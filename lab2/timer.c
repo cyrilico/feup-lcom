@@ -64,8 +64,12 @@ int timer_display_conf(unsigned char conf) {
 		case TIMER_LSB_MSB:
 			printf("LSB followed by MSB \n");
 			break;
+		default:
+			prinft("Not found \n");
+			break;
 	}
-	printf("Programmed Mode: %x \n", (conf & (BIT(1) | BIT(2) | BIT(3)))>>1); /*Shift right of 1 bit so as not to be misinterpreted*/
+	/*Bitwise ORs followed by AND to obtain programmed mode bits. Next, a shift right of 1 bit so the value is not misinterpreted with an extra bit */
+	printf("Programmed Mode: %x \n", (conf & (BIT(1) | BIT(2) | BIT(3)))>>1);
 	printf("BCD: %x \n", conf & BIT(0));
 	return 0;
 }

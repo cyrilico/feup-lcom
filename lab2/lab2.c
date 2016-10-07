@@ -10,7 +10,7 @@ static void print_usage(char **argv);
 
 int main(int argc, char **argv)
 {
-	/* Initializing service */
+	/* Initialize service */
 	sef_startup();
 
 	if (argc == 1) {					/* Prints usage of the program if no arguments are passed */
