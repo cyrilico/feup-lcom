@@ -25,19 +25,19 @@ int timer_get_conf(unsigned long timer, unsigned char *st) {
 	
 	unsigned long st_temp; /* because argument in sys_inb is of type unsigned long* and st is not of that type*/
 
-	switch(timer){
+	switch(timer) {
 		case 0:
-			sys_outb(TIMER_CTRL, 0xC2); /* Read-back, COUNT and STATUS active, Timer0 */
+			sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(1)); /* Read-back, STATUS active, Timer0 */
 			sys_inb(TIMER_0, &st_temp);
 			*st = (unsigned char)st_temp;
 			return 0;
 		case 1:
-			sys_outb(TIMER_CTRL, 0xC4); /* Read-back, COUNT and STATUS active, Timer1 */
+			sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(2)); /* Read-back, STATUS active, Timer1 */
 			sys_inb(TIMER_1, &st_temp);
 			*st = (unsigned char)st_temp;
 			return 0;
 		case 2:
-			sys_outb(TIMER_CTRL, 0xC8); /* Read-back, COUNT and STATUS active, Timer2 */
+			sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(3)); /* Read-back, STATUS active, Timer2 */
 			sys_inb(TIMER_2, &st_temp);
 			*st = (unsigned char)st_temp;
 			return 0;
@@ -51,8 +51,8 @@ int timer_get_conf(unsigned long timer, unsigned char *st) {
 int timer_display_conf(unsigned char conf) {
 	
 	printf("Timer status byte: 0x%x \n", conf);
-	printf("Output value: %i \n", conf & BIT(7));
-	printf("Null count: %i \n", conf & BIT(6));
+	printf("Output value: %c \n", conf & BIT(7));
+	printf("Null count: %c \n", conf & BIT(6));
 	printf("Access type: ");
 	switch(conf & TIMER_LSB_MSB) {
 		case TIMER_LSB:
@@ -81,8 +81,8 @@ int timer_test_int(unsigned long time) {
 }
 
 int timer_test_config(unsigned long timer) {
-	unsigned char* st;
-	timer_get_conf(timer, st);
-	timer_display_conf(*st);
+	unsigned char st;
+	timer_get_conf(timer, &st);
+	timer_display_conf(st);
 	return 0;
 }
