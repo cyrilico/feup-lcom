@@ -51,8 +51,8 @@ int timer_get_conf(unsigned long timer, unsigned char *st) {
 int timer_display_conf(unsigned char conf) {
 	
 	printf("Timer status byte: 0x%x \n", conf);
-	printf("Output value: %c \n", conf & BIT(7));
-	printf("Null count: %c \n", conf & BIT(6));
+	printf("Output value: %x \n", conf & BIT(7));
+	printf("Null count: %x \n", conf & BIT(6));
 	printf("Access type: ");
 	switch(conf & TIMER_LSB_MSB) {
 		case TIMER_LSB:
@@ -65,7 +65,7 @@ int timer_display_conf(unsigned char conf) {
 			printf("LSB followed by MSB \n");
 			break;
 	}
-	printf("Programmed mode: %x \n", conf & TIMER_SQR_WAVE);
+	printf("Programmed Mode: %x \n", (conf & (BIT(1) | BIT(2) | BIT(3)))>>1); /*Shift right of 1 bit so as not to be misinterpreted*/
 	printf("BCD: %x \n", conf & BIT(0));
 	return 0;
 }
