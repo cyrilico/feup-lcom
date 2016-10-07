@@ -4,7 +4,14 @@
 
 int timer_set_square(unsigned long timer, unsigned long freq) {
 
-	return 1;
+	//Read timer configuration
+	unsigned char st;
+	timer_get_conf(timer, &st);
+
+	//Logical shifts to isolate 4 least significant bits of read configuration
+	st<<4;
+	st>>4;
+
 }
 
 int timer_subscribe_int(void ) {
