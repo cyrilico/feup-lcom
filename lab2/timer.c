@@ -50,7 +50,24 @@ int timer_get_conf(unsigned long timer, unsigned char *st) {
 
 int timer_display_conf(unsigned char conf) {
 	
-	return 1;
+	printf("Timer status byte: 0x%x \n", conf);
+	printf("Output value: %i \n", conf & BIT(7));
+	printf("Null count: %i \n", conf & BIT(6));
+	printf("Access type: ");
+	switch(conf & TIMER_LSB_MSB) {
+		case TIMER_LSB:
+			printf("LSB \n");
+			break;
+		case TIMER_MSB:
+			printf("MSB \n");
+			break;
+		case TIMER_LSB_MSB:
+			printf("LSB followed by MSB \n");
+			break;
+	}
+	printf("Programmed mode: %x \n", conf & TIMER_SQR_WAVE);
+	printf("BCD: %x \n", conf & BIT(0));
+	return 0;
 }
 
 int timer_test_square(unsigned long freq) {
