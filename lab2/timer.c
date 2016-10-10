@@ -12,15 +12,26 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 	//Logical shifts to isolate 4 least significant bits of read configuration
 	st<<4;
 	st>>4;
+
+	unsigned lsb_freq = freq; // 8 LSB from the new freq
+	freq>>8; //8 bit right shift to get 8 MSB on the right side
+	unsigned msb_freq = freq; // 8 MSB from the new freq
+
 	switch(timer){ //If function reaches this stage given timer should be valid so no need for default case
 	case 0:
-		//...
+		sys_outb(TIMER_CTRL, TIMER_SEL0 | TIMER_LSB_MSB | st);
+		sys_outb(TIMER_0, lsb_freq);
+		sys_outb(TIMER_0, msb_freq);
 		break;
 	case 1:
-		//...
+		sys_outb(TIMER_CTRL, TIMER_SEL1 | TIMER_LSB_MSB | st);
+		sys_outb(TIMER_1, lsb_freq);
+		sys_outb(TIMER_1, msb_freq);
 		break;
 	case 2:
-		//...
+		sys_outb(TIMER_CTRL, TIMER_SEL2 | TIMER_LSB_MSB | st);
+		sys_outb(TIMER_2, lsb_freq);
+		sys_outb(TIMER_2, msb_freq);
 		break;
 	}
 
