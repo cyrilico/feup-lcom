@@ -72,7 +72,7 @@ int timer_display_conf(unsigned char conf) {
 			printf("LSB followed by MSB \n");
 			break;
 		default:
-			prinft("Not found \n");
+			printf("Not found \n"); //When config is from timer 1 or 2 these bits come as 00, so just print out a "random" message (told by professor)
 			break;
 	}
 	/*Bitwise ORs followed by AND to obtain programmed mode bits. Next, a shift right of 1 bit so the value is not misinterpreted with an extra bit */
@@ -93,7 +93,9 @@ int timer_test_int(unsigned long time) {
 
 int timer_test_config(unsigned long timer) {
 	unsigned char st;
-	timer_get_conf(timer, &st);
-	timer_display_conf(st);
+	if(!timer_get_conf(timer, &st)) //timer introduced is valid, so current configuration was retrieved and can be displayed
+		timer_display_conf(st);
+	else //timer introduced is not valid
+		printf("Invalid timer! Value must be 0, 1 or 2\n");
 	return 0;
 }
