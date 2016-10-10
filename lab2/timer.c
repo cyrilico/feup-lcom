@@ -6,11 +6,23 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 
 	//Read timer configuration
 	unsigned char st;
-	timer_get_conf(timer, &st);
+	if(timer_get_conf(timer, &st)) //Value returned from timer_get_conf is not 0 so configuration was not retrieved successfully
+		return -1;
 
 	//Logical shifts to isolate 4 least significant bits of read configuration
 	st<<4;
 	st>>4;
+	switch(timer){ //If function reaches this stage given timer should be valid so no need for default case
+	case 0:
+		//...
+		break;
+	case 1:
+		//...
+		break;
+	case 2:
+		//...
+		break;
+	}
 
 }
 
