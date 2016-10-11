@@ -2,6 +2,8 @@
 #include <minix/drivers.h>
 #include "i8254.h"
 
+unsigned long interrupt_counter = 0;
+
 int timer_set_square(unsigned long timer, unsigned long freq) {
 
 	//Read timer configuration
@@ -48,7 +50,7 @@ int timer_unsubscribe_int() {
 }
 
 void timer_int_handler() {
-
+	interrupt_counter++;
 }
 
 int timer_get_conf(unsigned long timer, unsigned char *st) {
