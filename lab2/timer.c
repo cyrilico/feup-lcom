@@ -1,8 +1,14 @@
 #include <minix/syslib.h>
 #include <minix/drivers.h>
+#include <minix/com.h>
 #include "i8254.h"
 
+//Custom symbolic constants
+#define GET_LSB (BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(5) | BIT(6) | BIT(7))
+#define GET_2ND_LSB (BIT(8) | BIT(9) | BIT(10) | BIT (11) | BIT(12) | BIT(13) | BIT(14) | BIT(15))
+
 unsigned long interrupt_counter = 0;
+int hookid = 15;
 
 int timer_set_square(unsigned long timer, unsigned long freq) {
 
@@ -16,8 +22,8 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 
 	unsigned long newfreq = TIMER_FREQ/freq;
 	/*CHECK WITH PROFESSOR: "prettier" to define MSB and LSB macros; can we do it in i8254.h?*/
-	unsigned long lsb_newfreq = newfreq & (BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(5) | BIT(6) | BIT(7)); //isolate LSB
-	unsigned long msb_newfreq = newfreq>>8; //isolate MSB
+	unsigned long lsb_newfreq = newfreq & GET_LSB; //isolate LSB
+	unsigned long msb_newfreq = newfreq & GET_2ND_LSB; //isolate MSB
 
 	switch(timer){ //If function reaches this stage given timer should be valid so no need for default case
 	case 0:
@@ -40,12 +46,21 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 }
 
 int timer_subscribe_int(void ) {
-
-	return 1;
+	/*Bit specified in hookid to be returned by function if both calls are successful
+	 (variable needed because hookid will me modified in case of successful call)*/
+	int hookid_bit = BIT(hookid);
+	switch(sys_setpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookid){
+	case 0: //Sucess in setpolicy call
+		if(!sys_irqenable(&hookid)) //Sucess in enable call
+			return hookid_bit;
+		else
+			return -1;
+	default: //Unsuccessful call, no need to do enable call
+		return -1;
+	}
 }
 
 int timer_unsubscribe_int() {
-
 	return 1;
 }
 
