@@ -3,27 +3,23 @@
 #include <minix/com.h>
 #include "i8254.h"
 
-//Custom symbolic constants
-#define GET_LSB (BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(5) | BIT(6) | BIT(7))
-#define GET_2ND_LSB (BIT(8) | BIT(9) | BIT(10) | BIT (11) | BIT(12) | BIT(13) | BIT(14) | BIT(15))
-
 unsigned long interrupt_counter = 0;
 int hookid = 15;
 
 int timer_set_square(unsigned long timer, unsigned long freq) {
 
 	//Read timer configuration
+	//Value returned from timer_get_conf is not 0 so configuration was not retrieved successfully OR given freq is not valid
 	unsigned char st;
-	if(timer_get_conf(timer, &st)) //Value returned from timer_get_conf is not 0 so configuration was not retrieved successfully
+	if(timer_get_conf(timer, &st) != OK || freq == 0)
 		return -1;
 
 	//Isolate 4 less significant bits so as to not change initial value interpretation and programming mode (as specified in the guide)
 	st = st & (BIT(0) | BIT(1) | BIT(2) | BIT(3));
 
 	unsigned long newfreq = TIMER_FREQ/freq;
-	/*CHECK WITH PROFESSOR: "prettier" to define MSB and LSB macros; can we do it in i8254.h?*/
 	unsigned long lsb_newfreq = newfreq & GET_LSB; //isolate LSB
-	unsigned long msb_newfreq = newfreq & GET_2ND_LSB; //isolate MSB
+	unsigned long msb_newfreq = (newfreq & GET_2ND_LSB)>>8; //isolate MSB
 
 	switch(timer){ //If function reaches this stage given timer should be valid so no need for default case
 	case 0:
@@ -45,35 +41,32 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 
 }
 
-int timer_subscribe_int(void ) {
+int timer_subscribe_int(void) {
 	/*Bit specified in hookid to be returned by function if both calls are successful
 	 (variable needed because hookid will be modified in case of successful call)*/
 	int hookid_bit = BIT(hookid);
 
 	switch(sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookid)) {
-	case 0: //Success in setpolicy call
-		if(!sys_irqenable(&hookid)) //Success in enable call
-			return hookid_bit;
-		else
+		case 0: //Success in setpolicy call
+			if(sys_irqenable(&hookid) == OK) //Success in enable call
+				return hookid_bit;
+		default: //Unsuccessful call, no need to do enable call
 			return -1;
-	default: //Unsuccessful call, no need to do enable call
-		return -1;
 	}
 }
 
 int timer_unsubscribe_int() {
 	switch(sys_irqdisable( &hookid)) {
-	case 0: //Success in disable call
-		if(!sys_irqrmpolicy(&hookid)) //Success in unsubscribe call
-			return 0;
-		else
+		case 0: //Success in disable call
+			if(sys_irqrmpolicy(&hookid) == OK) //Success in unsubscribe call
+				return 0;
+		default: //Unsuccessful call, no need to do unsubscribe call
 			return -1;
-	default: //Unsuccessful call, no need to do unsubscribe call
-		return -1;
 	}
 }
 
 void timer_int_handler() {
+	//Increment global counter variable
 	interrupt_counter++;
 }
 
@@ -125,8 +118,31 @@ int timer_display_conf(unsigned char conf) {
 			break;
 	}
 	/*Bitwise ORs followed by AND to obtain programmed mode bits. Next, a shift right of 1 bit so the value is not misinterpreted with an extra bit */
-	printf("Programmed Mode: %x \n", (conf & (BIT(1) | BIT(2) | BIT(3)))>>1);
-	printf("BCD: %x \n", conf & BIT(0));
+	printf("Programmed Mode: ");
+	 switch((conf & (BIT(1) | BIT(2) | BIT(3)))>>1) {
+		 case 0:
+			 printf("0 (interrupt on terminal count)\n");
+			 break;
+		 case 1:
+			 printf("1 (hardware retriggerable one-shot)\n");
+			 break;
+		 case 2:
+			 printf("2 (rate generator)\n");
+			 break;
+		 case 3:
+			 printf("3 (square wave generator)\n");
+			 break;
+	 }
+
+	printf("Counting mode: ");
+	 switch(conf & BIT(0)) {
+		 case 0:
+			 printf("0 (binary)\n");
+			 break;
+		 case 1:
+			 printf("1 (BCD)\n");
+			 break;
+	 }
 	return 0;
 }
 
@@ -156,6 +172,7 @@ int timer_test_int(unsigned long time) {
 			case HARDWARE: /* hardware interrupt notification */
 				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
 					timer_int_handler();
+					//If counter mod 60 == 0, timer0 has made another 60 interruptions so another second has passed
 					if(interrupt_counter % 60 == 0)
 						printf("Hey! Another second has passed. %d seconds gone so far\n", interrupt_counter/60);
 
