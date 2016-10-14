@@ -23,19 +23,28 @@ int timer_set_square(unsigned long timer, unsigned long freq) {
 
 	switch(timer){ //If function reaches this stage given timer should be valid so no need for default case
 	case 0:
-		sys_outb(TIMER_CTRL, TIMER_SEL0 | TIMER_LSB_MSB | st);
-		sys_outb(TIMER_0, lsb_newfreq);
-		sys_outb(TIMER_0, msb_newfreq);
+		if(sys_outb(TIMER_CTRL, TIMER_SEL0 | TIMER_LSB_MSB | st))
+			return -1;
+		if(sys_outb(TIMER_0, lsb_newfreq))
+			return -1;
+		if(sys_outb(TIMER_0, msb_newfreq))
+			return -1;
 		return 0;
 	case 1:
-		sys_outb(TIMER_CTRL, TIMER_SEL1 | TIMER_LSB_MSB | st);
-		sys_outb(TIMER_1, lsb_newfreq);
-		sys_outb(TIMER_1, msb_newfreq);
+		if(sys_outb(TIMER_CTRL, TIMER_SEL1 | TIMER_LSB_MSB | st))
+			return -1;
+		if(sys_outb(TIMER_1, lsb_newfreq))
+			return -1;
+		if(sys_outb(TIMER_1, msb_newfreq))
+			return -1;
 		return 0;
 	case 2:
-		sys_outb(TIMER_CTRL, TIMER_SEL2 | TIMER_LSB_MSB | st);
-		sys_outb(TIMER_2, lsb_newfreq);
-		sys_outb(TIMER_2, msb_newfreq);
+		if(sys_outb(TIMER_CTRL, TIMER_SEL2 | TIMER_LSB_MSB | st))
+			return -1;
+		if(sys_outb(TIMER_2, lsb_newfreq))
+			return -1;
+		if(sys_outb(TIMER_2, msb_newfreq))
+			return -1;
 		return 0;
 	}
 
@@ -76,18 +85,24 @@ int timer_get_conf(unsigned long timer, unsigned char *st) {
 
 	switch(timer) {
 		case 0:
-			sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(1)); /* Read-back, STATUS active, Timer0 */
-			sys_inb(TIMER_0, &st_temp);
+			if(sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(1)))
+				return -1; /* Read-back, STATUS active, Timer0 */
+			if(sys_inb(TIMER_0, &st_temp))
+				return -1;
 			*st = (unsigned char)st_temp;
 			return 0;
 		case 1:
-			sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(2)); /* Read-back, STATUS active, Timer1 */
-			sys_inb(TIMER_1, &st_temp);
+			if(sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(2)))
+				return -1; /* Read-back, STATUS active, Timer1 */
+			if(sys_inb(TIMER_1, &st_temp))
+				return -1;
 			*st = (unsigned char)st_temp;
 			return 0;
 		case 2:
-			sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(3)); /* Read-back, STATUS active, Timer2 */
-			sys_inb(TIMER_2, &st_temp);
+			if(sys_outb(TIMER_CTRL, TIMER_RB_CMD | BIT(5) | BIT(3)))
+				return -1;/* Read-back, STATUS active, Timer2 */
+			if(sys_inb(TIMER_2, &st_temp))
+				return -1;
 			*st = (unsigned char)st_temp;
 			return 0;
 		default:
