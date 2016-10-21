@@ -1,5 +1,5 @@
 int kbd_test_scan(unsigned short ass) {
-	/* To be completed */
+	//return kbd_scan_loop(ass);
 }
 int kbd_test_leds(unsigned short n, unsigned short *leds) {
     /* To be completed */
