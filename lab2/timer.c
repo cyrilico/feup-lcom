@@ -55,11 +55,13 @@ int timer_subscribe_int(void) {
 	 (variable needed because hookid will be modified in case of successful call)*/
 	int hookid_bit = BIT(hookid);
 
-	if(sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookid) != OK)
-		return -1;
-
-	if(sys_irqenable(&hookid) != OK) //Failure in enable call
-		return -1;
+	switch(sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &hookid)) {
+		case 0: //Success in setpolicy call
+			if(sys_irqenable(&hookid) == OK) //Success in enable call
+				return hookid_bit;
+		default: //Unsuccessful call, no need to do enable call
+			return -1;
+}
 
 	//Success in enable call
 	return hookid_bit;
