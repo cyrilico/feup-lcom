@@ -97,7 +97,7 @@ int kbd_scan_loop() {
 					if(code == -1)
 						return -1;
 					else if(read_again == 1){
-						code << 8;
+						code = code << 8;
 						code |= code_aux;
 						read_again = 0;
 						kbd_print_code(code);
