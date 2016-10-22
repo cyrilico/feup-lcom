@@ -5,7 +5,8 @@
 #define STAT_REG 0x64
 #define IN_BUF 0x60
 #define OUT_BUF 0x60
-#define GET_LSB 0x01
+#define GET_LSB 0x00FF
+#define GET_MSB 0xFF00
 #define ESC_BREAK 0x81
 #define OBF BIT(0)
 #define IBF BIT(1)
@@ -13,6 +14,7 @@
 #define PARITY BIT(7)
 #define OK 0
 #define NTRIES 5
+#define TWO_BYTE_SCANCODE 0xE0
 
 int kbd_scan_loop();
 int kbd_subscribe_int(int *hookid);

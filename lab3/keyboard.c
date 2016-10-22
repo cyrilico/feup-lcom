@@ -53,6 +53,21 @@ unsigned long kbd_read_code() {
 	}
 }
 
+void kbd_print_code(unsigned long code) {
+	if(code & GET_MSB){ //Scancode has two bytes
+		if(code & BIT(15)) //Breakcode
+			printf("Breakcode: 0x%04x\n", code);
+		else
+			printf("Makecode: 0x%04x\n", code);
+	}
+	else{ //Scancode has one byte
+		if(code & BIT(7)) //Breakcode
+			printf("Breakcode: 0x%02x\n", code);
+		else
+			printf("Makecode: 0x%02x\n", code);
+	}
+}
+
 int kbd_scan_loop() {
 
 	int r;
@@ -64,7 +79,9 @@ int kbd_scan_loop() {
 	int ipc_status;
 	message msg;
 
-	unsigned long code; //alterei isto
+	unsigned long code = 0;
+	unsigned long code_aux = 0; //Auxiliar variable in case of two byte scancode
+	int read_again = 0;
 
 	while(code != ESC_BREAK) {
 		/* Get a request message. */
@@ -76,16 +93,21 @@ int kbd_scan_loop() {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE: /* hardware interrupt notification */
 				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
-					//Read individual codes
 					code = kbd_read_code();
-
 					if(code == -1)
 						return -1;
-
-					if(code & BIT(7))
-						printf("Breakcode: 0x%x\n", code);
+					else if(read_again == 1){
+						code << 8;
+						code |= code_aux;
+						read_again = 0;
+						kbd_print_code(code);
+					}
+					else if(code == TWO_BYTE_SCANCODE){
+						code_aux = code;
+						read_again = 1;
+					}
 					else
-						printf("Makecode: 0x%x\n", code);
+						kbd_print_code(code);
 				}
 				break;
 			default:
