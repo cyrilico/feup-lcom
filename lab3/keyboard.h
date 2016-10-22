@@ -3,6 +3,7 @@
 #define IRQ_KBD 1
 #define DELAY_US 20000
 #define STAT_REG 0x64
+#define KBC_CMD_REG 0x64
 #define IN_BUF 0x60
 #define OUT_BUF 0x60
 #define GET_LSB 0x00FF
@@ -20,3 +21,5 @@ int kbd_scan_loop();
 int kbd_subscribe_int(int *hookid);
 int kbd_unsubscribe_int(int *hookid);
 unsigned long kbd_read_code();
+unsigned long kbd_write_code(unsigned char cmd);
+void kbd_print_code(unsigned long code);
