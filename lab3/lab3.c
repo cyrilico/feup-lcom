@@ -26,7 +26,7 @@ static void print_usage(char **argv)
 {
 	printf("Usage: one of the following:\n"
 			"\t service run %s -args \"test_scan <decimal no. - 0: C version, other: assembly version>\"\n"
-			"\t service run %s -args \"test_leds <array of decimal no. - first element is size, rest is content ([0-2])>\"\n"
+			"\t service run %s -args \"test_leds <array of decimal no. [0-2] - sequence of leds to manipulate>\"\n"
 			"\t service run %s -args \"test_timed_scan <decimal no. - waiting time>\"\n",
 			argv[0], argv[0], argv[0]);
 }
@@ -45,25 +45,27 @@ if (strncmp(argv[1], "test_scan", strlen("test_scan")) == 0) {
 	  kbd_test_scan(c_or_asm);
 	  return 0;
   } else if (strncmp(argv[1], "test_leds", strlen("test_leds")) == 0) {
-	  if( argc < 4) { //Since the function has been correctly identified, means that empty array was provided regardless of size specified
-		  printf("keyboard: empty array found for test of kbd_test_leds()\n");
+	  if( argc < 3) { //Since the function has been correctly identified, means that empty array was provided regardless of size specified
+		  printf("keyboard: wrong no of arguments for test of kbd_test_leds()\n");
 		  return 1;
 	  }
-	  unsigned long size;
+	  unsigned long size = argc - 2;
 	  unsigned int *leds;
-	  if( (size = parse_ulong(argv[2], 10)) == ULONG_MAX )
-		  return 1;
 	  unsigned int i;
 	  for(i = 0; i < size; i++){
 		  leds[i] = parse_ulong(argv[2+i],10);
 		  if(leds[i] == ULONG_MAX)
 			  return 1;
+		  if(leds[i] > 2){ //Invalid led value
+			  printf("keyboard: invalid led value, must be in range [0-2]\n");
+			  return 1;
+		  }
 	  }
 	  printf("keyboard:: kbd_test_leds for array [ ");
 	  for(i = 0; i < size; i++){
-		  printf("%u ",leds[i]);
+		  printf("%lu ",leds[i]);
 	  }
-	   printf("]\n");
+	   printf(" ]\n");
 	  kbd_test_leds(size,leds);
 	  return 0;
   } else if (strncmp(argv[1], "test_timed_scan", strlen("test_timed_scan")) == 0) {
