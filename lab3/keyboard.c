@@ -53,6 +53,20 @@ unsigned long kbd_read_code() {
 	}
 }
 
+unsigned long kbd_read_code(unsigned char cmd) {
+	unsigned long st;
+	unsigned int counter = 0;
+	while( cout <= NTRIES ) {
+		sys_inb(STAT_REG, &st); /* assuming it returns OK */
+		/* loop while 8042 input buffer is not empty */
+		if( (st & IBF) == 0 ) {
+			sys_outb(KBC_CMD_REG, cmd); /* no args command */
+			return 0;
+		}
+		tickdelay(micros_to_ticks(DELAY_US));
+	}
+}
+
 void kbd_print_code(unsigned long code) {
 	if(code & GET_MSB){ //Scancode has two bytes
 		if(code & BIT(15)) //Breakcode
