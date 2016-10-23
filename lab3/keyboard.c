@@ -4,6 +4,7 @@
 #include <minix/drivers.h>
 #include <minix/sysutil.h>
 #include "keyboard.h"
+#include "timer.h"
 
 int hookid_kbd = 10;
 

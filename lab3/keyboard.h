@@ -1,3 +1,5 @@
+#ifndef __KEYBOARD_H
+#define __KEYBOARD_H
 
 #define BIT(n) (0x01<<(n))
 #define IRQ_KBD 1
@@ -23,3 +25,5 @@ int kbd_unsubscribe_int(int *hookid);
 unsigned long kbd_read_code();
 unsigned long kbd_write_code(unsigned char cmd);
 void kbd_print_code(unsigned long code);
+
+#endif

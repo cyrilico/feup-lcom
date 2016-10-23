@@ -5,7 +5,7 @@ COMPILER_TYPE= gnu
 CC= gcc
 
 PROG= lab3
-SRCS= lab3.c test3.c keyboard.c #falta adicionar ficheiro assembly que for usado 
+SRCS= lab3.c test3.c keyboard.c timer.c #falta adicionar ficheiro assembly que for usado 
 
 CCFLAGS= -Wall
 
