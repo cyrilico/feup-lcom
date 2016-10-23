@@ -18,6 +18,7 @@
 #define OK 0
 #define NTRIES 5
 #define TWO_BYTE_SCANCODE 0xE0
+#define PROCESS_LEDS 0xED
 
 int kbd_scan_loop();
 int kbd_subscribe_int(int *hookid);
