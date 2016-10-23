@@ -54,7 +54,7 @@ unsigned long kbd_read_code() {
 	}
 }
 
-unsigned long kbd_read_code(unsigned char cmd) {
+unsigned long kbd_write_code(unsigned char cmd) {
 	unsigned long st;
 	unsigned int counter = 0;
 	while( cout <= NTRIES ) {
@@ -123,6 +123,44 @@ int kbd_scan_loop() {
 					}
 					else
 						kbd_print_code(code);
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else { /* received a standard message, not a notification */
+			/* no standard messages expected: do nothing */
+		}
+	}
+	return kbd_unsubscribe_int(&hookid_kbd);
+}
+
+
+
+int kbd_leds_loop(unsigned short n, unsigned short *leds){
+	int ipc_status;
+	int r;
+	message msg;
+	unsigned int counter = 0;
+	int index = 0;
+	int irq_set = timer_subscribe_int();
+	if(irq_set == -1) //Failed subscription
+		return -1;
+
+	while(counter/60 <= n) {
+		/* Get a request message. */
+		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
+					counter++;
+					if(counter % 60 == 0){ //Another second has gone by
+						//Process current led input
+					}
 				}
 				break;
 			default:
