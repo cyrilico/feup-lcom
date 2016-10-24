@@ -26,5 +26,6 @@ int kbd_unsubscribe_int(int *hookid);
 unsigned long kbd_read_code();
 unsigned long kbd_write_code(unsigned char cmd);
 void kbd_print_code(unsigned long code);
+int kbd_timed_scan_loop(unsigned short n);
 
 #endif
