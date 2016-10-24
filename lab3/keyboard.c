@@ -57,7 +57,7 @@ unsigned long kbd_read_code() {
 unsigned long kbd_write_code(unsigned char cmd) {
 	unsigned long st;
 	unsigned int counter = 0;
-	while( cout <= NTRIES ) {
+	while( counter <= NTRIES ) {
 		sys_inb(STAT_REG, &st); /* assuming it returns OK */
 		/* loop while 8042 input buffer is not empty */
 		if( (st & IBF) == 0 ) {
@@ -171,4 +171,68 @@ int kbd_leds_loop(unsigned short n, unsigned short *leds){
 		}
 	}
 
+}
+
+int kbd_timed_scan_loop(unsigned short n){
+	int r;
+	int kbd_irq_set = kbd_subscribe_int(&hookid_kbd);
+	if(kbd_irq_set == -1) //Failed keyboard subscription
+		return -1;
+	int timer_irq_set = timer_subscribe_int();
+	if(timer_irq_set == -1) //Failed timer subscription
+		return -1;
+
+	int ipc_status;
+	message msg;
+
+	unsigned long code = 0;
+	unsigned long code_aux = 0; //Auxiliar variable in case of two byte scancode
+	int read_again = 0;
+	unsigned int counter = 0;
+
+	while(code != ESC_BREAK && counter/60 < n) {
+		/* Get a request message. */
+		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & kbd_irq_set) {
+					code = kbd_read_code();
+					if(code == -1)
+						return -1;
+					else if(read_again == 1){
+						code = code << 8;
+						code |= code_aux;
+						read_again = 0;
+						kbd_print_code(code);
+					}
+					else if(code == TWO_BYTE_SCANCODE){
+						code_aux = code;
+						read_again = 1;
+					}
+					else
+						kbd_print_code(code);
+
+					counter = 0; //Keyboard has caused an interrupt so idle time is reset
+				}
+				else if(msg.NOTIFY_ARG & timer_irq_set) {
+					counter++;
+					if(counter % 60 == 0)
+						printf("No keyboard action detected in the last second. %ds until program exits.\n", n-counter/60);
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else { /* received a standard message, not a notification */
+			/* no standard messages expected: do nothing */
+		}
+	}
+	if(kbd_unsubscribe_int(&hookid_kbd) == -1 || timer_unsubscribe_int() == -1)
+		return -1;
+	else
+		return 0;
 }
