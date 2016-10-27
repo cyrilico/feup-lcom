@@ -5,7 +5,7 @@
 #include "test3.h"
 
 static int proc_args(int argc, char **argv);
-static unsigned long parse_ulong(char *str, int base);
+static unsigned short parse_ulong(char *str, int base);
 static void print_usage(char **argv);
 
 int main(int argc, char **argv)
@@ -49,8 +49,8 @@ if (strncmp(argv[1], "test_scan", strlen("test_scan")) == 0) {
 		  printf("keyboard: wrong no of arguments for test of kbd_test_leds()\n");
 		  return 1;
 	  }
-	  unsigned long size = argc - 2;
-	  unsigned int *leds;
+	  unsigned short size = argc - 2;
+	  unsigned short leds[size];
 	  unsigned int i;
 	  for(i = 0; i < size; i++){
 		  leds[i] = parse_ulong(argv[2+i],10);
@@ -86,7 +86,7 @@ if (strncmp(argv[1], "test_scan", strlen("test_scan")) == 0) {
 }
 
 
-static unsigned long parse_ulong(char *str, int base)
+static unsigned short parse_ulong(char *str, int base)
 {
 	char *endptr;
 	unsigned long val;
