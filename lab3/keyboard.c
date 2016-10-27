@@ -5,6 +5,7 @@
 #include <minix/sysutil.h>
 #include "keyboard.h"
 #include "timer.h"
+#include "i8254.h"
 
 int hookid_kbd = 10;
 int SCROLLLOCK_ON = 0;
