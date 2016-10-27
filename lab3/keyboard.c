@@ -6,6 +6,7 @@
 #include "keyboard.h"
 #include "timer.h"
 #include "i8254.h"
+#include "i8042.h"
 
 int hookid_kbd = 10;
 int SCROLLLOCK_ON = 0;
