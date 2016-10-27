@@ -1,4 +1,4 @@
-#include "i8254.h"
+#include "i8042.h"
 
 .global _kbd_read_code_ASM
 
