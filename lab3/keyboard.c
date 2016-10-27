@@ -7,6 +7,9 @@
 #include "timer.h"
 
 int hookid_kbd = 10;
+int SCROLLLOCK_ON = 0;
+int NUMLOCK_ON = 0;
+int CAPSLOCK_ON = 0;
 
 int kbd_subscribe_int(int *hookid) {
 	/*Variable that will hold return value in case of successful call, since sys_irq calls will modify hookid value*/
@@ -52,6 +55,8 @@ unsigned long kbd_read_code() {
 		tickdelay(micros_to_ticks(DELAY_US));
 		counter++;
 	}
+	printf("nothing read\n");
+	return -1;
 }
 
 unsigned long kbd_write_code(unsigned char cmd) {
@@ -61,11 +66,12 @@ unsigned long kbd_write_code(unsigned char cmd) {
 		sys_inb(STAT_REG, &st); /* assuming it returns OK */
 		/* loop while 8042 input buffer is not empty */
 		if( (st & IBF) == 0 ) {
-			sys_outb(KBC_CMD_REG, cmd); /* no args command */
+			sys_outb(IN_BUF, cmd); /* no args command */
 			return 0;
 		}
 		tickdelay(micros_to_ticks(DELAY_US));
 	}
+	return -1;
 }
 
 void kbd_print_code(unsigned long code) {
@@ -135,44 +141,6 @@ int kbd_scan_loop() {
 	return kbd_unsubscribe_int(&hookid_kbd);
 }
 
-
-
-int kbd_leds_loop(unsigned short n, unsigned short *leds){
-	int ipc_status;
-	int r;
-	message msg;
-	unsigned int counter = 0;
-	int index = 0;
-	int irq_set = timer_subscribe_int();
-	if(irq_set == -1) //Failed subscription
-		return -1;
-
-	while(counter/60 <= n) {
-		/* Get a request message. */
-		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-			printf("driver_receive failed with: %d", r);
-			continue;
-		}
-		if (is_ipc_notify(ipc_status)) { /* received notification */
-			switch (_ENDPOINT_P(msg.m_source)) {
-			case HARDWARE: /* hardware interrupt notification */
-				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
-					counter++;
-					if(counter % 60 == 0){ //Another second has gone by
-						//Process current led input
-					}
-				}
-				break;
-			default:
-				break; /* no other notifications expected: do nothing */
-			}
-		} else { /* received a standard message, not a notification */
-			/* no standard messages expected: do nothing */
-		}
-	}
-
-}
-
 int kbd_timed_scan_loop(unsigned short n){
 	int r;
 	int kbd_irq_set = kbd_subscribe_int(&hookid_kbd);
@@ -235,4 +203,120 @@ int kbd_timed_scan_loop(unsigned short n){
 		return -1;
 	else
 		return 0;
+}
+
+/*CHECK WITH PROFESSOR: Should a limit number of tries be added here aswell?*/
+int kbd_send_led_cmd(){
+	unsigned long response;
+	do{
+		if(kbd_write_code(PROCESS_LEDS) == -1)
+			return -1;
+		response = kbd_read_code();
+		if(response == -1)
+			return -1;
+	}while(response == ERROR || response == RESEND);
+	return 0;
+}
+
+int kbd_process_leds(unsigned long led_sequence){
+	int ready_to_process;
+	int response;
+	do{
+		ready_to_process = kbd_send_led_cmd();
+		if(ready_to_process == -1)
+			return -1;
+		do{
+			if(kbd_write_code(led_sequence) == -1)
+				return -1;
+			if( (response = kbd_read_code()) == -1)
+				return -1;
+			if (response == ERROR || response == ACK)
+				break;
+		}while(response != ERROR && response != ACK);
+		//if(response == ACK) //Led sequence processed successfully
+			//break;
+	}while(response == ERROR);
+	return 0;
+}
+
+unsigned long kbd_change_led_sequence(unsigned long led){
+	switch(led){
+	case 0:
+		SCROLLLOCK_ON = (SCROLLLOCK_ON+1)%2; //Guarantees that if it was 1 it goes to 0 and vice-versa
+		break;
+	case 1:
+		NUMLOCK_ON = (NUMLOCK_ON+1)%2;
+		break;
+	case 2:
+		CAPSLOCK_ON = (CAPSLOCK_ON+1)%2;
+		break;
+	}
+	return ((CAPSLOCK_ON << 2) | (NUMLOCK_ON << 1) | SCROLLLOCK_ON);
+}
+
+
+/*CHECK WITH PROFESSOR: Assumes all leds are turned off in the beginning (should it not?)
+ * ALSO: Minix crashes even after successful exit when ENTER breakcode isn't read in the beginning -> ????*/
+int kbd_leds_loop(unsigned short n, unsigned short *leds){
+		int ipc_status;
+	int r;
+	message msg;
+	unsigned int counter = 0;
+	int index = 0;
+	int led_sequence = 0;
+	int irq_set = timer_subscribe_int();
+	if(irq_set == -1) //Failed subscription
+		return -1;
+	kbd_subscribe_int(&hookid_kbd);
+	unsigned long trash = kbd_read_code();
+	printf("trash: 0x%x\n",trash);
+	/*//Disable scancodes so they won't be mistakenly returned as command responses
+		int disable_scancode_response;
+		do{
+			kbd_write_code(DISABLE_SCANCODES);
+			if( (disable_scancode_response = kbd_read_code()) == ACK)
+				break;
+		}while(disable_scancode_response == RESEND || disable_scancode_response == ERROR);*/
+	while(counter/60 < n) {
+		/* Get a request message. */
+		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
+					counter++;
+					if(counter % 60 == 0){ //Another second has gone by
+						/*Might remove this printf later, but for now is here to confirm each LED light is changed after one second passes*/
+						led_sequence = kbd_change_led_sequence(leds[index]);
+						printf("Current led sequence: %d\n", led_sequence);
+						kbd_process_leds(led_sequence);
+						index++;
+						printf("Another second has passed, current led: %d\n", leds[index-1]);
+					}
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else { /* received a standard message, not a notification */
+			/* no standard messages expected: do nothing */
+		}
+	}
+
+	/*//Reenable scancodes
+	int reenable_scancode_response;
+	do{
+		kbd_write_code(ENABLE_SCANCODES);
+		if( (reenable_scancode_response = kbd_read_code()) == ACK)
+			break;
+	}while(reenable_scancode_response == RESEND || reenable_scancode_response == ERROR);*/
+	if(kbd_unsubscribe_int(&hookid_kbd) == -1 || timer_unsubscribe_int() == -1)
+		return -1;
+	else{
+		printf("exiting\n");
+		return 0;
+	}
 }

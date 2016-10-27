@@ -19,6 +19,11 @@
 #define NTRIES 5
 #define TWO_BYTE_SCANCODE 0xE0
 #define PROCESS_LEDS 0xED
+#define ACK 0xFA
+#define RESEND 0xFE
+#define ERROR 0xFC
+#define DISABLE_SCANCODES 0xF5
+#define ENABLE_SCANCODES 0xF4
 
 int kbd_scan_loop();
 int kbd_subscribe_int(int *hookid);
@@ -27,5 +32,8 @@ unsigned long kbd_read_code();
 unsigned long kbd_write_code(unsigned char cmd);
 void kbd_print_code(unsigned long code);
 int kbd_timed_scan_loop(unsigned short n);
-
+int kbd_send_led_cmd();
+int kbd_process_leds(unsigned long led_sequence);
+unsigned long kbd_change_led_sequence(unsigned long led);
+int kbd_leds_loop(unsigned short n, unsigned short *leds);
 #endif
