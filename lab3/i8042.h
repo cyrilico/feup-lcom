@@ -15,7 +15,7 @@
 #define TIMEOUT BIT(6)
 #define PARITY BIT(7)
 #define OK 0
-#define NTRIES 5
+#define NTRIES 50
 #define TWO_BYTE_SCANCODE 0xE0
 #define PROCESS_LEDS 0xED
 #define ACK 0xFA

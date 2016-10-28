@@ -1,7 +1,7 @@
 #include "keyboard.h"
 
 int kbd_test_scan(unsigned short ass) {
-	return kbd_scan_loop();
+	return kbd_scan_loop(ass);
 }
 int kbd_test_leds(unsigned short n, unsigned short *leds) {
 	return kbd_leds_loop(n, leds);

@@ -91,8 +91,9 @@ void kbd_print_code(unsigned long code) {
 	}
 }
 
-int kbd_scan_loop() {
+int kbd_scan_loop(unsigned short c_or_asm) {
 
+	unsigned long lixo;
 	int r;
 	int irq_set = kbd_subscribe_int(&hookid_kbd);
 
@@ -116,7 +117,10 @@ int kbd_scan_loop() {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE: /* hardware interrupt notification */
 				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
-					code = kbd_read_code();
+					if(c_or_asm == 0)
+						code = kbd_read_code();
+					else
+						code = kbd_read_code_ASM();
 					if(code == -1)
 						return -1;
 					else if(read_again == 1){
