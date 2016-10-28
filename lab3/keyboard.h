@@ -1,7 +1,7 @@
 #ifndef __KEYBOARD_H
 #define __KEYBOARD_H
 
-int kbd_scan_loop();
+int kbd_scan_loop(unsigned short c_or_asm);
 int kbd_subscribe_int(int *hookid);
 int kbd_unsubscribe_int(int *hookid);
 unsigned long kbd_read_code();
