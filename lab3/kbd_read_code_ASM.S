@@ -6,9 +6,9 @@
 
 _kbd_read_code_ASM:
 
-		xorl %eax, %eax
 		mov $NTRIES, %cx
 	NEXT:
+		xorl %eax, %eax
 		inb $STAT_REG /*assuming it returns OK, al = status read from KBD */
 		testb $OBF, %al
 		jz OBF_EMPTY
@@ -22,7 +22,7 @@ _kbd_read_code_ASM:
 		movl $-1, %eax
 		jmp END
 	OBF_EMPTY:
-		/*WAIT 20ms*/
+		/* Wait 20 ms */
 		loopnz NEXT
 		movl $-1, %eax
 END:	ret
