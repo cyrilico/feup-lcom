@@ -23,10 +23,11 @@ int main(int argc, char *argv[])
 static void print_usage(char **argv)
 {
 	printf("Usage: one of the following:\n"
-			"\t service run %s -args \"config <decimal no.- timer>\"\n"
-			"\t service run %s -args \"square <decimal no. - frequency>\"\n"
-			"\t service run %s -args \"int <decimal no. - time>\"\n",
-			argv[0], argv[0], argv[0]);
+			"\t service run %s -args \"test_packet <decimal no.- number of packets>\"\n"
+			"\t service run %s -args \"test_async <decimal no. - idle time, in seconds>\"\n"
+			"\t service run %s -args \"test_config <void>\"\n"
+			"\t service run %s -args \"test_gesture <decimal no. - minimum length of movement\"\n",
+			argv[0], argv[0], argv[0], argv[0]);
 }
 
 static int proc_args(int argc, char **argv)
@@ -42,7 +43,7 @@ static int proc_args(int argc, char **argv)
 		counter = parse_ulong(argv[2], 10);
 		if (counter == ULONG_MAX)
 			return 1;
-		printf("mouse::test_packet(%lu)\n", timer);
+		printf("mouse::test_packet(%lu)\n", counter);
 		return test_packet(counter);
 	}
 	else if (strncmp(argv[1], "test_async", strlen("test_async")) == 0) {
