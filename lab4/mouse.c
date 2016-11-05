@@ -1,34 +1,48 @@
-#include <limits.h>
-#include <string.h>
-#include <errno.h>
-#include <minix/drivers.h>
-#include <minix/sysutil.h>
-#include "i8042.h"
-#include "i8254.h"
-#include "timer.h"
 #include "mouse.h"
 
 int hookid_mouse = 23;
 
-int mouse_subscribe_int(int *hookid) {
+int mouse_subscribe_int() {
 	/*Variable that will hold return value in case of successful call, since sys_irq calls will modify hookid value*/
-	int hookid_mouse_bit = BIT(*hookid);
+	int hookid_mouse_bit = BIT(hookid_mouse);
 
-	if(sys_irqsetpolicy(IRQ_MOUSE, IRQ_EXCLUSIVE | IRQ_REENABLE, hookid) != OK)
+	if(sys_irqsetpolicy(IRQ_MOUSE, IRQ_EXCLUSIVE | IRQ_REENABLE, &hookid_mouse) != OK)
 		return -1;
 
-	if(sys_irqenable(hookid) != OK)
+	if(sys_irqenable(&hookid_mouse) != OK)
 		return -1;
 
 	return hookid_mouse_bit;
 }
 
-int mouse_unsubscribe_int(int *hookid) {
-	if(sys_irqdisable(hookid) != OK)
+int mouse_unsubscribe_int() {
+	if(sys_irqdisable(&hookid_mouse) != OK)
 		return -1;
 
-	if(sys_irqrmpolicy(hookid) != OK)
+	if(sys_irqrmpolicy(&hookid_mouse) != OK)
 		return -1;
 
 	return 0;
+}
+
+unsigned long mouse_read_code(){
+	unsigned long st;
+	unsigned long data;
+	unsigned int counter = 0;
+
+	while(counter <= NTRIES) {
+		sys_inb(STAT_REG, &st);
+		/* assuming it returns OK */
+		/* loop while 8042 output buffer is empty */
+		if(st & OBF) {
+			sys_inb(OUT_BUF, &data); /* assuming it returns OK */
+			if ( (st &(PARITY | TIMEOUT)) == 0 )
+				return data;
+			else
+				return -1;
+		}
+		tickdelay(micros_to_ticks(DELAY_US));
+		counter++;
+	}
+	return -1;
 }
