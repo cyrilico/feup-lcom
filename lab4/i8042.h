@@ -26,5 +26,9 @@
 
 /*New macros created during lab4 (will merge when all functions are implemented; until then it's easier to stay like this if something needs to be changed)*/
 #define IRQ_MOUSE 12
+#define TWOSCOMPLEMENT(N) (~N+1)
+#define WRITE_BYTE_MOUSE 0xD4
+#define ENABLE_MOUSE_DATA_REPORTING 0xF4
+#define DISABLE_MOUSE_DATA_REPORTING 0xF5
 
 #endif

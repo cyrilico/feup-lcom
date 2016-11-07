@@ -13,5 +13,6 @@
 int mouse_subscribe_int();
 int mouse_unsubscribe_int();
 unsigned long mouse_read_code();
+unsigned long mouse_write_code(long destination, unsigned char cmd);
 
 #endif
