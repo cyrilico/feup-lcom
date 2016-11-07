@@ -46,3 +46,18 @@ unsigned long mouse_read_code(){
 	}
 	return -1;
 }
+
+unsigned long mouse_write_code(long destination, unsigned char cmd){
+	unsigned long st;
+	unsigned int counter = 0;
+	while( counter <= NTRIES ) {
+		sys_inb(STAT_REG, &st); /* assuming it returns OK */
+		/* loop while 8042 input buffer is not empty */
+		if( (st & IBF) == 0 ) {
+			sys_outb(destination, cmd); /* no args command */
+			return 0;
+		}
+		tickdelay(micros_to_ticks(DELAY_US));
+	}
+	return -1;
+}
