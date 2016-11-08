@@ -145,6 +145,7 @@ int test_async(unsigned short idle_time) {
 						packet[counter++] = byte;
 						if(counter > 2) {
 							mouse_print_packet(packet);
+							counter = 0;
 						}
 					}
 				}
@@ -161,22 +162,19 @@ int test_async(unsigned short idle_time) {
 			/* no standard messages expected: do nothing */
 		}
 	}
-	printf("SAI \n");
 
 	if(mouse_write_code(STAT_REG, WRITE_BYTE_MOUSE) == -1)
 		return -1;
-	printf("CENAS");
+
 	if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
 		return -1;
-	printf("CENAS2");
+
 	sys_inb(OUT_BUF, &byte); //Make sure nothing stays in OUT_BUF
-	printf("CENAS3");
 
 	if(mouse_unsubscribe_int() == -1 || timer_unsubscribe_int() == -1)
 		return -1;
 	else
 		return 0;
-
 }
 
 int test_config(void) {
