@@ -6,12 +6,12 @@ void mouse_print_packet(long packet[]){
 	printf("B2=0x%x ", packet[1]);
 	printf("B3=0x%x ", packet[2]);
 	printf("LB=%u ", packet[0] & BIT(0));
-	printf("MB=%u ", packet[0] & BIT(2));
-	printf("RB=%u ", packet[0] & BIT(1));
-	printf("XOV=%u ", packet[0] & BIT(6));
-	printf("YOV=%u ", packet[0] & BIT(7));
-	printf("X=%d ", ((packet[0] & BIT(4)) ? TWOSCOMPLEMENT(packet[1]) : packet[1]));
-	printf("Y=%d\n\n", ((packet[0] & BIT(5)) ? TWOSCOMPLEMENT(packet[2]) : packet[2]));
+	printf("MB=%u ", (packet[0] & BIT(2))>>2);
+	printf("RB=%u ", (packet[0] & BIT(1))>>1);
+	printf("XOV=%u ", (packet[0] & BIT(6))>>6);
+	printf("YOV=%u ", (packet[0] & BIT(7))>>7);
+	printf("X=%d ", ((packet[0] & BIT(4)) ? TWOSCOMPLEMENT(BIT(8)|packet[1]) : packet[1]));
+	printf("Y=%d\n\n", ((packet[0] & BIT(5)) ? TWOSCOMPLEMENT(BIT(8)|packet[2]) : packet[2]));
 }
 
 int test_packet(unsigned short cnt){
@@ -29,15 +29,17 @@ int test_packet(unsigned short cnt){
 	long packet[3];
 	long byte; //Auxiliar variable that will store each byte read
 
-	if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
-		return -1;
-	if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
-		return -1;
+	do{
+		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+			return -1;
+		if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
+			return -1;
+		sys_inb(OUT_BUF, &byte);
+		if(byte != ACK)
+			printf("Erro a mandar F4\n");
+	}while(byte != ACK);
 
-	sys_inb(OUT_BUF, &byte);
-	if("Value returned after data reporting enabled: 0x%x\n\n", byte);
-	if(byte != ACK)
-		return -1;
+	printf("Value returned after data reporting enabled: 0x%x\n\n", byte);
 	/*Testing if TWOSCOMPLEMENT works*/
 	printf("1 - %ld\n2 - %ld\n3 - %ld\n", TWOSCOMPLEMENT(1), TWOSCOMPLEMENT(2), TWOSCOMPLEMENT(3));
 
@@ -78,17 +80,20 @@ int test_packet(unsigned short cnt){
 		}
 	}
 
-	if(mouse_write_code(STAT_REG, WRITE_BYTE_MOUSE) == -1)
-		return -1;
-	if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
-		return -1;
-	sys_inb(OUT_BUF, &byte); //Make sure nothing stays in OUT_BUF
+	do{
+		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+			return -1;
+		if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
+			return -1;
+		sys_inb(OUT_BUF, &byte);
+		if(byte != ACK)
+			printf("Erro a mandar F%\n");
+	}while(byte != ACK);
+
 	return mouse_unsubscribe_int();
 }
 
 int test_async(unsigned short idle_time) {
-    /* To be completed ... */
-
 	int r;
 	int irq_set = mouse_subscribe_int();
 
@@ -108,13 +113,17 @@ int test_async(unsigned short idle_time) {
 
 	unsigned int idle_counter = 0;
 
-	if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
-		return -1;
-	if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
-		return -1;
+	do{
+		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+			return -1;
+		if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
+			return -1;
+		sys_inb(OUT_BUF, &byte);
+		if(byte != ACK)
+			printf("Erro a mandar F4\n");
+	}while(byte != ACK);
 
-	sys_inb(OUT_BUF, &byte);
-	if("Value returned after data reporting enabled: 0x%x\n\n", byte);
+	printf("Value returned after data reporting enabled: 0x%x\n\n", byte);
 	if(byte != ACK)
 		return -1;
 	/*Testing if TWOSCOMPLEMENT works*/
@@ -137,7 +146,7 @@ int test_async(unsigned short idle_time) {
 							packet[counter++] = byte;
 						}
 						else{
-							printf("Invalid first byte, trying again\n");
+							printf("Invalid first byte so invalid packet, trying again\n\n");
 							continue;
 						}
 					}
@@ -163,13 +172,15 @@ int test_async(unsigned short idle_time) {
 		}
 	}
 
-	if(mouse_write_code(STAT_REG, WRITE_BYTE_MOUSE) == -1)
-		return -1;
-
-	if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
-		return -1;
-
-	sys_inb(OUT_BUF, &byte); //Make sure nothing stays in OUT_BUF
+	do{
+		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+			return -1;
+		if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
+			return -1;
+		sys_inb(OUT_BUF, &byte);
+		if(byte != ACK)
+			printf("Erro a mandar F%\n");
+	}while(byte != ACK);
 
 	if(mouse_unsubscribe_int() == -1 || timer_unsubscribe_int() == -1)
 		return -1;
@@ -177,8 +188,42 @@ int test_async(unsigned short idle_time) {
 		return 0;
 }
 
+void mouse_print_config(long packet[]){
+	printf("Current mouse configuration:\n");
+	printf("Mode: %s", (packet[0] & BIT(6)) ? "Remote (polled)\n" : "Stream\n");
+	printf("Data reporting is %s", (packet[0] & BIT(5)) ? "enabled\n" : "disabled\n");
+	printf("Scaling is %s", (packet[0] & BIT(4)) ? "2:1\n" : "1:1\n");
+	printf("Middle button is %s", (packet[0] & BIT(2)) ? "pressed\n" : "released\n");
+	printf("Right button is %s", (packet[0] & BIT(1)) ? "pressed\n" : "released\n");
+	printf("Left button is %s", (packet[0] & BIT(0)) ? "pressed\n" : "released\n");
+	printf("Resolution: %d counts per mm\n", BIT(packet[1] & (BIT(0) | BIT(1)))); //packet[1] & (BIT(0)|BIT(1)) returns 0,1,2 or 3. The corresponding value is 2^value. BIT(n) does that
+	printf("Sample rate: %d Hz\n\n", packet[2]);
+}
+
 int test_config(void) {
-    /* To be completed ... */
+	if(mouse_subscribe_int() == -1) //Failed subscription
+		return -1;
+
+	int counter = 0;
+	long packet[3];
+	long byte; //Auxiliar variable that will store each byte read
+	do{
+		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+			return -1;
+		if(mouse_write_code(IN_BUF, GET_MOUSE_CONFIG) == -1)
+			return -1;
+		sys_inb(OUT_BUF, &byte);
+		if(byte != ACK)
+			printf("Erro a mandar E9\n");
+	}while(byte != ACK);
+
+	while(counter < 3){
+		sys_inb(OUT_BUF, packet+(counter++));
+		tickdelay(micros_to_ticks(DELAY_US));
+	}
+
+	mouse_print_config(packet);
+	return mouse_unsubscribe_int();
 }
 
 int test_gesture(short length) {
