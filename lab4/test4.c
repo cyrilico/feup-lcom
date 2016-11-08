@@ -1,4 +1,5 @@
 #include "mouse.h"
+#include "timer.h"
 
 void mouse_print_packet(long packet[]){
 	printf("B1=0x%x ", packet[0]);
@@ -87,6 +88,95 @@ int test_packet(unsigned short cnt){
 
 int test_async(unsigned short idle_time) {
     /* To be completed ... */
+
+	int r;
+	int irq_set = mouse_subscribe_int();
+
+	if(irq_set == -1) //Failed subscription
+		return -1;
+
+    int timer_irq_set = timer_subscribe_int();
+    if(timer_irq_set == -1) //Failed timer subscription
+    	 return -1;
+
+	int ipc_status;
+	message msg;
+
+	int counter = 0;
+	long packet[3];
+	long byte; //Auxiliar variable that will store each byte read
+
+	unsigned int idle_counter = 0;
+
+	if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+		return -1;
+	if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
+		return -1;
+
+	sys_inb(OUT_BUF, &byte);
+	if("Value returned after data reporting enabled: 0x%x\n\n", byte);
+	if(byte != ACK)
+		return -1;
+	/*Testing if TWOSCOMPLEMENT works*/
+	printf("1 - %ld\n2 - %ld\n3 - %ld\n", TWOSCOMPLEMENT(1), TWOSCOMPLEMENT(2), TWOSCOMPLEMENT(3));
+
+	while(idle_counter/60 < idle_time) {
+		/* Get a request message. */
+		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
+					sys_inb(OUT_BUF, &byte);
+					idle_counter = 0; //Mouse has caused an interrupted so idle time is reset
+					if(counter == 0){
+						if(byte & BIT(3)) { //Valid first byte (or at least we hope so)
+							packet[counter++] = byte;
+						}
+						else{
+							printf("Invalid first byte, trying again\n");
+							continue;
+						}
+					}
+					else{
+						packet[counter++] = byte;
+						if(counter > 2) {
+							mouse_print_packet(packet);
+						}
+					}
+				}
+				else if(msg.NOTIFY_ARG & timer_irq_set) {
+					idle_counter++;
+					if(idle_counter % 60 == 0)
+						printf("No mouse action detected in the last second. %ds until program exits.\n", idle_time-idle_counter/60);
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else { /* received a standard message, not a notification */
+			/* no standard messages expected: do nothing */
+		}
+	}
+	printf("SAI \n");
+
+	if(mouse_write_code(STAT_REG, WRITE_BYTE_MOUSE) == -1)
+		return -1;
+	printf("CENAS");
+	if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
+		return -1;
+	printf("CENAS2");
+	sys_inb(OUT_BUF, &byte); //Make sure nothing stays in OUT_BUF
+	printf("CENAS3");
+
+	if(mouse_unsubscribe_int() == -1 || timer_unsubscribe_int() == -1)
+		return -1;
+	else
+		return 0;
+
 }
 
 int test_config(void) {
