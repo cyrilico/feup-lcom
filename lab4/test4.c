@@ -188,7 +188,7 @@ int test_async(unsigned short idle_time) {
 		return 0;
 }
 
-void mouse_print_config(long packet[]){
+void mouse_print_config(unsigned char packet[]){
 	printf("Current mouse configuration:\n");
 	printf("Mode: %s", (packet[0] & BIT(6)) ? "Remote (polled)\n" : "Stream\n");
 	printf("Data reporting is %s", (packet[0] & BIT(5)) ? "enabled\n" : "disabled\n");
@@ -196,7 +196,7 @@ void mouse_print_config(long packet[]){
 	printf("Middle button is %s", (packet[0] & BIT(2)) ? "pressed\n" : "released\n");
 	printf("Right button is %s", (packet[0] & BIT(1)) ? "pressed\n" : "released\n");
 	printf("Left button is %s", (packet[0] & BIT(0)) ? "pressed\n" : "released\n");
-	printf("Resolution: %d counts per mm\n", BIT(packet[1] & (BIT(0) | BIT(1)))); //packet[1] & (BIT(0)|BIT(1)) returns 0,1,2 or 3. The corresponding value is 2^value. BIT(n) does that
+	printf("Resolution: %d counts per mm\n", BIT(packet[1])); //packet[1] returns 0,1,2 or 3. The corresponding value is 2^value. BIT(n) does that
 	printf("Sample rate: %d Hz\n\n", packet[2]);
 }
 
@@ -204,9 +204,18 @@ int test_config(void) {
 	if(mouse_subscribe_int() == -1) //Failed subscription
 		return -1;
 
-	int counter = 0;
-	long packet[3];
+	unsigned short counter = 0;
+	unsigned char packet[3];
 	long byte; //Auxiliar variable that will store each byte read
+	do{
+			if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+				return -1;
+			if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
+				return -1;
+			sys_inb(OUT_BUF, &byte);
+			if(byte != ACK)
+				printf("Erro a mandar F4\n");
+		}while(byte != ACK);
 	do{
 		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
 			return -1;
@@ -218,7 +227,8 @@ int test_config(void) {
 	}while(byte != ACK);
 
 	while(counter < 3){
-		sys_inb(OUT_BUF, packet+(counter++));
+		sys_inb(OUT_BUF, &byte);
+		packet[counter++] = (unsigned char)byte;
 		tickdelay(micros_to_ticks(DELAY_US));
 	}
 
