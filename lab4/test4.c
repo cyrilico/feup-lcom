@@ -1,7 +1,7 @@
 #include "mouse.h"
 #include "timer.h"
 
-void mouse_print_packet(long packet[]){
+void mouse_print_packet(unsigned char packet[]){
 	printf("B1=0x%x ", packet[0]);
 	printf("B2=0x%x ", packet[1]);
 	printf("B3=0x%x ", packet[2]);
@@ -25,8 +25,8 @@ int test_packet(unsigned short cnt){
 	message msg;
 
 	unsigned short number_of_packets = 0; //number of full packets processed
-	int counter = 0;
-	long packet[3];
+	unsigned short counter = 0;
+	unsigned char packet[3];
 	long byte; //Auxiliar variable that will store each byte read
 
 	do{
@@ -56,14 +56,14 @@ int test_packet(unsigned short cnt){
 					sys_inb(OUT_BUF, &byte);
 					if(counter == 0){
 						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
-							packet[counter++] = byte;
+							packet[counter++] = (unsigned char)byte;
 						else{
 							printf("Invalid first byte, trying again\n");
 							continue;
 						}
 					}
 					else{
-						packet[counter++] = byte;
+						packet[counter++] = (unsigned char)byte;
 						if(counter > 2){
 							mouse_print_packet(packet);
 							counter = 0;
@@ -107,8 +107,8 @@ int test_async(unsigned short idle_time) {
 	int ipc_status;
 	message msg;
 
-	int counter = 0;
-	long packet[3];
+	unsigned short counter = 0;
+	unsigned char packet[3];
 	long byte; //Auxiliar variable that will store each byte read
 
 	unsigned int idle_counter = 0;
@@ -143,7 +143,7 @@ int test_async(unsigned short idle_time) {
 					idle_counter = 0; //Mouse has caused an interrupted so idle time is reset
 					if(counter == 0){
 						if(byte & BIT(3)) { //Valid first byte (or at least we hope so)
-							packet[counter++] = byte;
+							packet[counter++] = (unsigned char)byte;
 						}
 						else{
 							printf("Invalid first byte so invalid packet, trying again\n\n");
@@ -151,7 +151,7 @@ int test_async(unsigned short idle_time) {
 						}
 					}
 					else{
-						packet[counter++] = byte;
+						packet[counter++] = (unsigned char)byte;
 						if(counter > 2) {
 							mouse_print_packet(packet);
 							counter = 0;
@@ -238,8 +238,8 @@ int test_gesture(short length) {
 	message msg;
 
 	unsigned short number_of_packets = 0; //number of full packets processed
-	int counter = 0;
-	long packet[3];
+	unsigned short counter = 0;
+	unsigned char packet[3];
 	long byte; //Auxiliar variable that will store each byte read
 
 	int positive_slope = -1;
@@ -272,14 +272,14 @@ int test_gesture(short length) {
 					sys_inb(OUT_BUF, &byte);
 					if(counter == 0){
 						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
-							packet[counter++] = byte;
+							packet[counter++] = (unsigned char)byte;
 						else{
 							printf("Invalid first byte, trying again\n");
 							continue;
 						}
 					}
 					else{
-						packet[counter++] = byte;
+						packet[counter++] = (unsigned char)byte;
 						if(counter > 2){
 							mouse_print_packet(packet);
 							counter = 0;
