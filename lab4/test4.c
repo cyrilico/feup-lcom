@@ -236,6 +236,7 @@ int test_config(void) {
 	return mouse_unsubscribe_int();
 }
 
+
 int test_gesture(short length) {
 
 	int r;
@@ -252,8 +253,8 @@ int test_gesture(short length) {
 	unsigned char packet[3];
 	long byte; //Auxiliar variable that will store each byte read
 
-	int positive_slope = -1;
-	int y_variation = 0;
+	int mouse_event = 0;
+	rbstate previousrb = ISDOWN;
 
 	do{
 		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
@@ -266,10 +267,8 @@ int test_gesture(short length) {
 	}while(byte != ACK);
 
 	printf("Value returned after data reporting enabled: 0x%x\n\n", byte);
-	/*Testing if TWOSCOMPLEMENT works*/
-	printf("1 - %ld\n2 - %ld\n3 - %ld\n", TWOSCOMPLEMENT(1), TWOSCOMPLEMENT(2), TWOSCOMPLEMENT(3));
 
-	while(y_variation < length && positive_slope == -1) {
+	while(st != COMP) {
 		/* Get a request message. */
 		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
 			printf("driver_receive failed with: %d", r);
@@ -293,21 +292,7 @@ int test_gesture(short length) {
 						if(counter > 2){
 							mouse_print_packet(packet);
 							counter = 0;
-							number_of_packets++;
-
-							if(packet[0] & RIGHT_BUTTON_PRESSED) { //Check first byte to see if right button is pressed
-								printf("CHEGUEI \n");
-								if(packet[0] & (BIT(4)|BIT(5))) //Check if x and y variations aren't negative
-									positive_slope = -1;
-								else
-									positive_slope = OK;
-
-								y_variation+= packet[2];
-							}
-							else {
-								y_variation = 0;
-								positive_slope = -1;
-							}
+							mouse_event = 1;
 						}
 					}
 				}
@@ -317,6 +302,19 @@ int test_gesture(short length) {
 			}
 		} else { /* received a standard message, not a notification */
 			/* no standard messages expected: do nothing */
+		}
+		if(mouse_event){
+			mouse_event = 0;
+			if(!(packet[0] & BIT(1)) && previousrb == ISDOWN){//Right button was pressed but got released
+				previousrb = ISUP;
+				mouse_event_handler(RUP);
+			}
+			else if((packet[0] & BIT(1)) && previousrb == ISDOWN) //Right button was and is pressed
+				mouse_event_handler(MOVE);
+			else if((packet[0] & BIT(1)) && previousrb == ISUP){ //Right button was released but got pressed
+				previousrb = ISDOWN;
+				mouse_event_handler(RDOWN);
+			}
 		}
 	}
 
