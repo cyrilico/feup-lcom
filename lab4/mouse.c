@@ -61,3 +61,20 @@ unsigned long mouse_write_code(long destination, unsigned char cmd){
 	}
 	return -1;
 }
+
+void mouse_event_handler(event evt) {
+	switch (st) {
+	case INIT:
+		if( evt == RDOWN )
+			st = DRAW;
+		break;
+	case DRAW:
+		if( evt == MOVE ) {
+			//Test if movement is enough to complete desired length. If so, st = COMP
+		} else if( evt == RUP )
+			st = INIT;
+		break;
+	default:
+		break;
+	}
+}
