@@ -62,26 +62,33 @@ unsigned long mouse_write_code(long destination, unsigned char cmd){
 	return -1;
 }
 
-void mouse_event_handler(event evt) {
-	switch (st) {
+void mouse_event_handler(state *st, event evt, short *y_variation, short desired_length) {
+	switch (*st) {
 	case INIT:
-		if( evt == RDOWN )
-			st = DRAW;
+		if( evt == RDOWN ){
+			printf("Mudanca de estado para DRAW\n");
+			*st = DRAW;
+		}
 		break;
 	case DRAW:
 		if( evt == MOVE ) {
+			printf("Testando movimento\n");
+			printf("Movimento total atual: %d\n Movimento total esperado: %d\n", *y_variation, desired_length);
 			//Test if movement is enough to complete desired length. If so, st = COMP
-			if(sign_change == 1) { //Reject movement if x and y variations have different signs
+			/*if(sign_change == 1) { //Reject movement if x and y variations have different signs
 				st = INIT;
 				y_variation = 0;
 				sign_change = 0;
+			}*/
+			if (*y_variation >= desired_length){ //Make length a global variable so it can be accessed here?
+				printf("Completou\n");
+				*st = COMP;
 			}
-			else if (y_variation >= gesture_length) //Make length a global variable so it can be accessed here?
-				st = COMP;
 		} else if( evt == RUP ) {
-			st = INIT;
-			y_variation = 0;
-			sign_change = 0;
+			printf("Mudança de estado para INIT\n");
+			*st = INIT;
+			*y_variation = 0;
+			//sign_change = 0;
 		}
 		break;
 	default:
