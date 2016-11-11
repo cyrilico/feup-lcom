@@ -239,6 +239,8 @@ int test_config(void) {
 
 int test_gesture(short length) {
 
+	gesture_length = length;
+
 	int r;
 	int irq_set = mouse_subscribe_int();
 
@@ -310,6 +312,10 @@ int test_gesture(short length) {
 				mouse_event_handler(RUP);
 			}
 			else if((packet[0] & BIT(1)) && previousrb == ISDOWN) //Right button was and is pressed
+
+				sign_change = (packet[0] & BIT(4)) ^ (packet[0] & BIT(5)); //If the x and y variation have different signs, reject "drawing"
+				//(packet[0] & BIT(4)) ? x_variation += TWOSCOMPLEMENT(BIT(8)|packet[1]) : x_variation = packet[1]);
+				(packet[0] & BIT(5)) ? y_variation += TWOSCOMPLEMENT(packet[2]) : y_variation += packet[2]);
 				mouse_event_handler(MOVE);
 			else if((packet[0] & BIT(1)) && previousrb == ISUP){ //Right button was released but got pressed
 				previousrb = ISDOWN;
