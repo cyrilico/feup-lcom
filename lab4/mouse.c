@@ -71,8 +71,18 @@ void mouse_event_handler(event evt) {
 	case DRAW:
 		if( evt == MOVE ) {
 			//Test if movement is enough to complete desired length. If so, st = COMP
-		} else if( evt == RUP )
+			if(sign_change == 1) { //Reject movement if x and y variations have different signs
+				st = INIT;
+				y_variation = 0;
+				sign_change = 0;
+			}
+			else if (y_variation >= gesture_length) //Make length a global variable so it can be accessed here?
+				st = COMP;
+		} else if( evt == RUP ) {
 			st = INIT;
+			y_variation = 0;
+			sign_change = 0;
+		}
 		break;
 	default:
 		break;

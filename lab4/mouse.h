@@ -15,6 +15,9 @@ typedef enum event_t {RUP,RDOWN,MOVE} event;
 typedef enum rbutton_t {ISUP,ISDOWN} rbstate;
 
 static state st = INIT; // initial state; keep state
+int y_variation = 0;
+int sign_change = 0;
+int gesture_length = 0;
 
 int mouse_subscribe_int();
 int mouse_unsubscribe_int();
