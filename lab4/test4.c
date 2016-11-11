@@ -30,19 +30,8 @@ int test_packet(unsigned short cnt){
 	unsigned char packet[3];
 	long byte; //Auxiliar variable that will store each byte read
 
-	do{
-		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+	if(mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING) == -1)
 			return -1;
-		if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
-			return -1;
-		sys_inb(OUT_BUF, &byte);
-		if(byte != ACK)
-			printf("Erro a mandar F4\n");
-	}while(byte != ACK);
-
-	printf("Value returned after data reporting enabled: 0x%x\n\n", byte);
-	/*Testing if TWOSCOMPLEMENT works*/
-	printf("1 - %ld\n2 - %ld\n3 - %ld\n", TWOSCOMPLEMENT(1), TWOSCOMPLEMENT(2), TWOSCOMPLEMENT(3));
 
 	while(number_of_packets < cnt) {
 		/* Get a request message. */
@@ -81,15 +70,8 @@ int test_packet(unsigned short cnt){
 		}
 	}
 
-	do{
-		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+	if(mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING) == -1)
 			return -1;
-		if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
-			return -1;
-		sys_inb(OUT_BUF, &byte);
-		if(byte != ACK)
-			printf("Erro a mandar F%\n");
-	}while(byte != ACK);
 
 	return mouse_unsubscribe_int();
 }
@@ -114,21 +96,8 @@ int test_async(unsigned short idle_time) {
 
 	unsigned int idle_counter = 0;
 
-	do{
-		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+	if(mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING) == -1)
 			return -1;
-		if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
-			return -1;
-		sys_inb(OUT_BUF, &byte);
-		if(byte != ACK)
-			printf("Erro a mandar F4\n");
-	}while(byte != ACK);
-
-	printf("Value returned after data reporting enabled: 0x%x\n\n", byte);
-	if(byte != ACK)
-		return -1;
-	/*Testing if TWOSCOMPLEMENT works*/
-	printf("1 - %ld\n2 - %ld\n3 - %ld\n", TWOSCOMPLEMENT(1), TWOSCOMPLEMENT(2), TWOSCOMPLEMENT(3));
 
 	while(idle_counter/60 < idle_time) {
 		/* Get a request message. */
@@ -173,15 +142,8 @@ int test_async(unsigned short idle_time) {
 		}
 	}
 
-	do{
-		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+	if(mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING) == -1)
 			return -1;
-		if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
-			return -1;
-		sys_inb(OUT_BUF, &byte);
-		if(byte != ACK)
-			printf("Erro a mandar F5\n");
-	}while(byte != ACK);
 
 	if(mouse_unsubscribe_int() == -1 || timer_unsubscribe_int() == -1)
 		return -1;
@@ -261,17 +223,8 @@ int test_gesture(short length) {
 	state st = INIT; //Variable that will hold machine state
 	int sign_change = 0;
 
-	do{
-		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
-			return -1;
-		if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
-			return -1;
-		sys_inb(OUT_BUF, &byte);
-		if(byte != ACK)
-			printf("Erro a mandar F4\n");
-	}while(byte != ACK);
-
-	printf("Value returned after data reporting enabled: 0x%x\n\n", byte);
+	if(mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING) == -1)
+		return -1;
 
 	while(st != COMP) {
 		/* Get a request message. */
@@ -315,7 +268,7 @@ int test_gesture(short length) {
 				mouse_event_handler(&st, RUP, &y_variation, desired_length, &sign_change);
 			}
 			else if((packet[0] & BIT(1)) && previousrb == ISDOWN){ //Right button was and is pressed
-				sign_change = ((packet[0] & BIT(4))>>4) ^ ((packet[0] & BIT(5))>>5); //If the x and y variation have different signs, reject "drawing"
+				sign_change = ((packet[0] & BIT(4))>>4) ^ ((packet[0] & BIT(5))>>5); //If the x and y variation have different signs
 				if(packet[0] & BIT(5))
 					y_variation += TWOSCOMPLEMENT(packet[2]);
 				else
@@ -329,15 +282,8 @@ int test_gesture(short length) {
 		}
 	}
 
-	do{
-		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+	if(mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING) == -1)
 			return -1;
-		if(mouse_write_code(IN_BUF, DISABLE_MOUSE_DATA_REPORTING) == -1)
-			return -1;
-		sys_inb(OUT_BUF, &byte);
-		if(byte != ACK)
-			printf("Erro a mandar F5\n");
-	}while(byte != ACK);
 
 	return mouse_unsubscribe_int();
 }

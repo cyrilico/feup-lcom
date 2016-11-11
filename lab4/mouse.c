@@ -62,6 +62,21 @@ unsigned long mouse_write_code(long destination, unsigned char cmd){
 	return -1;
 }
 
+int mouse_write_byte(unsigned char byte){
+	unsigned long trash, counter = 0;
+	do{
+		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+			return -1;
+		if(mouse_write_code(IN_BUF, byte) == -1)
+			return -1;
+		sys_inb(OUT_BUF, &trash);
+		if(trash != ACK)
+			printf("Error sending 0x%x, trying again\n",byte);
+		counter++;
+	}while(trash != ACK && counter < NTRIES);
+	return 0;
+}
+
 void mouse_event_handler(state *st, event evt, short *y_variation, short desired_length, int *sign_change) {
 	switch (*st) {
 	case INIT:
@@ -93,10 +108,10 @@ void mouse_event_handler(state *st, event evt, short *y_variation, short desired
 				}
 			}
 		} else if( evt == RUP ) {
-			printf("Mudança de estado para INIT\n");
+			printf("Mudanca de estado para INIT\n");
 			*st = INIT;
 			*y_variation = 0;
-			//sign_change = 0;
+			*sign_change = 0;
 		}
 		break;
 	default:
