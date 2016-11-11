@@ -1,8 +1,10 @@
 #ifndef _I8042_H_
 #define _I8042_H_
 
+#include "timer.h"
+
 #define IRQ_KBD 1
-#define BIT(n) (0x01 << (n))
+//#define BIT(n) (0x01 << (n))
 #define DELAY_US 20000
 #define STAT_REG 0x64
 #define KBC_CMD_REG 0x64
@@ -26,7 +28,8 @@
 
 /*New macros created during lab4 (will merge when all functions are implemented; until then it's easier to stay like this if something needs to be changed)*/
 #define IRQ_MOUSE 12
-#define TWOSCOMPLEMENT(N) (~N+1)
+#define TWOSCOMPLEMENT(N) (short)(0xff00 | N)
+#define ABS_VALUE(X) (X < 0 ? -X : X)
 #define WRITE_BYTE_MOUSE 0xD4
 #define ENABLE_MOUSE_DATA_REPORTING 0xF4
 #define DISABLE_MOUSE_DATA_REPORTING 0xF5

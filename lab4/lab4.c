@@ -73,7 +73,7 @@ static int proc_args(int argc, char **argv)
 		length = parse_ulong(argv[2], 10);
 		if (length == ULONG_MAX)
 			return 1;
-		printf("mouse::test_gesture(%lu)\n", length);
+		printf("mouse::test_gesture(%d)\n", (short)length);
 		return test_gesture(length);
 	}
 	else {

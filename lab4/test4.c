@@ -10,8 +10,9 @@ void mouse_print_packet(unsigned char packet[]){
 	printf("RB=%u ", (packet[0] & BIT(1))>>1);
 	printf("XOV=%u ", (packet[0] & BIT(6))>>6);
 	printf("YOV=%u ", (packet[0] & BIT(7))>>7);
-	printf("X=%d ", ((packet[0] & BIT(4)) ? TWOSCOMPLEMENT(BIT(8)|packet[1]) : packet[1]));
-	printf("Y=%d\n\n", ((packet[0] & BIT(5)) ? TWOSCOMPLEMENT(BIT(8)|packet[2]) : packet[2]));
+	printf("X=%d ", ((packet[0] & BIT(4)) ? TWOSCOMPLEMENT(packet[1]) : packet[1]));
+	printf("Y=%d\n\n", ((packet[0] & BIT(5)) ? TWOSCOMPLEMENT(packet[2]) : packet[2]));
+
 }
 
 int test_packet(unsigned short cnt){
@@ -179,7 +180,7 @@ int test_async(unsigned short idle_time) {
 			return -1;
 		sys_inb(OUT_BUF, &byte);
 		if(byte != ACK)
-			printf("Erro a mandar F%\n");
+			printf("Erro a mandar F5\n");
 	}while(byte != ACK);
 
 	if(mouse_unsubscribe_int() == -1 || timer_unsubscribe_int() == -1)
@@ -255,8 +256,10 @@ int test_gesture(short length) {
 	int mouse_event = 0;
 	rbstate previousrb = ISDOWN;
 
-	short y_variation = 0;
+	short desired_length = length;
+	short y_variation = 256;
 	state st = INIT; //Variable that will hold machine state
+	int sign_change = 0;
 
 	do{
 		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
@@ -309,19 +312,19 @@ int test_gesture(short length) {
 			mouse_event = 0;
 			if(!(packet[0] & BIT(1)) && previousrb == ISDOWN){//Right button was pressed but got released
 				previousrb = ISUP;
-				mouse_event_handler(&st, RUP, &y_variation, length);
+				mouse_event_handler(&st, RUP, &y_variation, desired_length, &sign_change);
 			}
 			else if((packet[0] & BIT(1)) && previousrb == ISDOWN){ //Right button was and is pressed
-				//sign_change = (packet[0] & BIT(4)) ^ (packet[0] & BIT(5)); //If the x and y variation have different signs, reject "drawing"
+				sign_change = ((packet[0] & BIT(4))>>4) ^ ((packet[0] & BIT(5))>>5); //If the x and y variation have different signs, reject "drawing"
 				if(packet[0] & BIT(5))
 					y_variation += TWOSCOMPLEMENT(packet[2]);
 				else
 					y_variation += packet[2];
-			mouse_event_handler(&st, MOVE, &y_variation, length);
+			mouse_event_handler(&st, MOVE, &y_variation, desired_length, &sign_change);
 			}
 			else if((packet[0] & BIT(1)) && previousrb == ISUP){ //Right button was released but got pressed
 				previousrb = ISDOWN;
-				mouse_event_handler(&st, RDOWN, &y_variation, length);
+				mouse_event_handler(&st, RDOWN, &y_variation, desired_length, &sign_change);
 			}
 		}
 	}
@@ -333,7 +336,7 @@ int test_gesture(short length) {
 			return -1;
 		sys_inb(OUT_BUF, &byte);
 		if(byte != ACK)
-			printf("Erro a mandar F%\n");
+			printf("Erro a mandar F5\n");
 	}while(byte != ACK);
 
 	return mouse_unsubscribe_int();

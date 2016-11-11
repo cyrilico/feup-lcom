@@ -62,7 +62,7 @@ unsigned long mouse_write_code(long destination, unsigned char cmd){
 	return -1;
 }
 
-void mouse_event_handler(state *st, event evt, short *y_variation, short desired_length) {
+void mouse_event_handler(state *st, event evt, short *y_variation, short desired_length, int *sign_change) {
 	switch (*st) {
 	case INIT:
 		if( evt == RDOWN ){
@@ -75,14 +75,22 @@ void mouse_event_handler(state *st, event evt, short *y_variation, short desired
 			printf("Testando movimento\n");
 			printf("Movimento total atual: %d\n Movimento total esperado: %d\n", *y_variation, desired_length);
 			//Test if movement is enough to complete desired length. If so, st = COMP
-			/*if(sign_change == 1) { //Reject movement if x and y variations have different signs
+			if(*sign_change == 1) { //Reject movement if x and y variations have different signs
 				st = INIT;
-				y_variation = 0;
-				sign_change = 0;
-			}*/
-			if (*y_variation >= desired_length){ //Make length a global variable so it can be accessed here?
-				printf("Completou\n");
-				*st = COMP;
+				*y_variation = 0;
+				*sign_change = 0;
+			}
+			if(desired_length < 0){
+				if (*y_variation <= desired_length){ //Make length a global variable so it can be accessed here?
+					printf("Completou\n");
+					*st = COMP;
+				}
+			}
+			else{
+				if (*y_variation >= desired_length){ //Make length a global variable so it can be accessed here?
+					printf("Completou\n");
+					*st = COMP;
+				}
 			}
 		} else if( evt == RUP ) {
 			printf("Mudança de estado para INIT\n");
