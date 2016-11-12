@@ -220,8 +220,9 @@ int test_gesture(short length) {
 
 	short desired_length = length;
 	short y_variation = 256;
+
 	state st = INIT; //Variable that will hold machine state
-	int sign_change = 0;
+
 
 	if(mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING) == -1)
 		return -1;
@@ -265,19 +266,37 @@ int test_gesture(short length) {
 			mouse_event = 0;
 			if(!(packet[0] & BIT(1)) && previousrb == ISDOWN){//Right button was pressed but got released
 				previousrb = ISUP;
-				mouse_event_handler(&st, RUP, &y_variation, desired_length, &sign_change);
+				mouse_event_handler(&st, RUP, &y_variation, desired_length);
 			}
 			else if((packet[0] & BIT(1)) && previousrb == ISDOWN){ //Right button was and is pressed
-				sign_change = ((packet[0] & BIT(4))>>4) ^ ((packet[0] & BIT(5))>>5); //If the x and y variation have different signs
-				if(packet[0] & BIT(5))
-					y_variation += TWOSCOMPLEMENT(packet[2]);
-				else
-					y_variation += packet[2];
-			mouse_event_handler(&st, MOVE, &y_variation, desired_length, &sign_change);
+
+				if(length > 0) {
+					if(((packet[0] & BIT(4)) && ABS_VALUE(TWOSCOMPLEMENT(packet[1])) > MAX_X_TOLERANCE) || ((packet[0] & BIT(5)) && ABS_VALUE(TWOSCOMPLEMENT(packet[2])) > MAX_Y_TOLERANCE)) { //If deltaX < 0 e ABS(deltaX) > MAX_X_TOLERANCE or same for y
+						printf("CENAS\n");
+						y_variation = 0;
+					}
+					else if(packet[0] & BIT(5))
+						y_variation += TWOSCOMPLEMENT(packet[2]);
+					else
+						y_variation += packet[2];
+
+				}
+				else { //length < 0
+					if((((packet[0] & BIT(4)) == 0) && ABS_VALUE(packet[1]) > MAX_X_TOLERANCE) || (((packet[0] & BIT(5)) == 0) && ABS_VALUE(packet[2]) > MAX_Y_TOLERANCE)) {
+						printf("CENAS2\n");
+						y_variation = 0;
+					}
+					else if(packet[0] & BIT(5))
+						y_variation += TWOSCOMPLEMENT(packet[2]);
+					else
+						y_variation += packet[2];
+				}
+
+			mouse_event_handler(&st, MOVE, &y_variation, desired_length);
 			}
 			else if((packet[0] & BIT(1)) && previousrb == ISUP){ //Right button was released but got pressed
 				previousrb = ISDOWN;
-				mouse_event_handler(&st, RDOWN, &y_variation, desired_length, &sign_change);
+				mouse_event_handler(&st, RDOWN, &y_variation, desired_length);
 			}
 		}
 	}
