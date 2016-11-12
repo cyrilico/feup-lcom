@@ -64,10 +64,13 @@ unsigned long mouse_write_code(long destination, unsigned char cmd){
 
 int mouse_write_byte(unsigned char byte){
 	unsigned long trash, counter = 0;
+
 	do{
 		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
 			return -1;
+
 		if(mouse_write_code(IN_BUF, byte) == -1)
+
 			return -1;
 		sys_inb(OUT_BUF, &trash);
 		if(trash != ACK)
@@ -77,7 +80,7 @@ int mouse_write_byte(unsigned char byte){
 	return 0;
 }
 
-void mouse_event_handler(state *st, event evt, short *y_variation, short desired_length, int *sign_change) {
+void mouse_event_handler(state *st, event evt, short *y_variation, short desired_length) {
 	switch (*st) {
 	case INIT:
 		if( evt == RDOWN ){
@@ -89,13 +92,8 @@ void mouse_event_handler(state *st, event evt, short *y_variation, short desired
 		if( evt == MOVE ) {
 			printf("Testando movimento\n");
 			printf("Movimento total atual: %d\n Movimento total esperado: %d\n", *y_variation, desired_length);
-			//Test if movement is enough to complete desired length. If so, st = COMP
-			if(*sign_change == 1) { //Reject movement if x and y variations have different signs
-				st = INIT;
-				*y_variation = 0;
-				*sign_change = 0;
-			}
-			if(desired_length < 0){
+
+			if(desired_length < 0) {
 				if (*y_variation <= desired_length){ //Make length a global variable so it can be accessed here?
 					printf("Completou\n");
 					*st = COMP;
@@ -108,10 +106,9 @@ void mouse_event_handler(state *st, event evt, short *y_variation, short desired
 				}
 			}
 		} else if( evt == RUP ) {
-			printf("Mudanca de estado para INIT\n");
+			printf("Mudança de estado para INIT\n");
 			*st = INIT;
 			*y_variation = 0;
-			*sign_change = 0;
 		}
 		break;
 	default:
