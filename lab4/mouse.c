@@ -84,29 +84,29 @@ void mouse_event_handler(state *st, event evt, short *y_variation, short desired
 	switch (*st) {
 	case INIT:
 		if( evt == RDOWN ){
-			printf("Mudanca de estado para DRAW\n");
+			printf("State change: is now DRAW\n");
 			*st = DRAW;
 		}
 		break;
 	case DRAW:
 		if( evt == MOVE ) {
-			printf("Testando movimento\n");
-			printf("Movimento total atual: %d\n Movimento total esperado: %d\n", *y_variation, desired_length);
+			printf("Testing movement\n");
+			printf("Current total movement: %d\n Total expected movement: %d\n", *y_variation, desired_length);
 
 			if(desired_length < 0) {
 				if (*y_variation <= desired_length){ //Make length a global variable so it can be accessed here?
-					printf("Completou\n");
+					printf("Completed, exiting\n");
 					*st = COMP;
 				}
 			}
 			else{
 				if (*y_variation >= desired_length){ //Make length a global variable so it can be accessed here?
-					printf("Completou\n");
+					printf("Completed, exiting\n");
 					*st = COMP;
 				}
 			}
 		} else if( evt == RUP ) {
-			printf("Mudança de estado para INIT\n");
+			printf("State change: is now INIT\n");
 			*st = INIT;
 			*y_variation = 0;
 		}
