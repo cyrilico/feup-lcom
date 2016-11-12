@@ -170,24 +170,10 @@ int test_config(void) {
 	unsigned short counter = 0;
 	unsigned char packet[3];
 	long byte; //Auxiliar variable that will store each byte read
-	do{
-			if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
+	if(mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING) == -1)
 				return -1;
-			if(mouse_write_code(IN_BUF, ENABLE_MOUSE_DATA_REPORTING) == -1)
+	if(mouse_write_byte(GET_MOUSE_CONFIG) == -1)
 				return -1;
-			sys_inb(OUT_BUF, &byte);
-			if(byte != ACK)
-				printf("Erro a mandar F4\n");
-		}while(byte != ACK);
-	do{
-		if(mouse_write_code(STAT_REG,WRITE_BYTE_MOUSE) == -1)
-			return -1;
-		if(mouse_write_code(IN_BUF, GET_MOUSE_CONFIG) == -1)
-			return -1;
-		sys_inb(OUT_BUF, &byte);
-		if(byte != ACK)
-			printf("Erro a mandar E9\n");
-	}while(byte != ACK);
 
 	while(counter < 3){
 		sys_inb(OUT_BUF, &byte);
@@ -196,6 +182,10 @@ int test_config(void) {
 	}
 
 	mouse_print_config(packet);
+
+	if(mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING) == -1)
+					return -1;
+
 	return mouse_unsubscribe_int();
 }
 
@@ -219,6 +209,9 @@ int test_gesture(short length) {
 	rbstate previousrb = ISDOWN;
 
 	short desired_length = length;
+	/* y_variation should be initialized with 0, but if we do so initial variation in case of negative 'length' is -256 (?!)
+	 * initialized as 256 seems to be working for both cases...
+	 */
 	short y_variation = 256;
 
 	state st = INIT; //Variable that will hold machine state
@@ -272,7 +265,6 @@ int test_gesture(short length) {
 
 				if(length > 0) {
 					if(((packet[0] & BIT(4)) && ABS_VALUE(TWOSCOMPLEMENT(packet[1])) > MAX_X_TOLERANCE) || ((packet[0] & BIT(5)) && ABS_VALUE(TWOSCOMPLEMENT(packet[2])) > MAX_Y_TOLERANCE)) { //If deltaX < 0 e ABS(deltaX) > MAX_X_TOLERANCE or same for y
-						printf("CENAS\n");
 						y_variation = 0;
 					}
 					else if(packet[0] & BIT(5))
@@ -283,7 +275,6 @@ int test_gesture(short length) {
 				}
 				else { //length < 0
 					if((((packet[0] & BIT(4)) == 0) && ABS_VALUE(packet[1]) > MAX_X_TOLERANCE) || (((packet[0] & BIT(5)) == 0) && ABS_VALUE(packet[2]) > MAX_Y_TOLERANCE)) {
-						printf("CENAS2\n");
 						y_variation = 0;
 					}
 					else if(packet[0] & BIT(5))
