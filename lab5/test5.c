@@ -1,7 +1,15 @@
+#include <minix/syslib.h>
+#include <minix/drivers.h>
+#include <machine/int86.h>
+#include <sys/mman.h>
+#include <sys/types.h>
 #include "test5.h"
 #include "timer.h"
 #include "vbe.h"
 #include "video_gr.h"
+
+
+#define OK 0
 
 void *test_init(unsigned short mode, unsigned short delay) {
 	struct reg86u r;
@@ -15,14 +23,19 @@ void *test_init(unsigned short mode, unsigned short delay) {
 	}
 	
 	timer_test_int(delay);
-	return vg_exit(); //return to text mode
+	vg_exit(); //return to text mode
+	printf("Voltei\n");
+	return 0;
 }
 
 
 int test_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color) {
 	
-	/* To be completed */
-	
+	void* cenas = vg_init(1);
+	timer_test_int(5);
+	vg_exit();
+	printf("Voltei e o endereco base e': 0x%x\n", cenas);
+	return 0;
 }
 
 int test_line(unsigned short xi, unsigned short yi, 
