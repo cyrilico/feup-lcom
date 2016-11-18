@@ -191,8 +191,8 @@ int timer_test_int(unsigned long time) {
 				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
 					timer_int_handler();
 					//If counter mod 60 == 0, timer0 has made another 60 interruptions so another second has passed
-					if(interrupt_counter % 60 == 0)
-						printf("Hey! Another second has passed. %d seconds gone so far\n", interrupt_counter/60);
+					//if(interrupt_counter % 60 == 0)
+						//printf("Hey! Another second has passed. %d seconds gone so far\n", interrupt_counter/60);
 
 				}
 				break;
