@@ -42,3 +42,38 @@ int vg_exit() {
   } else
       return 0;
 }
+
+void* vg_init(unsigned int mode){
+	int r1;
+	struct mem_range mr;
+	unsigned int vram_base = VRAM_PHYS_ADDR;
+	unsigned int vram_size = H_RES*V_RES*BITS_PER_PIXEL;
+
+	struct reg86u r;
+	r.u.w.ax = 0x4F02; // VBE call, function 02 -- set VBE mode
+	r.u.w.bx = 1<<14|0x105; // set bit 14: linear framebuffer
+	r.u.b.intno = 0x10;
+
+	if( sys_int86(&r) != OK ) {
+		printf("set_vbe_mode: sys_int86() failed \n");
+		return 1;
+	}
+
+	/* Allow memory mapping */
+
+	mr.mr_base = (phys_bytes) vram_base;
+	mr.mr_limit = mr.mr_base + vram_size;
+
+	if( OK != (r1 = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)))
+		panic("sys_privctl (ADD_MEM) failed: %d\n", r);
+
+	/* Map memory */
+
+	video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
+
+	if(video_mem == MAP_FAILED)
+		panic("couldn't map video memory");
+
+	return video_mem;
+}
+

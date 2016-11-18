@@ -27,8 +27,8 @@ static void print_usage(char **argv)
 			"\t service run %s -args \"test_init <decimal no.- mode> <decimal no. - delay>\"\n"
 			"\t service run %s -args \"test_square <decimal no. - x> <decimal no. - y> <decimal no. - size> <decimal no. - color>\"\n"
 			"\t service run %s -args \"test_line <decimal no. - xi> <decimal no. - yi> <decimal no. - xf> <decimal no. - yf> <decimal no. - color>\"\n"
-			"\t service run %s -args \"test_xpm <decimal no. - xi> <decimal no. - yi> <string xpm>\"\n",
-			"\t service run %s -args \"test_move <decimal no. - xi> <decimal no. - yi> <string xpm> <decimal no. - hor> <decimal no. - delta> <decimal no. - time>\"\n",
+			"\t service run %s -args \"test_xpm <decimal no. - xi> <decimal no. - yi> <string xpm>\"\n"
+			"\t service run %s -args \"test_move <decimal no. - xi> <decimal no. - yi> <string xpm> <decimal no. - hor> <decimal no. - delta> <decimal no. - time>\"\n"
 			"\t service run %s -args \"test_controller <void>\"\n",
 			argv[0], argv[0], argv[0], argv[0], argv[0], argv[0]);
 }
@@ -47,7 +47,8 @@ static int proc_args(int argc, char **argv)
 		if (delay == USHRT_MAX)
 			return 1;
 		printf("video_card::test_init(%u,%u)\n", mode, delay);
-		return test_init(mode,delay);
+		test_init(mode,delay);
+		return 0;
 	}
 	else if (strncmp(argv[1], "test_square", strlen("test_square")) == 0) {
 		if (argc != 6) {
