@@ -1,7 +1,21 @@
+#include "test5.h"
+#include "timer.h"
+#include "vbe.h"
+#include "video_gr.h"
+
 void *test_init(unsigned short mode, unsigned short delay) {
+	struct reg86u r;
+	r.u.w.ax = 0x4F02; // VBE call, function 02 -- set VBE mode
+	r.u.w.bx = 1<<14|0x105; // set bit 14: linear framebuffer
+	r.u.b.intno = 0x10;
 	
-	/* To be completed */
+	if( sys_int86(&r) != OK ) {
+	printf("set_vbe_mode: sys_int86() failed \n");
+	return 1;
+	}
 	
+	timer_test_int(delay);
+	return vg_exit(); //return to text mode
 }
 
 
