@@ -5,6 +5,8 @@
 #include <sys/types.h>
 
 #include "vbe.h"
+#include "video.h"
+#include "lmlib.h"
 
 /* Constants for VBE 0x105 mode */
 
@@ -44,20 +46,31 @@ int vg_exit() {
 }
 
 void* vg_init(unsigned int mode){
+	lm_init();
 	int r1;
 	struct mem_range mr;
-	unsigned int vram_base = VRAM_PHYS_ADDR;
-	unsigned int vram_size = H_RES*V_RES*BITS_PER_PIXEL;
+	unsigned int vram_base;
+	unsigned int vram_size;
 
 	struct reg86u r;
-	r.u.w.ax = 0x4F02; // VBE call, function 02 -- set VBE mode
-	r.u.w.bx = 1<<14|0x105; // set bit 14: linear framebuffer
-	r.u.b.intno = 0x10;
+	r.u.w.ax = VBE_CALL | VBE_SET_MODE; // VBE call, function 02 -- set VBE mode
+	r.u.w.bx = BIT(14) | mode; // set bit 14: linear framebuffer
+	r.u.b.intno = INT10;
 
 	if( sys_int86(&r) != OK ) {
 		printf("set_vbe_mode: sys_int86() failed \n");
-		return 1;
+		return NULL;
 	}
+
+	vbe_mode_info_t current_mode_information;
+	if(vbe_get_mode_info(mode, &current_mode_information) != OK)
+			return NULL;
+
+	vram_base = current_mode_information.PhysBasePtr;
+	h_res = current_mode_information.XResolution;
+	v_res = current_mode_information.YResolution;
+	bits_per_pixel = current_mode_information.BitsPerPixel;
+	vram_size = h_res*v_res*bits_per_pixel/8;
 
 	/* Allow memory mapping */
 
@@ -74,6 +87,5 @@ void* vg_init(unsigned int mode){
 	if(video_mem == MAP_FAILED)
 		panic("couldn't map video memory");
 
-	return video_mem;
+	return (void*)video_mem;
 }
-
