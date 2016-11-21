@@ -40,7 +40,7 @@ static int proc_args(int argc, char **argv)
 			printf("video_card: wrong no. of arguments for test_init()\n");
 			return 1;
 		}
-		unsigned short mode = parse_ushort(argv[2], 10);
+		unsigned short mode = parse_ushort(argv[2], 16);
 		if (mode == USHRT_MAX)
 			return 1;
 		unsigned short delay = parse_ushort(argv[3], 10);
@@ -64,7 +64,7 @@ static int proc_args(int argc, char **argv)
 		unsigned short size = parse_ushort(argv[4], 10);
 		if (size == USHRT_MAX)
 			return 1;
-		unsigned long color = parse_ulong(argv[5], 10);
+		unsigned long color = parse_ulong(argv[5], 16);
 		if (color == ULONG_MAX)
 			return 1;
 		printf("video_card::test_square(%u,%u,%u,%lu)\n", x, y, size, color);
@@ -87,7 +87,7 @@ static int proc_args(int argc, char **argv)
 		unsigned short yf = parse_ushort(argv[5], 10);
 		if (yf == USHRT_MAX)
 			return 1;
-		unsigned long color = parse_ulong(argv[6], 10);
+		unsigned long color = parse_ulong(argv[6], 16);
 		if (color == ULONG_MAX)
 			return 1;
 

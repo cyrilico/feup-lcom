@@ -7,34 +7,31 @@
 #include "timer.h"
 #include "vbe.h"
 #include "video_gr.h"
-
-
-#define OK 0
+#include "video.h"
 
 void *test_init(unsigned short mode, unsigned short delay) {
 	struct reg86u r;
-	r.u.w.ax = 0x4F02; // VBE call, function 02 -- set VBE mode
-	r.u.w.bx = 1<<14|0x105; // set bit 14: linear framebuffer
-	r.u.b.intno = 0x10;
+	r.u.w.ax = VBE_CALL | VBE_SET_MODE;
+	r.u.w.bx = BIT(14) | mode; // set bit 14: linear framebuffer
+	r.u.b.intno = INT10;
 	
 	if( sys_int86(&r) != OK ) {
-	printf("set_vbe_mode: sys_int86() failed \n");
-	return 1;
+		printf("set_vbe_mode: sys_int86() failed \n");
+		return NULL;
 	}
 	
+	vbe_mode_info_t current_mode_information;
+	if(vbe_get_mode_info(mode, &current_mode_information) != OK)
+		return NULL;
+
 	timer_test_int(delay);
-	vg_exit(); //return to text mode
-	printf("Voltei\n");
+	vg_exit();
+	printf("Voltei e o endereco fisico corresponde a: 0x%X\n", current_mode_information.PhysBasePtr);
 	return 0;
 }
 
 
 int test_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color) {
-	
-	void* cenas = vg_init(1);
-	timer_test_int(5);
-	vg_exit();
-	printf("Voltei e o endereco base e': 0x%x\n", cenas);
 	return 0;
 }
 
