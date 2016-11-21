@@ -27,6 +27,14 @@ void *vg_init(unsigned short mode);
  */
 int vg_exit(void);
 
+int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color);
+
+unsigned int vg_get_h_res();
+unsigned int vg_get_v_res();
+unsigned int vg_get_bits_per_pixel();
+char* vg_get_video_mem();
+
+
  /** @} end of video_gr */
  
 #endif /* __VIDEO_GR_H */

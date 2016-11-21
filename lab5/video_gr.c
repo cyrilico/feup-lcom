@@ -89,3 +89,27 @@ void* vg_init(unsigned int mode){
 
 	return (void*)video_mem;
 }
+
+int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color){
+	if(x > h_res || y > v_res)
+		return -1;
+	char* position = video_mem + (y*h_res + x)*bits_per_pixel/8;
+	*position = color;
+	return 0;
+}
+
+unsigned int vg_get_h_res(){
+	return h_res;
+}
+
+unsigned int vg_get_v_res(){
+	return v_res;
+}
+
+unsigned int vg_get_bits_per_pixel(){
+	return bits_per_pixel;
+}
+
+char* vg_get_video_mem(){
+	return video_mem;
+}
