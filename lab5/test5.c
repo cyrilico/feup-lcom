@@ -32,6 +32,27 @@ void *test_init(unsigned short mode, unsigned short delay) {
 
 
 int test_square(unsigned short x, unsigned short y, unsigned short size, unsigned long color) {
+	if(vg_init(MODE105) == NULL)
+		return -1;
+	unsigned int xi = x;
+	/*If x+size goes out of memory range, limit it to the monitor's border and draw figure partially (instead of exiting without drawing anything)*/*
+	unsigned int xf = (x+size > vg_get_h_res() ? vg_get_h_res() : x+size);
+	unsigned int yi = y;
+	/*If y+size goes out of memory range, limit it to the monitor's border and draw figure partially (instead of exiting without drawing anything)*/*
+	unsigned int yf = (y+size > vg_get_v_res() ? vg_get_v_res() : y+size);
+	while(yi < yf){
+		while(xi < xf){
+			if(vg_fill_pixel(xi, yi, color) != OK){
+				vg_exit();
+				return -1;
+			}
+			xi++;
+		}
+		xi = x;
+		yi++;
+	}
+	kbd_scan_loop(0);
+	vg_exit();
 	return 0;
 }
 
