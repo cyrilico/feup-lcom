@@ -94,7 +94,43 @@ static int proc_args(int argc, char **argv)
 		printf("video_card::test_line(%u,%u,%u,%u,%lu)\n", xi, yi, xf, yf, color);
 		return test_line(xi,yi,xf,yf,color);
 	}
-	/*Missing code for calling test_xpm and test_move (still strying to figure out parameter char* xpm[]) and how it should be tested here*/
+	else if (strncmp(argv[1], "test_xpm", strlen("test_xpm")) == 0) {
+		if (argc != 5) {
+			printf("video_card: wrong no. of arguments for test_xpm()\n");
+			return 1;
+		}
+		unsigned short xi = parse_ushort(argv[2], 10);
+		if (xi == USHRT_MAX)
+			return 1;
+		unsigned short yi = parse_ushort(argv[3], 10);
+		if (yi == USHRT_MAX)
+			return 1;
+		printf("video_card::test_xpm(%u,%u,%s)\n", xi, yi, argv[4]);
+		return test_xpm(xi,yi,argv[4]);
+	}
+	else if (strncmp(argv[1], "test_move", strlen("test_move")) == 0) {
+		if (argc != 8) {
+			printf("video_card: wrong no. of arguments for test_move()\n");
+			return 1;
+		}
+		unsigned short xi = parse_ushort(argv[2], 10);
+		if (xi == USHRT_MAX)
+			return 1;
+		unsigned short yi = parse_ushort(argv[3], 10);
+		if (yi == USHRT_MAX)
+			return 1;
+		unsigned short hor = parse_ushort(argv[2], 10);
+		if (hor == USHRT_MAX)
+			return 1;
+		unsigned short delta = parse_ushort(argv[3], 10);
+		if (delta == USHRT_MAX)
+			return 1;
+		unsigned short time = parse_ushort(argv[2], 10);
+		if (time == USHRT_MAX)
+			return 1;
+		printf("video_card::test_xpm(%u,%u,%s,%u,%u,%u)\n", xi, yi, argv[4], hor, delta, time);
+		return test_move(xi,yi,argv[4], hor, delta, time);
+	}
 	else if (strncmp(argv[1], "test_controller", strlen("test_controller")) == 0) {
 		if (argc != 2) {
 			printf("video_card: wrong no. of arguments for test_controller()\n");
