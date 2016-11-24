@@ -2,8 +2,8 @@
 #define __KEYBOARD_H
 
 int kbd_scan_loop(unsigned short c_or_asm);
-int kbd_subscribe_int(int *hookid);
-int kbd_unsubscribe_int(int *hookid);
+int kbd_subscribe_int();
+int kbd_unsubscribe_int();
 unsigned long kbd_read_code();
 unsigned long kbd_write_code(unsigned char cmd);
 void kbd_print_code(unsigned long code);

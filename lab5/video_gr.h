@@ -1,6 +1,8 @@
 #ifndef __VIDEO_GR_H
 #define __VIDEO_GR_H
 
+#include "sprite.h"
+
 /** @defgroup video_gr video_gr
  * @{
  *
@@ -28,6 +30,7 @@ void *vg_init(unsigned short mode);
 int vg_exit(void);
 
 int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color);
+int vg_draw_sprite(unsigned int xi, unsigned int yi, Sprite* s);
 
 unsigned int vg_get_h_res();
 unsigned int vg_get_v_res();
