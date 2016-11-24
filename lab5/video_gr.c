@@ -7,6 +7,7 @@
 #include "vbe.h"
 #include "video.h"
 #include "lmlib.h"
+#include "sprite.h"
 
 /* Constants for VBE 0x105 mode */
 
@@ -95,6 +96,26 @@ int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color){
 		return -1;
 	char* position = video_mem + (y*h_res + x)*bits_per_pixel/8;
 	*position = color;
+	return 0;
+}
+
+int vg_draw_sprite(unsigned int xi, unsigned int yi, Sprite* s){
+	int initial_x = xi;
+	int initial_y = yi;
+	int final_x = s->width + xi;
+	int final_y = s->height + yi;
+
+	unsigned int index = 0; //To access elements in color array
+	while(initial_y < final_y) {
+		while(initial_x < final_x){
+			if(vg_fill_pixel(initial_x++, initial_y, s->map[index++]) != OK){
+				vg_exit();
+				return -1;
+			}
+		}
+		initial_x = xi;
+		initial_y++;
+	}
 	return 0;
 }
 

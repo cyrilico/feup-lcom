@@ -7,6 +7,7 @@
 #define _SPRITE_H_
 
 #include "read_xpm.h"
+#include "pixmap.h"
 
 /** @defgroup sprite Sprite
  * @{
@@ -27,11 +28,10 @@ typedef struct {
 } Sprite;
 
 /** Creates with xspeed and yspeed and position
- * (within the screen limits), a new sprite with pixmap "pic", in
- * memory whose address is "base";
+ * (within the screen limits), a new sprite with pixmap "pic"
  * Returns NULL on invalid pixmap.
  */
-Sprite * create_sprite(char *pic[], char *base, int xspeed, int yspeed);
+Sprite * create_sprite(char *pic[], int x, int y, int xspeed, int yspeed);
 
 
 /** Animate the sprite "fig" according to its attributes in memory,

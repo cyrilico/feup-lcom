@@ -6,7 +6,7 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 
-Sprite* create_sprite(char *pic[], char *base, int xspeed, int yspeed) {
+Sprite* create_sprite(char *pic[], int x, int y, int xspeed, int yspeed) {
 	//allocate space for the "object"
 	Sprite *sp = (Sprite *) malloc ( sizeof(Sprite));
 	if( sp == NULL )
@@ -19,8 +19,8 @@ Sprite* create_sprite(char *pic[], char *base, int xspeed, int yspeed) {
 		free(sp);
 		return NULL;
 	}
-	base = sp->map[0];
-
+	sp->x = x;
+	sp->y = y;
 	sp->xspeed = xspeed;
 	sp->yspeed = yspeed;
 	return sp;

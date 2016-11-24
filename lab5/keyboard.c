@@ -13,25 +13,25 @@ int SCROLLLOCK_ON = 0;
 int NUMLOCK_ON = 0;
 int CAPSLOCK_ON = 0;
 
-int kbd_subscribe_int(int *hookid) {
+int kbd_subscribe_int() {
 	/*Variable that will hold return value in case of successful call, since sys_irq calls will modify hookid value*/
-	int hookid_kbd_bit = BIT(*hookid);
+	int hookid_kbd_bit = BIT(hookid_kbd);
 
-	if(sys_irqsetpolicy(IRQ_KBD, IRQ_EXCLUSIVE | IRQ_REENABLE, hookid) != OK)
+	if(sys_irqsetpolicy(IRQ_KBD, IRQ_EXCLUSIVE | IRQ_REENABLE, &hookid_kbd) != OK)
 		return -1;
 
-	if(sys_irqenable(hookid) != OK)
+	if(sys_irqenable(&hookid_kbd) != OK)
 		return -1;
 
 	return hookid_kbd_bit;
 }
 
-int kbd_unsubscribe_int(int *hookid) {
+int kbd_unsubscribe_int() {
 
-	if(sys_irqdisable(hookid) != OK)
+	if(sys_irqdisable(&hookid_kbd) != OK)
 		return -1;
 
-	if(sys_irqrmpolicy(hookid) != OK)
+	if(sys_irqrmpolicy(&hookid_kbd) != OK)
 		return -1;
 
 	return 0;
@@ -94,7 +94,7 @@ int kbd_scan_loop(unsigned short c_or_asm) {
 
 	unsigned long lixo;
 	int r;
-	int irq_set = kbd_subscribe_int(&hookid_kbd);
+	int irq_set = kbd_subscribe_int();
 
 	if(irq_set == -1) //Failed subscription
 		return -1;
@@ -143,12 +143,12 @@ int kbd_scan_loop(unsigned short c_or_asm) {
 			/* no standard messages expected: do nothing */
 		}
 	}
-	return kbd_unsubscribe_int(&hookid_kbd);
+	return kbd_unsubscribe_int();
 }
 
 int kbd_timed_scan_loop(unsigned short n){
 	int r;
-	int kbd_irq_set = kbd_subscribe_int(&hookid_kbd);
+	int kbd_irq_set = kbd_subscribe_int();
 	if(kbd_irq_set == -1) //Failed keyboard subscription
 		return -1;
 	int timer_irq_set = timer_subscribe_int();
@@ -204,7 +204,7 @@ int kbd_timed_scan_loop(unsigned short n){
 			/* no standard messages expected: do nothing */
 		}
 	}
-	if(kbd_unsubscribe_int(&hookid_kbd) == -1 || timer_unsubscribe_int() == -1)
+	if(kbd_unsubscribe_int() == -1 || timer_unsubscribe_int() == -1)
 		return -1;
 	else
 		return 0;
@@ -271,7 +271,7 @@ int kbd_leds_loop(unsigned short n, unsigned short *leds){
 	int irq_set = timer_subscribe_int();
 	if(irq_set == -1) //Failed subscription
 		return -1;
-	int kbd_subscribe = kbd_subscribe_int(&hookid_kbd);
+	int kbd_subscribe = kbd_subscribe_int();
 	if(kbd_subscribe == -1)
 		return -1;
 	unsigned long trash = kbd_read_code();
@@ -303,7 +303,7 @@ int kbd_leds_loop(unsigned short n, unsigned short *leds){
 		}
 	}
 
-	if(kbd_unsubscribe_int(&hookid_kbd) == -1 || timer_unsubscribe_int() == -1)
+	if(kbd_unsubscribe_int() == -1 || timer_unsubscribe_int() == -1)
 		return -1;
 	else{
 		printf("Exiting\n");

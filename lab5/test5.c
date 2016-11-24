@@ -11,7 +11,6 @@
 #include "video.h"
 #include "sprite.h"
 #include "read_xpm.h"
-#include "pixmap.h"
 
 void *test_init(unsigned short mode, unsigned short delay) {
 	struct reg86u r;
@@ -97,7 +96,7 @@ int test_line(unsigned short xi, unsigned short yi, unsigned short xf, unsigned 
 			}
 			/*In each iteration, take the current point and translate it using the vector (x,y) = (1,slope)
 			 * Of course, y value will be rounded when used as argument for vg_fill_pixel(), which will cause non-horizontal lines with reduced slope
-			 * to seem kind of 'broken'*/
+			 * or a big slope to seem kind of 'broken'*/
 			x_initial += 1;
 			y_initial += slope;
 		}
@@ -110,24 +109,27 @@ int test_line(unsigned short xi, unsigned short yi, unsigned short xf, unsigned 
 int test_xpm(unsigned short xi, unsigned short yi, char *xpm[]) {
 	if(vg_init(MODE105) == NULL)
 			return -1;
-	
-
-	char* pixmap;
-	//char* position = video_mem + (yi*h_res + xi)*bits_per_pixel/8;
-
-	Sprite* sp = create_sprite(pic3, pixmap, 0, 0);
-	int yc = 0;
-	int xc = 0;
-	while(yc < (sp->height+yi)) {
-		while(xi < (sp->width+xi)){
-			if(vg_fill_pixel(xc++, yc, (unsigned long)pixmap++) != OK){
-				vg_exit();
-				return -1;
-			}
-		}
-		xc = xi;
-		yc++;
+	if(xi > vg_get_h_res() || yi > vg_get_v_res()){
+		vg_exit();
+		printf("Invalid xi and/or yi\n");
+		return -1;
 	}
+
+	Sprite* sp = create_sprite(xpm, xi, yi, 0, 0);
+	if(sp == NULL){
+		vg_exit();
+		printf("Error in reading xpm\n");
+		return -1;
+	}
+
+	if(sp->width + xi > vg_get_h_res() || sp->height + yi > vg_get_v_res()){ //This and not readjustment of variables because color array is sequential so pretty hard to cover the case
+		vg_exit();
+		printf("Upper left corner coordinates are too tight! Poor xpm can't show himself fully.\n");
+		return -1;
+	}
+
+	if(vg_draw_sprite(xi,yi,sp) != OK)
+		return -1;
 
 	kbd_scan_loop(0);
 	vg_exit();
