@@ -9,6 +9,9 @@
 #include "vbe.h"
 #include "video_gr.h"
 #include "video.h"
+#include "sprite.h"
+#include "read_xpm.h"
+#include "pixmap.h"
 
 void *test_init(unsigned short mode, unsigned short delay) {
 	struct reg86u r;
@@ -105,9 +108,30 @@ int test_line(unsigned short xi, unsigned short yi, unsigned short xf, unsigned 
 }
 
 int test_xpm(unsigned short xi, unsigned short yi, char *xpm[]) {
+	if(vg_init(MODE105) == NULL)
+			return -1;
 	
-	/* To be completed */
-	
+
+	char* pixmap;
+	//char* position = video_mem + (yi*h_res + xi)*bits_per_pixel/8;
+
+	Sprite* sp = create_sprite(pic3, pixmap, 0, 0);
+	int yc = 0;
+	int xc = 0;
+	while(yc < (sp->height+yi)) {
+		while(xi < (sp->width+xi)){
+			if(vg_fill_pixel(xc++, yc, (unsigned long)pixmap++) != OK){
+				vg_exit();
+				return -1;
+			}
+		}
+		xc = xi;
+		yc++;
+	}
+
+	kbd_scan_loop(0);
+	vg_exit();
+	return 0;
 }	
 
 int test_move(unsigned short xi, unsigned short yi, char *xpm[], 
