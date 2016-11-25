@@ -138,9 +138,69 @@ int test_xpm(unsigned short xi, unsigned short yi, char *xpm[]) {
 
 int test_move(unsigned short xi, unsigned short yi, char *xpm[], 
 				unsigned short hor, short delta, unsigned short time) {
-	
-	/* To be completed */
-	
+	if(vg_init(MODE105) == NULL)
+			return -1;
+
+	int speed = (float)(delta/time)/60.0;
+
+	Sprite* sp;
+	if(hor != 0) // horizontal movement (add macro later)
+		sp = create_sprite(xpm, xi, yi, speed, 0);
+	else
+		 sp = create_sprite(xpm, xi, yi, 0, speed);
+
+	if(sp == NULL){
+		vg_exit();
+		printf("Error in reading xpm\n");
+		return -1;
+	}
+
+	if(vg_draw_sprite(xi,yi,sp) != OK)
+		return -1;
+
+	int r;
+	int irq_set = timer_subscribe_int();
+
+	if(irq_set == -1) //Failed subscription
+		return -1;
+
+	int ipc_status;
+	message msg;
+
+	unsigned short counter = 0;
+
+	while(counter/60 < time) {
+		/* Get a request message. */
+		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
+			printf("driver_receive failed with: %d", r);
+			continue;
+		}
+		if (is_ipc_notify(ipc_status)) { /* received notification */
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE: /* hardware interrupt notification */
+				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
+					counter++;
+					if(vg_fill_screen(0) != OK)
+						return -1;
+
+					if(vg_move_sprite(sp) != OK)
+						return -1;
+				}
+				break;
+			default:
+				break; /* no other notifications expected: do nothing */
+			}
+		} else { /* received a standard message, not a notification */
+			/* no standard messages expected: do nothing */
+		}
+	}
+
+	if(timer_unsubscribe_int() != OK)
+		return -1;
+
+	kbd_scan_loop(0);
+	vg_exit();
+	return 0;
 }					
 
 int test_controller() {

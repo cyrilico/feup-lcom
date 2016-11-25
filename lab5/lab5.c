@@ -131,13 +131,13 @@ static int proc_args(int argc, char **argv)
 		unsigned short yi = parse_ushort(argv[3], 10);
 		if (yi == USHRT_MAX)
 			return 1;
-		unsigned short hor = parse_ushort(argv[2], 10);
+		unsigned short hor = parse_ushort(argv[5], 10);
 		if (hor == USHRT_MAX)
 			return 1;
-		unsigned short delta = parse_ushort(argv[3], 10);
+		unsigned short delta = parse_ushort(argv[6], 10);
 		if (delta == USHRT_MAX)
 			return 1;
-		unsigned short time = parse_ushort(argv[2], 10);
+		unsigned short time = parse_ushort(argv[7], 10);
 		if (time == USHRT_MAX)
 			return 1;
 		char** xpm;
