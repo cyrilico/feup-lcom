@@ -11,6 +11,7 @@
 #include "video.h"
 #include "sprite.h"
 #include "read_xpm.h"
+#include "i8042.h"
 
 void *test_init(unsigned short mode, unsigned short delay) {
 	struct reg86u r;
@@ -128,7 +129,7 @@ int test_xpm(unsigned short xi, unsigned short yi, char *xpm[]) {
 		return -1;
 	}
 
-	if(vg_draw_sprite(xi,yi,sp) != OK)
+	if(vg_draw_sprite(sp) != OK)
 		return -1;
 
 	kbd_scan_loop(0);
@@ -141,7 +142,7 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 	if(vg_init(MODE105) == NULL)
 			return -1;
 
-	int speed = (float)(delta/time)/60.0;
+	float speed = delta/(time*60.0);
 
 	Sprite* sp;
 	if(hor != 0) // horizontal movement (add macro later)
@@ -155,21 +156,28 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 		return -1;
 	}
 
-	if(vg_draw_sprite(xi,yi,sp) != OK)
+	int r;
+	int irq_timer = timer_subscribe_int();
+
+	if(irq_timer == -1) //Failed subscription
 		return -1;
 
-	int r;
-	int irq_set = timer_subscribe_int();
-
-	if(irq_set == -1) //Failed subscription
+	int irq_keyboard = kbd_subscribe_int();
+	if(irq_keyboard == -1) //Failed subscription
 		return -1;
 
 	int ipc_status;
 	message msg;
 
 	unsigned short counter = 0;
+	int read_again = 0;
+	unsigned long code = 0;
+	unsigned long code_aux = 0;
 
-	while(counter/60 < time) {
+	if(vg_draw_sprite(sp) != OK)
+		return -1;
+
+	while(counter/60 < time && code != ESC_BREAK) {
 		/* Get a request message. */
 		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
 			printf("driver_receive failed with: %d", r);
@@ -178,13 +186,25 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 		if (is_ipc_notify(ipc_status)) { /* received notification */
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE: /* hardware interrupt notification */
-				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
+				if (msg.NOTIFY_ARG & irq_timer) { /* subscribed interrupt */
 					counter++;
-					if(vg_fill_screen(0) != OK)
-						return -1;
 
 					if(vg_move_sprite(sp) != OK)
 						return -1;
+				}
+				else if(msg.NOTIFY_ARG & irq_keyboard){
+					code = kbd_read_code();
+					if(code == -1)
+						return -1;
+					else if(read_again == 1){
+						code = code << 8;
+						code |= code_aux;
+						read_again = 0;
+					}
+					else if(code == TWO_BYTE_SCANCODE){
+						code_aux = code;
+						read_again = 1;
+					}
 				}
 				break;
 			default:
@@ -195,10 +215,12 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 		}
 	}
 
-	if(timer_unsubscribe_int() != OK)
+
+	if(timer_unsubscribe_int() != OK || kbd_unsubscribe_int() != OK)
 		return -1;
 
 	kbd_scan_loop(0);
+
 	vg_exit();
 	return 0;
 }					
