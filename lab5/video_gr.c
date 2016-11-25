@@ -3,6 +3,7 @@
 #include <machine/int86.h>
 #include <sys/mman.h>
 #include <sys/types.h>
+#include <math.h>
 
 #include "vbe.h"
 #include "video.h"
