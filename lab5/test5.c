@@ -14,7 +14,9 @@
 #include "i8042.h"
 
 void *test_init(unsigned short mode, unsigned short delay) {
-	struct reg86u r;
+	/* In the handout it states not to map memory in this function, but is it only DIRECTLY in this function? Assumed so, so substituted code below for
+	 * vg_init + vbe_get_mode_info calls */
+	/*struct reg86u r;
 	r.u.w.ax = VBE_CALL | VBE_SET_MODE;
 	r.u.w.bx = BIT(14) | mode; // set bit 14: linear framebuffer
 	r.u.b.intno = INT10;
@@ -26,11 +28,16 @@ void *test_init(unsigned short mode, unsigned short delay) {
 	
 	vbe_mode_info_t current_mode_information;
 	if(vbe_get_mode_info(mode, &current_mode_information) != OK)
-		return NULL;
+		return NULL;*/
 
+
+	void* result = vg_init(mode);
+	vbe_mode_info_t current_mode_information;
+	if(vbe_get_mode_info(mode, &current_mode_information) != OK)
+		return NULL;
 	timer_test_int(delay);
 	vg_exit();
-	printf("Voltei e o endereco fisico corresponde a: 0x%X\n", current_mode_information.PhysBasePtr);
+	printf("Back to text mode, VRAM physical address is: 0x%X\n", current_mode_information.PhysBasePtr);
 	return 0;
 }
 
@@ -145,20 +152,17 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 	float speed = delta/(time*60.0);
 
 	Sprite* sp;
-	if(hor != 0) // horizontal movement (add macro later)
+	if(hor != 0)
 		sp = create_sprite(xpm, xi, yi, speed, 0);
 	else
 		 sp = create_sprite(xpm, xi, yi, 0, speed);
 
 	if(sp == NULL){
 		vg_exit();
-		printf("Error in reading xpm\n");
 		return -1;
 	}
 
-	int r;
 	int irq_timer = timer_subscribe_int();
-
 	if(irq_timer == -1) //Failed subscription
 		return -1;
 
@@ -166,6 +170,7 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 	if(irq_keyboard == -1) //Failed subscription
 		return -1;
 
+	int r;
 	int ipc_status;
 	message msg;
 
@@ -176,6 +181,8 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 
 	if(vg_draw_sprite(sp) != OK)
 		return -1;
+
+	int early_exit = 0; //Exited before movement completed? 0 if not, 1 if yes
 
 	while(counter/60 < time && code != ESC_BREAK) {
 		/* Get a request message. */
@@ -188,11 +195,10 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 			case HARDWARE: /* hardware interrupt notification */
 				if (msg.NOTIFY_ARG & irq_timer) { /* subscribed interrupt */
 					counter++;
-
 					if(vg_move_sprite(sp) != OK)
 						return -1;
 				}
-				else if(msg.NOTIFY_ARG & irq_keyboard){
+				if(msg.NOTIFY_ARG & irq_keyboard){
 					code = kbd_read_code();
 					if(code == -1)
 						return -1;
@@ -205,6 +211,8 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 						code_aux = code;
 						read_again = 1;
 					}
+					if(code == ESC_BREAK)
+						early_exit = 1;
 				}
 				break;
 			default:
@@ -219,15 +227,35 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 	if(timer_unsubscribe_int() != OK || kbd_unsubscribe_int() != OK)
 		return -1;
 
-	kbd_scan_loop(0);
+	if(!early_exit)
+		kbd_scan_loop(0);
 
 	vg_exit();
 	return 0;
 }					
 
 int test_controller() {
+	vbe_controller_info_t current_controller_information;
+	if(vbe_get_controller_info(&current_controller_information) != OK){
+		printf("Error acquiring controller information\n");
+		return -1;
+	}
+
+	printf("Current controller capabilities:\n");
+	printf("%s", current_controller_information.Capabilities[0] ? "DAC width is switchable to 8 bits per primary color\n" : "DAC is fixed width, with 6 bits per primary color\n");
+	printf("%s", current_controller_information.Capabilities[1] ? "Controller is not VGA compatible\n" : "Controller is VGA compatible\n");
+	printf("%s", current_controller_information.Capabilities[2] ? "When programming large blocks of information to the RAMDAC, use the blank bit in Function 09h\n" : "Normal RAMDAC Operation\n");
 	
-	/* To be completed */
+	printf("\n");
+	printf("Current available modes, in hexadecimal:\n");
+	unsigned int index = 0;
+	while(((current_controller_information.Reserved[index+1]<<8) | current_controller_information.Reserved[index]) != 0xFFFF){
+		printf("0x%x ", ((current_controller_information.Reserved[index+1]<<8) | current_controller_information.Reserved[index]));
+		index += 2;
+	}
+	printf("\n\n");
 	
+	printf("Current total memory, in kB: %u\n", current_controller_information.TotalMemory*64);
+	return 0;
 }					
 	
