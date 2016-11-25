@@ -99,6 +99,24 @@ int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color){
 	return 0;
 }
 
+
+int vg_fill_screen(unsigned long color)  {
+	unsigned int x = 0;
+	unsigned int y = 0;
+
+	while(y < v_res) {
+		while(x < h_res) {
+			if(vg_fill_pixel(x++, y, color) != OK){
+				vg_exit();
+				return -1;
+			}
+		}
+		y++;
+		x = 0;
+	}
+	return 0;
+}
+
 int vg_draw_sprite(unsigned int xi, unsigned int yi, Sprite* s){
 	int initial_x = xi;
 	int initial_y = yi;
@@ -118,6 +136,16 @@ int vg_draw_sprite(unsigned int xi, unsigned int yi, Sprite* s){
 	}
 	return 0;
 }
+
+int vg_move_sprite(Sprite* s) {
+	s->x += s->xspeed;
+	s->y += s->yspeed;
+
+	if(vg_draw_sprite(s->x,s->y,s) != OK)
+		return -1;
+	return 0;
+}
+
 
 unsigned int vg_get_h_res(){
 	return h_res;
