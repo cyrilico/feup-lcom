@@ -30,8 +30,8 @@ void *vg_init(unsigned short mode);
 int vg_exit(void);
 
 int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color);
-int vg_fill_screen(unsigned long color);
-int vg_draw_sprite(unsigned int xi, unsigned int yi, Sprite* s);
+int vg_fill_screen(unsigned int xi, unsigned int yi, unsigned int width, unsigned int height, unsigned long color);
+int vg_draw_sprite(Sprite* s);
 int vg_move_sprite(Sprite* s);
 
 unsigned int vg_get_h_res();

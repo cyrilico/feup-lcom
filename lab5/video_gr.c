@@ -100,28 +100,28 @@ int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color){
 }
 
 
-int vg_fill_screen(unsigned long color)  {
-	unsigned int x = 0;
-	unsigned int y = 0;
+int vg_fill_screen(unsigned int xi, unsigned int yi, unsigned int width, unsigned int height, unsigned long color)  {
+	unsigned int x = xi;
+	unsigned int y = yi;
 
-	while(y < v_res) {
-		while(x < h_res) {
+	while(y < yi+height) {
+		while(x < xi+width) {
 			if(vg_fill_pixel(x++, y, color) != OK){
 				vg_exit();
 				return -1;
 			}
 		}
 		y++;
-		x = 0;
+		x = xi;
 	}
 	return 0;
 }
 
-int vg_draw_sprite(unsigned int xi, unsigned int yi, Sprite* s){
-	int initial_x = xi;
-	int initial_y = yi;
-	int final_x = s->width + xi;
-	int final_y = s->height + yi;
+int vg_draw_sprite(Sprite* s){
+	int initial_x = s->x;
+	int initial_y = s->y;
+	int final_x = s->width + s->x;
+	int final_y = s->height + s->y;
 
 	unsigned int index = 0; //To access elements in color array
 	while(initial_y < final_y) {
@@ -131,17 +131,20 @@ int vg_draw_sprite(unsigned int xi, unsigned int yi, Sprite* s){
 				return -1;
 			}
 		}
-		initial_x = xi;
+		initial_x = s->x;
 		initial_y++;
 	}
 	return 0;
 }
 
 int vg_move_sprite(Sprite* s) {
+	if(vg_fill_screen(s->x,s->y,s->width,s->height,0) != OK)
+		return -1;
+
 	s->x += s->xspeed;
 	s->y += s->yspeed;
 
-	if(vg_draw_sprite(s->x,s->y,s) != OK)
+	if(vg_draw_sprite(s) != OK)
 		return -1;
 	return 0;
 }
