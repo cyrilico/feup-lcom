@@ -38,7 +38,7 @@ void *test_init(unsigned short mode, unsigned short delay) {
 	timer_test_int(delay);
 	vg_exit();
 	printf("Back to text mode, VRAM physical address is: 0x%X\n", current_mode_information.PhysBasePtr);
-	return 0;
+	return result;
 }
 
 

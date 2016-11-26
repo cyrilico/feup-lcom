@@ -32,6 +32,9 @@ static unsigned h_res;		/* Horizontal screen resolution in pixels */
 static unsigned v_res;		/* Vertical screen resolution in pixels */
 static unsigned bits_per_pixel; /* Number of VRAM bits per pixel */
 
+static float xspeed_buffer = 0;
+static float yspeed_buffer = 0;
+
 int vg_exit() {
   struct reg86u reg86;
 
@@ -146,16 +149,16 @@ int vg_move_sprite(Sprite* s, float* x_cumulative, float* y_cumulative) {
 
 	s->y += s->yspeed;
 	*y_cumulative += modf(s->yspeed, &trash); //modf(arg1,arg2) - returns decimal part of arg1 and stores integer part in arg2
-	if(*y_cumulative >= 1){ //Compensate for cumulative decimal part left behind
-			*y_cumulative -= 1;
-			s->y += 1;
+	if(abs(*y_cumulative) >= 1){ //Compensate for cumulative decimal part left behind
+	            *y_cumulative += (*y_cumulative > 0 ? -1 : 1);
+	            s->y += (*y_cumulative > 0 ? 1 : -1);
 	}
 
 	s->x += s->xspeed;
 	*x_cumulative += modf(s->xspeed, &trash);
-	if(*x_cumulative >= 1){ //Compensate for cumulative decimal part left behind
-			*x_cumulative -= 1;
-			s->x += 1;
+	if(abs(*x_cumulative) >= 1){ //Compensate for cumulative decimal part left behind
+	            *x_cumulative += (*x_cumulative > 0 ? -1 : 1);
+	            s->x += (*x_cumulative > 0 ? 1 : -1);
 	}
 
 	if(vg_draw_sprite(s) != OK)
