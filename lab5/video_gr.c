@@ -138,18 +138,30 @@ int vg_draw_sprite(Sprite* s){
 	return 0;
 }
 
-int vg_move_sprite(Sprite* s) {
-	if(vg_fill_screen(s->x,s->y,s->width,s->height,0) != OK)
+int vg_move_sprite(Sprite* s, float* x_cumulative, float* y_cumulative) {
+	if(vg_fill_screen(s->x,s->y,s->width,s->height,BLACK) != OK)
 		return -1;
+
+	double trash; //Store useless information (needed as parameter for modf function)
+
+	s->y += s->yspeed;
+	*y_cumulative += modf(s->yspeed, &trash); //modf(arg1,arg2) - returns decimal part of arg1 and stores integer part in arg2
+	if(*y_cumulative >= 1){ //Compensate for cumulative decimal part left behind
+			*y_cumulative -= 1;
+			s->y += 1;
+	}
 
 	s->x += s->xspeed;
-	s->y += s->yspeed;
+	*x_cumulative += modf(s->xspeed, &trash);
+	if(*x_cumulative >= 1){ //Compensate for cumulative decimal part left behind
+			*x_cumulative -= 1;
+			s->x += 1;
+	}
 
 	if(vg_draw_sprite(s) != OK)
-		return -1;
+			return -1;
 	return 0;
 }
-
 
 unsigned int vg_get_h_res(){
 	return h_res;

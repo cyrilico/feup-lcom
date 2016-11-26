@@ -9,5 +9,6 @@
 #define INT10 0x10
 #define SUCCESSFUL_VBE_CALL 0x4F
 #define MODE105 0x105
+#define BLACK 0
 
 #endif

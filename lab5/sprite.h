@@ -31,7 +31,7 @@ typedef struct {
  * (within the screen limits), a new sprite with pixmap "pic"
  * Returns NULL on invalid pixmap.
  */
-Sprite * create_sprite(char *pic[], int x, int y, int xspeed, int yspeed);
+Sprite * create_sprite(char *pic[], int x, int y, float xspeed, float yspeed);
 
 
 /** Animate the sprite "fig" according to its attributes in memory,

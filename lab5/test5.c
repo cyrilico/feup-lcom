@@ -149,13 +149,13 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 	if(vg_init(MODE105) == NULL)
 			return -1;
 
-	float speed = delta/(time*60.0);
+	float speed = (float)delta/(time*60);
 
 	Sprite* sp;
 	if(hor != 0)
 		sp = create_sprite(xpm, xi, yi, speed, 0);
 	else
-		 sp = create_sprite(xpm, xi, yi, 0, speed);
+		sp = create_sprite(xpm, xi, yi, 0, speed);
 
 	if(sp == NULL){
 		vg_exit();
@@ -179,9 +179,8 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 	unsigned long code = 0;
 	unsigned long code_aux = 0;
 
-	if(vg_draw_sprite(sp) != OK)
-		return -1;
-
+	float x_cumulative = 0; //Store cumulative decimal part left behind when adding speed to current position (compensate every time it reaches 1)
+	float y_cumulative = 0; //Same as above
 	int early_exit = 0; //Exited before movement completed? 0 if not, 1 if yes
 
 	while(counter/60 < time && code != ESC_BREAK) {
@@ -195,7 +194,7 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 			case HARDWARE: /* hardware interrupt notification */
 				if (msg.NOTIFY_ARG & irq_timer) { /* subscribed interrupt */
 					counter++;
-					if(vg_move_sprite(sp) != OK)
+					if(vg_move_sprite(sp, &x_cumulative, &y_cumulative) != OK)
 						return -1;
 				}
 				if(msg.NOTIFY_ARG & irq_keyboard){
