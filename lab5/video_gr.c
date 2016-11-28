@@ -75,24 +75,22 @@ void* vg_init(unsigned int mode){
 	vram_size = h_res*v_res*bits_per_pixel/8;
 
 	/* Allow memory mapping */
-
 	mr.mr_base = (phys_bytes) vram_base;
 	mr.mr_limit = mr.mr_base + vram_size;
 
 	if( OK != (r1 = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)))
-		panic("sys_privctl (ADD_MEM) failed: %d\n", r);
-
+		panic("sys_privctl (ADD_MEM) failed: %d\n", r1);
 	/* Map memory */
-
 	video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
-
 	if(video_mem == MAP_FAILED)
-		panic("couldn't map video memory");
+		panic("couldn’t map video memory");
 
-	return (void*)video_mem;
+	printf("Consegui %x \n", video_mem);
+	return (void *)video_mem;
 }
 
-int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color){
+
+int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color) {
 	if(x > h_res || y > v_res)
 		return -1;
 	char* position = video_mem + (y*h_res + x)*bits_per_pixel/8;
