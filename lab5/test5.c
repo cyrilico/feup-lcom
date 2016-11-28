@@ -153,7 +153,7 @@ int test_move(unsigned short xi, unsigned short yi, char *xpm[],
 
 	Sprite* sp;
 	if(hor != 0)
-		sp = create_sprite(xpm, xi, yi, speed, 0);
+		sp = create_sprite(xpm, xi, yi, 1, 0);
 	else
 		sp = create_sprite(xpm, xi, yi, 0, speed);
 

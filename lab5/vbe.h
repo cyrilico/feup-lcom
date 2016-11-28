@@ -74,6 +74,24 @@ typedef struct {
   uint8_t Reserved4[190]; 		 /* remainder of ModeInfoBlock */
 } __attribute__((packed)) vbe_mode_info_t;
 
+typedef struct {
+	char VbeSignature[4];	/* VBE signature */
+	uint16_t VbeVersion;	/* VBE Version */
+	phys_bytes OemStringPtr;	/* pointer to OEM String */
+	uint32_t Capabilities[4];	/* capabilities of graphics controller */
+	phys_bytes VideoModePtr;	/* pointer to VideoModeList */
+	uint16_t TotalMemory;	/* number of 64kb memory blocks */
+
+	/* Added for VBE 2.0 */
+	uint16_t OemSoftwareRev;	/* VBE implementation Software revision */
+	phys_bytes OemVendorNamePtr;	/* pointer to Vendor Name String */
+	phys_bytes OemProductNamePtr;	/* pointer to Product Name String */
+	phys_bytes OemProductRevPtr;	/* pointer to Product Revision String */
+	uint8_t Reserved[222];	/* reserved for VBE implementation scratch area */
+	uint8_t OemData[256];	/* Data Area for OEM Strings */
+} __attribute__((packed)) vbe_info_block_t;
+
+
 /** @} end of vbe_mode_info_t*/
 
 
