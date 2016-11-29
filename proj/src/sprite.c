@@ -13,7 +13,7 @@ Sprite* create_sprite(char *pic[], int x, int y, float xspeed, float yspeed) {
 		return NULL;
 
 	// read the sprite pixmap
-	sp->map = read_xpm(pic, &(sp->width), &(sp->height));
+	//sp->map = read_xpm(pic, &(sp->width), &(sp->height));
 
 	if( sp->map == NULL ) {
 		free(sp);

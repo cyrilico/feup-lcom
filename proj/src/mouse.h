@@ -8,6 +8,7 @@
 #include <minix/sysutil.h>
 #include "i8042.h"
 #include "i8254.h"
+#include "ps2.h"
 #include "timer.h"
 
 typedef enum state_t {INIT,DRAW,COMP} state;
