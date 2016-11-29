@@ -6,8 +6,6 @@
 #ifndef _SPRITE_H_
 #define _SPRITE_H_
 
-#include "read_xpm.h"
-#include "pixmap.h"
 
 /** @defgroup sprite Sprite
  * @{
