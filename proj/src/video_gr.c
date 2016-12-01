@@ -5,10 +5,11 @@
 #include <sys/types.h>
 #include <math.h>
 
+#include "video_gr.h"
 #include "vbe.h"
 #include "video.h"
 #include "lmlib.h"
-#include "sprite.h"
+#include "utils.h"
 
 /* Constants for VBE 0x105 mode */
 
@@ -47,7 +48,7 @@ int vg_exit() {
       return 0;
 }
 
-void* vg_init(unsigned int mode){
+void* vg_init(unsigned short mode){
 	lm_init();
 	int r1;
 	struct mem_range mr;

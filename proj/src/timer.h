@@ -1,5 +1,4 @@
-#ifndef __TIMER_H
-#define __TIMER_H
+#pragma once
 
 /** @defgroup timer timer
  * @{
@@ -92,5 +91,3 @@ int timer_test_int(unsigned long time);
  * @return Return 0 upon success and non-zero otherwise
  */
 int timer_test_config(unsigned long timer);
-
-#endif /* __TIMER_H */

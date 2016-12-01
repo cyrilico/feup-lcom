@@ -1,4 +1,13 @@
+#include <limits.h>
+#include <string.h>
+#include <errno.h>
+#include <minix/drivers.h>
+#include <minix/sysutil.h>
+#include "i8042.h"
+#include "i8254.h"
+#include "timer.h"
 #include "mouse.h"
+#include "utils.h"
 
 int hookid_mouse = 23;
 
@@ -84,29 +93,22 @@ void mouse_event_handler(state *st, event evt, short *y_variation, short desired
 	switch (*st) {
 	case INIT:
 		if( evt == RDOWN ){
-			printf("State change: is now DRAW\n");
 			*st = DRAW;
 		}
 		break;
 	case DRAW:
 		if( evt == MOVE ) {
-			printf("Testing movement\n");
-			printf("Current total movement: %d\n Total expected movement: %d\n", *y_variation, desired_length);
-
 			if(desired_length < 0) {
 				if (*y_variation <= desired_length){ //Make length a global variable so it can be accessed here?
-					printf("Completed, exiting\n");
 					*st = COMP;
 				}
 			}
 			else{
 				if (*y_variation >= desired_length){ //Make length a global variable so it can be accessed here?
-					printf("Completed, exiting\n");
 					*st = COMP;
 				}
 			}
 		} else if( evt == RUP ) {
-			printf("State change: is now INIT\n");
 			*st = INIT;
 			*y_variation = 0;
 		}

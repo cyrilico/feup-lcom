@@ -1,5 +1,4 @@
-#ifndef __VIDEO_GR_H
-#define __VIDEO_GR_H
+#pragma once
 
 #include "sprite.h"
 
@@ -41,5 +40,3 @@ char* vg_get_video_mem();
 
 
  /** @} end of video_gr */
- 
-#endif /* __VIDEO_GR_H */

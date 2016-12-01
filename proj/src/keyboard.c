@@ -7,6 +7,7 @@
 #include "timer.h"
 #include "i8254.h"
 #include "i8042.h"
+#include "utils.h"
 
 int hookid_kbd = 10;
 int SCROLLLOCK_ON = 0;
@@ -90,9 +91,7 @@ void kbd_print_code(unsigned long code) {
 	}
 }
 
-int kbd_scan_loop(unsigned short c_or_asm) {
-
-	unsigned long lixo;
+int kbd_scan_loop() {
 	int r;
 	int irq_set = kbd_subscribe_int();
 
@@ -116,24 +115,18 @@ int kbd_scan_loop(unsigned short c_or_asm) {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE: /* hardware interrupt notification */
 				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
-					if(c_or_asm == 0)
 						code = kbd_read_code();
-					else
-						code = kbd_read_code_ASM();
 					if(code == -1)
 						return -1;
 					else if(read_again == 1){
 						code = code << 8;
 						code |= code_aux;
 						read_again = 0;
-						kbd_print_code(code);
 					}
 					else if(code == TWO_BYTE_SCANCODE){
 						code_aux = code;
 						read_again = 1;
 					}
-					else
-						kbd_print_code(code);
 				}
 				break;
 			default:
@@ -180,21 +173,15 @@ int kbd_timed_scan_loop(unsigned short n){
 						code = code << 8;
 						code |= code_aux;
 						read_again = 0;
-						kbd_print_code(code);
 					}
 					else if(code == TWO_BYTE_SCANCODE){
 						code_aux = code;
 						read_again = 1;
 					}
-					else
-						kbd_print_code(code);
-
 					counter = 0; //Keyboard has caused an interrupt so idle time is reset
 				}
 				else if(msg.NOTIFY_ARG & timer_irq_set) {
 					counter++;
-					if(counter % 60 == 0)
-						printf("No keyboard action detected in the last second. %ds until program exits.\n", n-counter/60);
 				}
 				break;
 			default:

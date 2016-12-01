@@ -1,5 +1,6 @@
-#ifndef _LCOM_I8254_H_
-#define _LCOM_I8254_H_
+#pragma once
+
+#include "utils.h"
 
 //Custom symbolic constants
 #define GET_LSB (BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(5) | BIT(6) | BIT(7))
@@ -12,9 +13,6 @@
  */
 
 #define TIMER_FREQ  1193182    /**< @brief clock frequency for timer in PC and AT */
-
-#define BIT(n) (0x01<<(n))
-
 #define TIMER0_IRQ	        0    /**< @brief Timer 0 IRQ line */
 
 /* I/O port addresses */
@@ -58,5 +56,3 @@
 #define TIMER_RB_SEL(n)         BIT((n)+1)
 
 /**@}*/
-
-#endif /* _LCOM_I8254_H */

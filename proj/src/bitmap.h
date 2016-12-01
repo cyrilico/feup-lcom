@@ -2,7 +2,9 @@
 
 /** @defgroup Bitmap Bitmap
  * @{
- * Functions for manipulating bitmaps
+ * Functions for manipulating bitmaps.
+ * All credits go to Henrique Ferrolho. We just added the information about the bitmap's coordinates on the screen to the structure.
+ * Taken from http://difusal.blogspot.pt/2014/09/minixtutorial-8-loading-bmp-images.html
  */
 
 typedef enum {
@@ -34,26 +36,26 @@ typedef struct {
 typedef struct {
     BitmapInfoHeader bitmapInfoHeader;
     unsigned char* bitmapData;
-    unsigned x, y;
+    unsigned int x, y;
 } Bitmap;
 
 /**
  * @brief Loads a bmp image
  *
  * @param filename Path of the image to load
+ * @param x initial bitmap position on the x-axis
+ * @param y initial bitmap position on the y-axis
  * @return Non NULL pointer to the image buffer
  */
-Bitmap* loadBitmap(const char* filename);
+Bitmap* loadBitmap(const char* filename, unsigned int x, unsigned int y);
 
 /**
  * @brief Draws an unscaled, unrotated bitmap at the given position
  *
  * @param bitmap bitmap to be drawn
- * @param x destiny x coord
- * @param y destiny y coord
  * @param alignment image alignment
  */
-void drawBitmap(Bitmap* bitmap, int x, int y, Alignment alignment);
+void drawBitmap(Bitmap* bitmap, Alignment alignment);
 
 /**
  * @brief Destroys the given bitmap, freeing all resources used by it.
