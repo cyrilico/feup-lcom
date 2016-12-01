@@ -1,5 +1,4 @@
-#ifndef __VBE_H
-#define __VBE_H
+#pragma once
 
 #include <stdint.h>
 
@@ -128,5 +127,3 @@ int vbe_get_mode_info(unsigned short mode, vbe_mode_info_t *vmi_p);
 int vbe_get_controller_info(vbe_controller_info_t *vci_p);
 
  /** @} end of vbe */
-
-#endif /* __VBE_H */

@@ -1,10 +1,10 @@
 #include "bitmap.h"
-
 #include "stdio.h"
-//#include "Graphics.h"
 #include "video_gr.h"
 
-Bitmap* loadBitmap(const char* filename) {
+
+
+Bitmap* loadBitmap(const char* filename, unsigned int x, unsigned int y) {
     // allocating necessary size
     Bitmap* bmp = (Bitmap*) malloc(sizeof(Bitmap));
 
@@ -74,11 +74,13 @@ Bitmap* loadBitmap(const char* filename) {
 
     bmp->bitmapData = bitmapImage;
     bmp->bitmapInfoHeader = bitmapInfoHeader;
+    bmp->x = x;
+    bmp->y = y;
 
     return bmp;
 }
 
-void drawBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
+void drawBitmap(Bitmap* bmp, Alignment alignment) {
     if (bmp == NULL)
         return;
 
@@ -87,24 +89,24 @@ void drawBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
     int height = bmp->bitmapInfoHeader.height;
 
     if (alignment == ALIGN_CENTER)
-        x -= width / 2;
+        bmp->x -= width / 2;
     else if (alignment == ALIGN_RIGHT)
-        x -= width;
+        bmp->x -= width;
 
-    if (x + width < 0 || x > vg_get_h_res() || y + height < 0
-            || y > vg_get_v_res())
+    if (bmp->x + width < 0 || bmp->x > vg_get_h_res() || bmp->y + height < 0
+            || bmp->y > vg_get_v_res())
         return;
 
     int xCorrection = 0;
-    if (x < 0) {
-        xCorrection = -x;
+    if (bmp->x < 0) {
+        xCorrection = -bmp->x;
         drawWidth -= xCorrection;
-        x = 0;
+        bmp->x = 0;
 
         if (drawWidth > vg_get_h_res())
             drawWidth = vg_get_h_res();
-    } else if (x + drawWidth >= vg_get_h_res()) {
-        drawWidth = vg_get_h_res() - x;
+    } else if (bmp->x + drawWidth >= vg_get_h_res()) {
+        drawWidth = vg_get_h_res() - bmp->x;
     }
 
     char* bufferStartPos;
@@ -112,13 +114,13 @@ void drawBitmap(Bitmap* bmp, int x, int y, Alignment alignment) {
 
     int i;
     for (i = 0; i < height; i++) {
-        int pos = y + height - 1 - i;
+        int pos = bmp->y + height - 1 - i;
 
         if (pos < 0 || pos >= vg_get_v_res())
             continue;
 
         bufferStartPos = vg_get_video_mem();
-        bufferStartPos += x * 2 + pos * vg_get_h_res() * 2;
+        bufferStartPos += bmp->x * 2 + pos * vg_get_h_res() * 2;
 
         imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;
 

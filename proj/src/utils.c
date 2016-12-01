@@ -1,11 +1,22 @@
+#include <string.h>
+#include "stdio.h"
 #include "utils.h"
 
+
 int file_exists(const char* filename) {
-	FILE* file = fopen(filename, 'r');
+	FILE* file = fopen(filename, "r");
 
 	if(file == NULL)
 		return -1;
 	return 0;
+}
+
+const char* fullPath(const char* filename){
+	char* result = (char*)malloc(256);
+	strcpy(result,"/home/lcom/lcom1617-t4g11/proj/images/"); //Damas' version of the path
+	//strcpy(result,"/home/lcom/feup2/lcom1617-t4g11/proj/images"); //Antonio's version of the path
+	strcat(result,filename);
+	return result;
 }
 
 int rgb(unsigned char r, unsigned char g, unsigned char b) {

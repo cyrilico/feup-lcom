@@ -1,15 +1,4 @@
-#ifndef __MOUSE_H
-#define __MOUSE_H
-
-#include <limits.h>
-#include <string.h>
-#include <errno.h>
-#include <minix/drivers.h>
-#include <minix/sysutil.h>
-#include "i8042.h"
-#include "i8254.h"
-#include "ps2.h"
-#include "timer.h"
+#pragma once
 
 typedef enum state_t {INIT,DRAW,COMP} state;
 typedef enum event_t {RUP,RDOWN,MOVE} event;
@@ -21,5 +10,3 @@ unsigned long mouse_read_code();
 unsigned long mouse_write_code(long destination, unsigned char cmd);
 int mouse_write_byte(unsigned char byte);
 void mouse_event_handler(state *st, event evt, short *y_variation, short desired_length);
-
-#endif

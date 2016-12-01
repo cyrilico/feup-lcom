@@ -1,6 +1,7 @@
 #include <minix/syslib.h>
 #include <minix/drivers.h>
 #include <minix/com.h>
+#include "timer.h"
 #include "i8254.h"
 
 unsigned long interrupt_counter = 0;
@@ -190,10 +191,6 @@ int timer_test_int(unsigned long time) {
 			case HARDWARE: /* hardware interrupt notification */
 				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
 					timer_int_handler();
-					//If counter mod 60 == 0, timer0 has made another 60 interruptions so another second has passed
-					//if(interrupt_counter % 60 == 0)
-						//printf("Hey! Another second has passed. %d seconds gone so far\n", interrupt_counter/60);
-
 				}
 				break;
 			default:
