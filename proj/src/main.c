@@ -11,6 +11,8 @@
 #include "sprite.h"
 #include "i8042.h"
 #include "bitmap.h"
+#include "keyboard.h"
+#include "game.h"
 
   /*
      * -------------------
@@ -31,11 +33,36 @@ int main(int argc, char **argv) {
 	if(vg_init(0x114) == NULL)
 		return -1;
 
-	Bitmap* buzz = loadBitmap("/home/lcom/feup2/lcom1617-t4g11/proj/images/buzz1.bmp");
+	Bitmap* buzz = loadBitmap("/home/lcom/feup2/lcom1617-t4g11/proj/images/buzzie.bmp");
+	buzz->x = 400;
+	buzz->y = 400;
+	drawBitmap(buzz, buzz->x, buzz->y, ALIGN_CENTER);
 
-	drawBitmap(buzz, 100, 100, ALIGN_CENTER);
+	 Game* game = (Game*) start_game();
+	 while(!game->done) {
+		 update_game(game);
 
-	timer_test_int(10);
+		 if(!game->done) {
+			 if(game->draw) {
+				// draw_game(game);
+			    	if(game->scancode == A_MAKE){
+			    		vg_fill_screen(buzz->x,buzz->y,buzz->bitmapInfoHeader.width,buzz->bitmapInfoHeader.height,0);
+			    		buzz->x -= 5;
+			    		drawBitmap(buzz, buzz->x, buzz->y, ALIGN_LEFT);
+			    	}
+			    	else if(game->scancode == D_MAKE){
+			    		vg_fill_screen(buzz->x,buzz->y,buzz->bitmapInfoHeader.width,buzz->bitmapInfoHeader.height,0);
+			    		buzz->x += 5;
+			    		drawBitmap(buzz, buzz->x, buzz->y, ALIGN_LEFT);
+			    	}
+			 //flipMBuffer();
+			 //flipDisplay();
+		 }
+	 }
+}
+	 exit_game(game);
+	//timer_test_int(10);
 	vg_exit();
     return 0;
 }
+

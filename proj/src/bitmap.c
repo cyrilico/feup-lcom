@@ -18,6 +18,9 @@ Bitmap* loadBitmap(const char* filename) {
     BitmapFileHeader bitmapFileHeader;
     fread(&bitmapFileHeader, 2, 1, filePtr);
 
+    bmp->x = 0;
+    bmp->y = 0;
+
     // verify that this is a bmp file by check bitmap id
     if (bitmapFileHeader.type != 0x4D42) {
         fclose(filePtr);
