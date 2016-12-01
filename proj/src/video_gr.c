@@ -94,7 +94,9 @@ int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color) {
 	if(x > h_res || y > v_res)
 		return -1;
 	char* position = video_mem + (y*h_res + x)*bits_per_pixel/8;
-	*position = color;
+	int i = 0;
+	while(i++ < bits_per_pixel/8)
+		*(position++) = color;
 	return 0;
 }
 

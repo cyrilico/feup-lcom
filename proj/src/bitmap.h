@@ -34,6 +34,7 @@ typedef struct {
 typedef struct {
     BitmapInfoHeader bitmapInfoHeader;
     unsigned char* bitmapData;
+    unsigned x, y;
 } Bitmap;
 
 /**
