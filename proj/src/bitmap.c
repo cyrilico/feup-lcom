@@ -4,7 +4,7 @@
 
 
 
-Bitmap* loadBitmap(const char* filename, unsigned int x, unsigned int y) {
+Bitmap* loadBitmap(const char* filename, int x, int y) {
     // allocating necessary size
     Bitmap* bmp = (Bitmap*) malloc(sizeof(Bitmap));
 
@@ -80,7 +80,7 @@ Bitmap* loadBitmap(const char* filename, unsigned int x, unsigned int y) {
     return bmp;
 }
 
-void drawBitmap(Bitmap* bmp, Alignment alignment) {
+void drawBitmap(Bitmap* bmp, char* buffer, Alignment alignment) {
     if (bmp == NULL)
         return;
 
@@ -119,7 +119,7 @@ void drawBitmap(Bitmap* bmp, Alignment alignment) {
         if (pos < 0 || pos >= vg_get_v_res())
             continue;
 
-        bufferStartPos = vg_get_video_mem();
+        bufferStartPos = buffer;
         bufferStartPos += bmp->x * 2 + pos * vg_get_h_res() * 2;
 
         imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;

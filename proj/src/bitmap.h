@@ -36,7 +36,7 @@ typedef struct {
 typedef struct {
     BitmapInfoHeader bitmapInfoHeader;
     unsigned char* bitmapData;
-    unsigned int x, y;
+    int x, y;
 } Bitmap;
 
 /**
@@ -47,7 +47,7 @@ typedef struct {
  * @param y initial bitmap position on the y-axis
  * @return Non NULL pointer to the image buffer
  */
-Bitmap* loadBitmap(const char* filename, unsigned int x, unsigned int y);
+Bitmap* loadBitmap(const char* filename, int x, int y);
 
 /**
  * @brief Draws an unscaled, unrotated bitmap at the given position
@@ -55,7 +55,7 @@ Bitmap* loadBitmap(const char* filename, unsigned int x, unsigned int y);
  * @param bitmap bitmap to be drawn
  * @param alignment image alignment
  */
-void drawBitmap(Bitmap* bitmap, Alignment alignment);
+void drawBitmap(Bitmap* bitmap, char* buffer, Alignment alignment);
 
 /**
  * @brief Destroys the given bitmap, freeing all resources used by it.
