@@ -3,7 +3,8 @@
 #define BIT(n) (0x01<<(n))
 #define NBYTE(n) (0xff<<(8*n))
 #define DELAY_US 20000
-#define TWOSCOMPLEMENT(N) (short)(0xff00 | N)
+//#define TWOSCOMPLEMENT(N) (short)(0xff00 | N)
+#define TWOSCOMPLEMENT(N) (~N+1)
 #define ABS_VALUE(X) (X < 0 ? -X : X)
 #define OK 0 //Sometimes is not defined for some reason
 

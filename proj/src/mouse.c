@@ -1,13 +1,4 @@
-#include <limits.h>
-#include <string.h>
-#include <errno.h>
-#include <minix/drivers.h>
-#include <minix/sysutil.h>
-#include "i8042.h"
-#include "i8254.h"
-#include "timer.h"
 #include "mouse.h"
-#include "utils.h"
 
 int hookid_mouse = 23;
 
@@ -116,4 +107,58 @@ void mouse_event_handler(state *st, event evt, short *y_variation, short desired
 	default:
 		break;
 	}
+}
+
+/* --------------------- */
+
+Mouse* create_mouse(){
+	Mouse* new_mouse = (Mouse*)(malloc(sizeof(Mouse)));
+	new_mouse->irq_set = mouse_subscribe_int();
+	if(new_mouse->irq_set == -1)
+		return NULL;
+	new_mouse->left_button_state = RELEASED;
+	new_mouse->crosshair = loadBitmap(fullPath("crosshair.bmp"),vg_get_h_res()/2,vg_get_v_res()/2);
+	return new_mouse;
+}
+
+void draw_mouse(Mouse* mouse, char* buffer){
+	drawBitmap(mouse->crosshair, buffer, ALIGN_CENTER);
+}
+
+void update_mouse(Mouse* mouse){
+	if(mouse->packet[0] & BIT(4)) //Negative x delta
+		mouse->crosshair->x += TWOSCOMPLEMENT(mouse->packet[1]);
+	else //Positive x delta
+		mouse->crosshair->x += mouse->packet[1];
+	if(mouse->packet[0] & BIT(5)) //Negative y delta
+		mouse->crosshair->y += TWOSCOMPLEMENT(mouse->packet[2]);
+	else //Positive y delta
+		mouse->crosshair->y += mouse->packet[2];
+	if(mouse->packet[0] & BIT(0)){ //Left button pressed
+		if(mouse->left_button_state == RELEASED)
+			mouse->left_button_state = PRESSED;
+	}
+	else{
+		if(mouse->left_button_state == PRESSED)
+			mouse->left_button_state = RELEASED;
+	}
+}
+
+void delete_mouse(Mouse* mouse){
+	deleteBitmap(mouse->crosshair);
+	free(mouse);
+}
+
+void mouse_print_packet(unsigned char packet[]){
+	printf("B1=0x%x ", packet[0]);
+	printf("B2=0x%x ", packet[1]);
+	printf("B3=0x%x ", packet[2]);
+	printf("LB=%u ", packet[0] & BIT(0));
+	printf("MB=%u ", (packet[0] & BIT(2))>>2);
+	printf("RB=%u ", (packet[0] & BIT(1))>>1);
+	printf("XOV=%u ", (packet[0] & BIT(6))>>6);
+	printf("YOV=%u ", (packet[0] & BIT(7))>>7);
+	printf("X=%d ", ((packet[0] & BIT(4)) ? TWOSCOMPLEMENT(packet[1]) : packet[1]));
+	printf("Y=%d\n\n", ((packet[0] & BIT(5)) ? TWOSCOMPLEMENT(packet[2]) : packet[2]));
+
 }
