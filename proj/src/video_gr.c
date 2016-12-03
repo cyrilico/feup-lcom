@@ -1,15 +1,4 @@
-#include <minix/syslib.h>
-#include <minix/drivers.h>
-#include <machine/int86.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <math.h>
-
 #include "video_gr.h"
-#include "vbe.h"
-#include "video.h"
-#include "lmlib.h"
-#include "utils.h"
 
 /* Constants for VBE 0x105 mode */
 
@@ -119,51 +108,6 @@ int vg_fill_screen(unsigned int xi, unsigned int yi, unsigned int width, unsigne
 	return 0;
 }
 
-int vg_draw_sprite(Sprite* s){
-	int initial_x = s->x;
-	int initial_y = s->y;
-	int final_x = s->width + s->x;
-	int final_y = s->height + s->y;
-
-	unsigned int index = 0; //To access elements in color array
-	while(initial_y < final_y) {
-		while(initial_x < final_x){
-			if(vg_fill_pixel(initial_x++, initial_y, s->map[index++]) != OK){
-				vg_exit();
-				return -1;
-			}
-		}
-		initial_x = s->x;
-		initial_y++;
-	}
-	return 0;
-}
-
-int vg_move_sprite(Sprite* s, float* x_cumulative, float* y_cumulative) {
-	if(vg_fill_screen(s->x,s->y,s->width,s->height,BLACK) != OK)
-		return -1;
-
-	double trash; //Store useless information (needed as parameter for modf function)
-
-	s->y += s->yspeed;
-	*y_cumulative += modf(s->yspeed, &trash); //modf(arg1,arg2) - returns decimal part of arg1 and stores integer part in arg2
-	if(abs(*y_cumulative) >= 1){ //Compensate for cumulative decimal part left behind
-	            *y_cumulative += (*y_cumulative > 0 ? -1 : 1);
-	            s->y += (*y_cumulative > 0 ? 1 : -1);
-	}
-
-	s->x += s->xspeed;
-	*x_cumulative += modf(s->xspeed, &trash);
-	if(abs(*x_cumulative) >= 1){ //Compensate for cumulative decimal part left behind
-	            *x_cumulative += (*x_cumulative > 0 ? -1 : 1);
-	            s->x += (*x_cumulative > 0 ? 1 : -1);
-	}
-
-	if(vg_draw_sprite(s) != OK)
-			return -1;
-	return 0;
-}
-
 unsigned int vg_get_h_res(){
 	return h_res;
 }
@@ -178,4 +122,8 @@ unsigned int vg_get_bits_per_pixel(){
 
 char* vg_get_video_mem(){
 	return video_mem;
+}
+
+unsigned int vg_get_window_size(){
+	return h_res*v_res*bits_per_pixel/8;
 }

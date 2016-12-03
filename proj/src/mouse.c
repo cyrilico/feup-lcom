@@ -113,34 +113,35 @@ void mouse_event_handler(state *st, event evt, short *y_variation, short desired
 
 Mouse* create_mouse(){
 	Mouse* new_mouse = (Mouse*)(malloc(sizeof(Mouse)));
-	new_mouse->irq_set = mouse_subscribe_int();
-	if(new_mouse->irq_set == -1)
-		return NULL;
 	new_mouse->left_button_state = RELEASED;
-	new_mouse->crosshair = loadBitmap(fullPath("crosshair.bmp"),vg_get_h_res()/2,vg_get_v_res()/2);
+	new_mouse->crosshair = loadBitmap(fullPath("crosshair.bmp"),100,100); //Mouse starts at (x,y)=(100,100)
 	return new_mouse;
 }
 
 void draw_mouse(Mouse* mouse, char* buffer){
-	drawBitmap(mouse->crosshair, buffer, ALIGN_CENTER);
+	drawBitmap(mouse->crosshair, buffer, ALIGN_LEFT);
 }
 
 void update_mouse(Mouse* mouse){
 	if(mouse->packet[0] & BIT(4)) //Negative x delta
-		mouse->crosshair->x += TWOSCOMPLEMENT(mouse->packet[1]);
+		mouse->crosshair->x -= ABS_VALUE(TWOSCOMPLEMENT(mouse->packet[1]));
 	else //Positive x delta
 		mouse->crosshair->x += mouse->packet[1];
 	if(mouse->packet[0] & BIT(5)) //Negative y delta
-		mouse->crosshair->y += TWOSCOMPLEMENT(mouse->packet[2]);
+		mouse->crosshair->y += ABS_VALUE(TWOSCOMPLEMENT(mouse->packet[2]));
 	else //Positive y delta
-		mouse->crosshair->y += mouse->packet[2];
+		mouse->crosshair->y -= mouse->packet[2];
 	if(mouse->packet[0] & BIT(0)){ //Left button pressed
 		if(mouse->left_button_state == RELEASED)
 			mouse->left_button_state = PRESSED;
 	}
 	else{
-		if(mouse->left_button_state == PRESSED)
+		if(mouse->left_button_state == PRESSED){
 			mouse->left_button_state = RELEASED;
+			mouse->left_button_was_released = 1;
+		}
+		else
+			mouse->left_button_was_released = 0;
 	}
 }
 
