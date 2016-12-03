@@ -18,8 +18,8 @@ typedef enum rbutton_t {ISUP,ISDOWN} rbstate;
 typedef enum lbutton_t {RELEASED,PRESSED} lbstate;
 
 typedef struct{
-	int irq_set;
 	lbstate left_button_state;
+	int left_button_was_released; //non-zero when lbstate is RELEASED and previous was PRESSED
 	Bitmap* crosshair;
 	unsigned char packet[3];
 }Mouse;

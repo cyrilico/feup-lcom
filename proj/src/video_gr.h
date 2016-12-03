@@ -1,6 +1,14 @@
 #pragma once
 
-#include "sprite.h"
+#include <minix/syslib.h>
+#include <minix/drivers.h>
+#include <machine/int86.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include "vbe.h"
+#include "video.h"
+#include "lmlib.h"
+#include "utils.h"
 
 /** @defgroup video_gr video_gr
  * @{
@@ -30,13 +38,12 @@ int vg_exit(void);
 
 int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color);
 int vg_fill_screen(unsigned int xi, unsigned int yi, unsigned int width, unsigned int height, unsigned long color);
-int vg_draw_sprite(Sprite* s);
-int vg_move_sprite(Sprite* s, float* x_cumulative, float* y_cumulative);
 
 unsigned int vg_get_h_res();
 unsigned int vg_get_v_res();
 unsigned int vg_get_bits_per_pixel();
 char* vg_get_video_mem();
+unsigned int vg_get_window_size();
 
 
  /** @} end of video_gr */
