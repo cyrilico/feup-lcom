@@ -42,6 +42,6 @@ typedef struct{
 	menustate state;
 }Menu;
 
-Menu* create_menu(char* dbuffer);
+Menu* create_menu();
 void draw_menu(Menu* menu);
 void delete_menu(Menu* menu);
