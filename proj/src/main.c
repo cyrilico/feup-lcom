@@ -17,34 +17,20 @@ int main(int argc, char **argv) {
 	 * sys_enable_iop(SELF);
 	*/
 
-	if(vg_init(0x114) == NULL)
+	if(start_graphic_mode() != OK)
 		return -1;
 
-	char* db_menu = (char*)(malloc(vg_get_window_size()));
-	char* db_game = (char*)(malloc(vg_get_window_size()));
-
-	Dispatcher* dispatcher = create_dispatcher(db_menu, db_game);
-
-	//drawBitmap(background,vg_get_video_mem(),ALIGN_LEFT);
-	//drawBitmap(buzz,vg_get_video_mem(),ALIGN_LEFT);
-	//draw_mouse(mouse,vg_get_video_mem());
-
+	Dispatcher* dispatcher = create_dispatcher();
 
 	while(dispatcher->state != EXIT_PROGRAM) {
 		if(dispatcher->state == MAIN_MENU) {
 			printf("Update Dispatcher\n");
-			update_dispatcher_menu(dispatcher);
+			process_main_menu(dispatcher);
 		}
-		//else state == GAME
-			//update_dispacher_game(dispatcher);
+		else
+			process_game(dispatcher);
 	}
 
-
-	vg_exit();
-	if(mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING) == -1){
-		printf("fodeu\n");
-		return -1;
-	}
-	return mouse_unsubscribe_int();
+	return exit_graphic_mode();
 }
 

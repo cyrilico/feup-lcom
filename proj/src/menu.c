@@ -23,9 +23,9 @@ void delete_button(Button* button){
 	free(button);
 }
 
-Menu* create_menu(char* dbuffer){
+Menu* create_menu(){
 	Menu* menu = (Menu*)(malloc(sizeof(Menu)));
-	//menu->irq_timer = timer_subscribe_int();
+	menu->irq_timer = timer_subscribe_int();
 	//menu->irq_keyboard = kbd_subscribe_int();
 	menu->irq_mouse = mouse_subscribe_int();
 
@@ -33,7 +33,7 @@ Menu* create_menu(char* dbuffer){
 	menu->exit_button = create_button(EXIT_BUTTON_X,EXIT_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT);
 	menu->mouse = create_mouse();
 	menu->background = loadBitmap(fullPath("menu_background.bmp"),0,0);
-	menu->double_buffer = dbuffer;
+	menu->double_buffer = (char*)(malloc(vg_get_window_size()));
 
 	menu->state = NOT_DONE;
 	return menu;
@@ -41,7 +41,6 @@ Menu* create_menu(char* dbuffer){
 
 void draw_menu(Menu* menu){
 	drawBitmap(menu->background,menu->double_buffer,ALIGN_LEFT);
-	update_mouse(menu->mouse);
 	draw_mouse(menu->mouse,menu->double_buffer);
 	memcpy(vg_get_video_mem(),menu->double_buffer,vg_get_window_size());
 }

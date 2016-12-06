@@ -1,17 +1,15 @@
 #include "dispatcher.h"
 
-Dispatcher* create_dispatcher(char* db_menu, char* db_game) {
+Dispatcher* create_dispatcher() {
 	Dispatcher* dispatcher = (Dispatcher*)(malloc(sizeof(Dispatcher)));
 
-	Menu* menu = create_menu(db_menu);
-
-	dispatcher->state = MAIN_MENU;
+	//dispatcher->menu = create_menu();
+	dispatcher->game = create_game();
+	dispatcher->state = GAME;
 	return dispatcher;
 }
 
-void update_dispatcher_menu(Dispatcher* dispatcher) {
-
-	int r;
+void process_main_menu(Dispatcher* dispatcher) {
 	int ipc_status;
 	message msg;
 
@@ -19,19 +17,15 @@ void update_dispatcher_menu(Dispatcher* dispatcher) {
 	unsigned short counter = 0;
 	long byte; //Auxiliar variable that will store each byte read
 
-	if(mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING) == -1)
-		return;
+	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
 
 	while(dispatcher->menu->state != DONE) {
-		/* Get a request message. */
-		if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) {
-			printf("driver_receive failed with: %d", r);
+		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
 			continue;
-		}
-		if (is_ipc_notify(ipc_status)) { /* received notification */
+		if (is_ipc_notify(ipc_status)) {
 			switch (_ENDPOINT_P(msg.m_source)) {
-			case HARDWARE: /* hardware interrupt notification */
-				if (msg.NOTIFY_ARG & dispatcher->menu->irq_mouse) { /* subscribed interrupt */
+			case HARDWARE:
+				if(msg.NOTIFY_ARG & dispatcher->menu->irq_mouse) {
 					sys_inb(OUT_BUF, &byte);
 					if(counter == 0){
 						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
@@ -47,23 +41,74 @@ void update_dispatcher_menu(Dispatcher* dispatcher) {
 						if(counter > 2){
 							mouse_print_packet(dispatcher->menu->mouse->packet);
 							counter = 0;
-							if(++number_of_packets != 1){
+							if(++number_of_packets != 1)
 								update_menu(dispatcher->menu);
-								draw_menu(dispatcher->menu);
-							}
 						}
 					}
 				}
+				else if(msg.NOTIFY_ARG & dispatcher->menu->irq_timer)
+					draw_menu(dispatcher->menu);
 				break;
 			default:
-				break; /* no other notifications expected: do nothing */
+				break;
 			}
-		} else { /* received a standard message, not a notification */
-			/* no standard messages expected: do nothing */
 		}
 	}
 
+	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
 	if(dispatcher->menu->state == DONE)
+		dispatcher->state = EXIT_PROGRAM;
+
+}
+
+void process_game(Dispatcher* dispatcher) {
+	int ipc_status;
+	message msg;
+
+	unsigned short number_of_packets = 0; //number of full packets processed
+	unsigned short counter = 0;
+	long byte; //Auxiliar variable that will store each byte read
+
+	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
+
+	while(dispatcher->game->state != GDONE) {
+		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
+			continue;
+		if (is_ipc_notify(ipc_status)) {
+			switch (_ENDPOINT_P(msg.m_source)) {
+			case HARDWARE:
+				if(msg.NOTIFY_ARG & dispatcher->game->irq_mouse) {
+					sys_inb(OUT_BUF, &byte);
+					if(counter == 0){
+						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
+							dispatcher->game->mouse->packet[counter++] = (unsigned char)byte;
+						else{
+							printf("Invalid first byte, trying again\n");
+							continue;
+						}
+					}
+					else{
+						dispatcher->game->mouse->packet[counter++] = (unsigned char)byte;
+						printf("Increment counter\n");
+						if(counter > 2){
+							mouse_print_packet(dispatcher->game->mouse->packet);
+							counter = 0;
+							if(++number_of_packets != 1)
+								update_game(dispatcher->game);
+						}
+					}
+				}
+				else if(msg.NOTIFY_ARG & dispatcher->game->irq_timer)
+					draw_game(dispatcher->game);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
+	if(dispatcher->game->state == GDONE)
 		dispatcher->state = EXIT_PROGRAM;
 
 }
