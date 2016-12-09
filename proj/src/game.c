@@ -24,6 +24,7 @@ void update_obstacle(Obstacle* obstacle){
 }
 
 void draw_obstacle(Obstacle* obstacle, char* buffer){
+	/*
 	int xi = obstacle->x;
 	int xf = xi + obstacle->width;
 	int yi = obstacle->y;
@@ -34,12 +35,13 @@ void draw_obstacle(Obstacle* obstacle, char* buffer){
 		xi = obstacle->x;
 		yi++;
 	}
+
+	 */
+	vg_fill_screen(obstacle->x, obstacle->y, obstacle->width, obstacle->height, obstacle->color);
 }
 
 Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
-	game->irq_timer = timer_subscribe_int();
-	game->irq_mouse = mouse_subscribe_int();
 	game->obstacle = create_obstacle(50,50,60,50);
 	game->mouse = create_mouse();
 	game->background = loadBitmap(fullPath("game_background.bmp"),0,0);

@@ -6,8 +6,9 @@
 typedef enum dispatcherstate_t {MAIN_MENU,GAME,EXIT_PROGRAM} dispatcherstate;
 
 typedef struct{
-	Menu* menu;
-	Game* game;
+	int irq_timer;
+	int irq_kbd;
+	int irq_mouse;
 	dispatcherstate state;
 } Dispatcher;
 

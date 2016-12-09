@@ -85,8 +85,10 @@ int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color, char* buf
 		return -1;
 	char* position = video_mem + (y*h_res + x)*bits_per_pixel/8;
 	int i = 0;
-	while(i++ < bits_per_pixel/8)
-		*(position++) = color;
+	while(i < bits_per_pixel/8) {
+		*(position++) = (color >> (i* 8));
+		i++;
+	}
 	return 0;
 }
 

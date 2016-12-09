@@ -24,9 +24,6 @@ void draw_obstacle(Obstacle* obstacle, char* buffer);
 typedef enum gamestate_t {GNOT_DONE, GDONE} gamestate;
 
 typedef struct{
-	int irq_timer;
-	int irq_keyboard;
-	int irq_mouse;
 
 	Obstacle* obstacle;
 	Mouse* mouse;
