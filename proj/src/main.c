@@ -30,7 +30,6 @@ int main(int argc, char **argv) {
 		else
 			process_game(dispatcher);
 	}
-
 	return exit_graphic_mode();
 }
 

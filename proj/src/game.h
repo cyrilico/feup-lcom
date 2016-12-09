@@ -8,16 +8,13 @@
 #include "utils.h"
 
 typedef struct{
-	int x;
-	int y;
-	int width;
-	int height;
 	int color;
 	int lives;
 	int colors[4];
+	Bitmap* obs;
 }Obstacle;
 
-Obstacle* create_obstacle(int x, int y, int width, int height);
+Obstacle* create_obstacle(int x, int y);
 void update_obstacle(Obstacle* obstacle);
 void draw_obstacle(Obstacle* obstacle, char* buffer);
 
@@ -28,6 +25,7 @@ typedef struct{
 	Obstacle* obstacle;
 	Mouse* mouse;
 	Bitmap* background;
+	Bitmap* player;
 	char* double_buffer;
 	gamestate state;
 }Game;
