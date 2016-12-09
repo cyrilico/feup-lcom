@@ -3,13 +3,18 @@
 Dispatcher* create_dispatcher() {
 	Dispatcher* dispatcher = (Dispatcher*)(malloc(sizeof(Dispatcher)));
 
-	//dispatcher->menu = create_menu();
-	dispatcher->game = create_game();
+	dispatcher->irq_timer = timer_subscribe_int();
+	dispatcher->irq_kbd = kbd_subscribe_int();
+	dispatcher->irq_mouse = mouse_subscribe_int();
+
 	dispatcher->state = GAME;
 	return dispatcher;
 }
 
 void process_main_menu(Dispatcher* dispatcher) {
+
+	Menu* menu = create_menu();
+
 	int ipc_status;
 	message msg;
 
@@ -19,35 +24,35 @@ void process_main_menu(Dispatcher* dispatcher) {
 
 	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
 
-	while(dispatcher->menu->state != DONE) {
+	while(menu->state != DONE) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
 			continue;
 		if (is_ipc_notify(ipc_status)) {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE:
-				if(msg.NOTIFY_ARG & dispatcher->menu->irq_mouse) {
+				if(msg.NOTIFY_ARG & dispatcher->irq_mouse) {
 					sys_inb(OUT_BUF, &byte);
 					if(counter == 0){
 						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
-							dispatcher->menu->mouse->packet[counter++] = (unsigned char)byte;
+							menu->mouse->packet[counter++] = (unsigned char)byte;
 						else{
 							printf("Invalid first byte, trying again\n");
 							continue;
 						}
 					}
 					else{
-						dispatcher->menu->mouse->packet[counter++] = (unsigned char)byte;
+						menu->mouse->packet[counter++] = (unsigned char)byte;
 						printf("Increment counter\n");
 						if(counter > 2){
-							mouse_print_packet(dispatcher->menu->mouse->packet);
+							mouse_print_packet(menu->mouse->packet);
 							counter = 0;
 							if(++number_of_packets != 1)
-								update_menu(dispatcher->menu);
+								update_menu(menu);
 						}
 					}
 				}
-				else if(msg.NOTIFY_ARG & dispatcher->menu->irq_timer)
-					draw_menu(dispatcher->menu);
+				else if(msg.NOTIFY_ARG & dispatcher->irq_timer)
+					draw_menu(menu);
 				break;
 			default:
 				break;
@@ -56,12 +61,15 @@ void process_main_menu(Dispatcher* dispatcher) {
 	}
 
 	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
-	if(dispatcher->menu->state == DONE)
+	//Change menu state
+	if(menu->state == DONE)
 		dispatcher->state = EXIT_PROGRAM;
-
 }
 
 void process_game(Dispatcher* dispatcher) {
+
+	Game* game = create_game();
+
 	int ipc_status;
 	message msg;
 
@@ -71,35 +79,35 @@ void process_game(Dispatcher* dispatcher) {
 
 	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
 
-	while(dispatcher->game->state != GDONE) {
+	while(game->state != GDONE) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
 			continue;
 		if (is_ipc_notify(ipc_status)) {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE:
-				if(msg.NOTIFY_ARG & dispatcher->game->irq_mouse) {
+				if(msg.NOTIFY_ARG & dispatcher->irq_mouse) {
 					sys_inb(OUT_BUF, &byte);
 					if(counter == 0){
 						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
-							dispatcher->game->mouse->packet[counter++] = (unsigned char)byte;
+							game->mouse->packet[counter++] = (unsigned char)byte;
 						else{
 							printf("Invalid first byte, trying again\n");
 							continue;
 						}
 					}
 					else{
-						dispatcher->game->mouse->packet[counter++] = (unsigned char)byte;
+						game->mouse->packet[counter++] = (unsigned char)byte;
 						printf("Increment counter\n");
 						if(counter > 2){
-							mouse_print_packet(dispatcher->game->mouse->packet);
+							mouse_print_packet(game->mouse->packet);
 							counter = 0;
 							if(++number_of_packets != 1)
-								update_game(dispatcher->game);
+								update_game(game);
 						}
 					}
 				}
-				else if(msg.NOTIFY_ARG & dispatcher->game->irq_timer)
-					draw_game(dispatcher->game);
+				else if(msg.NOTIFY_ARG & dispatcher->irq_timer)
+					draw_game(game);
 				break;
 			default:
 				break;
@@ -108,13 +116,12 @@ void process_game(Dispatcher* dispatcher) {
 	}
 
 	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
-	if(dispatcher->game->state == GDONE)
+	if(game->state == GDONE)
 		dispatcher->state = EXIT_PROGRAM;
 
 }
 
 void delete_dispatcher(Dispatcher* dispatcher) {
-	delete_menu(dispatcher->menu);
 	free(dispatcher);
 }
 
