@@ -25,10 +25,6 @@ void delete_button(Button* button){
 
 Menu* create_menu(){
 	Menu* menu = (Menu*)(malloc(sizeof(Menu)));
-	menu->irq_timer = timer_subscribe_int();
-	//menu->irq_keyboard = kbd_subscribe_int();
-	menu->irq_mouse = mouse_subscribe_int();
-
 	menu->play_button = create_button(PLAY_BUTTON_X,PLAY_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT);
 	menu->exit_button = create_button(EXIT_BUTTON_X,EXIT_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT);
 	menu->mouse = create_mouse();
@@ -50,8 +46,10 @@ void update_menu(Menu* menu){
 	int lbreleased = menu->mouse->left_button_was_released;
 	int mouseInPlayButton = mouse_on_button(menu->play_button,menu->mouse);
 	int mouseInExitButton = mouse_on_button(menu->exit_button,menu->mouse);
-	if(lbreleased && (mouseInPlayButton || mouseInExitButton))
-		menu->state = DONE;
+	if(lbreleased && mouseInPlayButton)
+		menu->state = PLAY_CHOSEN;
+	else if(lbreleased && mouseInExitButton)
+		menu->state = EXIT_CHOSEN;
 }
 
 void delete_menu(Menu* menu){

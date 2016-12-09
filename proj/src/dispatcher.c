@@ -6,8 +6,7 @@ Dispatcher* create_dispatcher() {
 	dispatcher->irq_timer = timer_subscribe_int();
 	dispatcher->irq_kbd = kbd_subscribe_int();
 	dispatcher->irq_mouse = mouse_subscribe_int();
-
-	dispatcher->state = GAME;
+	dispatcher->state = MAIN_MENU;
 	return dispatcher;
 }
 
@@ -24,7 +23,7 @@ void process_main_menu(Dispatcher* dispatcher) {
 
 	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
 
-	while(menu->state != DONE) {
+	while(menu->state == NOT_DONE) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
 			continue;
 		if (is_ipc_notify(ipc_status)) {
@@ -62,8 +61,16 @@ void process_main_menu(Dispatcher* dispatcher) {
 
 	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
 	//Change menu state
-	if(menu->state == DONE)
+	switch(menu->state){
+	case PLAY_CHOSEN:
+		dispatcher->state = GAME;
+		break;
+	case EXIT_CHOSEN:
 		dispatcher->state = EXIT_PROGRAM;
+		break;
+	default:
+		break;
+	}
 }
 
 void process_game(Dispatcher* dispatcher) {
@@ -108,6 +115,8 @@ void process_game(Dispatcher* dispatcher) {
 				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer)
 					draw_game(game);
+				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd)
+					sys_inb(OUT_BUF, &byte);
 				break;
 			default:
 				break;

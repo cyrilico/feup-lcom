@@ -26,13 +26,9 @@ Button* create_button(int x, int y, int width, int height);
 int mouse_on_button(Button* button, Mouse* mouse);
 void delete_button(Button* button);
 
-typedef enum menustate_t {NOT_DONE, DONE} menustate;
+typedef enum menustate_t {NOT_DONE, PLAY_CHOSEN, EXIT_CHOSEN} menustate;
 
 typedef struct{
-	int irq_timer;
-	int irq_keyboard;
-	int irq_mouse;
-
 	Button* play_button;
 	Button* exit_button;
 	Mouse* mouse;
