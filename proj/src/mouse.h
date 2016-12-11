@@ -21,6 +21,8 @@ typedef struct{
 	lbstate left_button_state;
 	int left_button_was_released; //non-zero when lbstate is RELEASED and previous was PRESSED
 	Bitmap* crosshair;
+	unsigned int byteID;
+	unsigned int number_of_packets; //try to fix this crap later
 	unsigned char packet[3];
 }Mouse;
 

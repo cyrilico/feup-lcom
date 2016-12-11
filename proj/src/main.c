@@ -17,6 +17,8 @@ int main(int argc, char **argv) {
 	 * sys_enable_iop(SELF);
 	*/
 
+	srand(time(NULL));
+
 	if(start_graphic_mode() != OK)
 		return -1;
 
@@ -30,6 +32,8 @@ int main(int argc, char **argv) {
 		else
 			process_game(dispatcher);
 	}
+
+	delete_dispatcher(dispatcher);
 	return exit_graphic_mode();
 }
 

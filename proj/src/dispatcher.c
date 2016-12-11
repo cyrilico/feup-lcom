@@ -21,8 +21,6 @@ void process_main_menu(Dispatcher* dispatcher) {
 	unsigned short counter = 0;
 	long byte; //Auxiliar variable that will store each byte read
 
-	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
-
 	while(menu->state == NOT_DONE) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
 			continue;
@@ -59,7 +57,6 @@ void process_main_menu(Dispatcher* dispatcher) {
 		}
 	}
 
-	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
 	//Change menu state
 	switch(menu->state){
 	case PLAY_CHOSEN:
@@ -71,6 +68,8 @@ void process_main_menu(Dispatcher* dispatcher) {
 	default:
 		break;
 	}
+
+	delete_menu(menu);
 }
 
 void process_game(Dispatcher* dispatcher) {
@@ -84,9 +83,7 @@ void process_game(Dispatcher* dispatcher) {
 	unsigned short counter = 0;
 	long byte; //Auxiliar variable that will store each byte read
 
-	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
-
-	while(game->state != GDONE) {
+	while(game->state != GAME_OVER) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
 			continue;
 		if (is_ipc_notify(ipc_status)) {
@@ -94,20 +91,17 @@ void process_game(Dispatcher* dispatcher) {
 			case HARDWARE:
 				if(msg.NOTIFY_ARG & dispatcher->irq_mouse) {
 					sys_inb(OUT_BUF, &byte);
-					if(counter == 0){
+					if(game->mouse->byteID == 0){
 						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
-							game->mouse->packet[counter++] = (unsigned char)byte;
-						else{
-							printf("Invalid first byte, trying again\n");
+							game->mouse->packet[game->mouse->byteID++] = (unsigned char)byte;
+						else
 							continue;
-						}
 					}
 					else{
-						game->mouse->packet[counter++] = (unsigned char)byte;
-						printf("Increment counter\n");
-						if(counter > 2){
+						game->mouse->packet[game->mouse->byteID++] = (unsigned char)byte;
+						if(game->mouse->byteID == 3){
 							mouse_print_packet(game->mouse->packet);
-							counter = 0;
+							game->mouse->byteID = 0;
 							if(++number_of_packets != 1)
 								update_game(game);
 						}
@@ -123,14 +117,13 @@ void process_game(Dispatcher* dispatcher) {
 			}
 		}
 	}
-
-	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
-	if(game->state == GDONE)
-		dispatcher->state = EXIT_PROGRAM;
-
+	dispatcher->state = MAIN_MENU;
 }
 
 void delete_dispatcher(Dispatcher* dispatcher) {
+	timer_unsubscribe_int();
+	kbd_unsubscribe_int();
+	mouse_unsubscribe_int();
 	free(dispatcher);
 }
 
