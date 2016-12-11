@@ -115,6 +115,9 @@ Mouse* create_mouse(){
 	Mouse* new_mouse = (Mouse*)(malloc(sizeof(Mouse)));
 	new_mouse->left_button_state = RELEASED;
 	new_mouse->crosshair = loadBitmap(fullPath("crosshair.bmp"),100,100); //Mouse starts at (x,y)=(100,100)
+	new_mouse->byteID = 0;
+	new_mouse->number_of_packets = 0;
+	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
 	return new_mouse;
 }
 
@@ -147,6 +150,7 @@ void update_mouse(Mouse* mouse){
 
 void delete_mouse(Mouse* mouse){
 	deleteBitmap(mouse->crosshair);
+	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
 	free(mouse);
 }
 

@@ -33,7 +33,7 @@ typedef struct{
 	Button* exit_button;
 	Mouse* mouse;
 	Bitmap* background;
-	char* double_buffer;
+	char* secondary_buffer;
 
 	menustate state;
 }Menu;
