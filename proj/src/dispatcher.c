@@ -81,6 +81,7 @@ void process_game(Dispatcher* dispatcher) {
 
 	unsigned short number_of_packets = 0; //number of full packets processed
 	unsigned short counter = 0;
+	int update = 0;
 	long byte; //Auxiliar variable that will store each byte read
 
 	while(game->state != GAME_OVER) {
@@ -102,16 +103,27 @@ void process_game(Dispatcher* dispatcher) {
 						if(game->mouse->byteID == 3){
 							mouse_print_packet(game->mouse->packet);
 							game->mouse->byteID = 0;
-							if(++(game->mouse->number_of_packets) != 1){
-								update_game(game);
-								if(game->mouse->left_button_was_released) //just to test if alternation between main menu and game is ok
-									game->state = GAME_OVER;
-							}
+							if(++(game->mouse->number_of_packets) != 1)
+								update = 1;
 						}
 					}
 				}
-				else if(msg.NOTIFY_ARG & dispatcher->irq_timer)
-					draw_game(game);
+				else if(msg.NOTIFY_ARG & dispatcher->irq_timer){
+					counter = (counter+1)%2;
+					update_game(game);
+					if(update){
+						update = 0;
+						update_mouse(game->mouse);
+						if(game->mouse->packet[0] & BIT(4)) //Negative x delta
+							game->player->x -= ABS_VALUE(TWOSCOMPLEMENT(game->mouse->packet[1]));
+						else //Positive x delta
+							game->player->x += game->mouse->packet[1];
+						if(game->mouse->left_button_was_released) //just to test if alternation between main menu and game is ok
+							game->state = GAME_OVER;
+					}
+					if(counter)
+						draw_game(game);
+				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd)
 					sys_inb(OUT_BUF, &byte);
 				break;
@@ -124,9 +136,9 @@ void process_game(Dispatcher* dispatcher) {
 }
 
 void delete_dispatcher(Dispatcher* dispatcher) {
-	timer_unsubscribe_int();
-	kbd_unsubscribe_int();
-	mouse_unsubscribe_int();
-	free(dispatcher);
-}
+		timer_unsubscribe_int();
+		kbd_unsubscribe_int();
+		mouse_unsubscribe_int();
+		free(dispatcher);
+	}
 
