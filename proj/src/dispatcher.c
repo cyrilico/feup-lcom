@@ -102,8 +102,11 @@ void process_game(Dispatcher* dispatcher) {
 						if(game->mouse->byteID == 3){
 							mouse_print_packet(game->mouse->packet);
 							game->mouse->byteID = 0;
-							if(++number_of_packets != 1)
+							if(++(game->mouse->number_of_packets) != 1){
 								update_game(game);
+								if(game->mouse->left_button_was_released) //just to test if alternation between main menu and game is ok
+									game->state = GAME_OVER;
+							}
 						}
 					}
 				}

@@ -3,13 +3,15 @@
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));
 	obstacle->lives = rand()%3+1;
-	for(int i = 0; i < 3; i++)
+	int i;
+	for(i = 0; i < 3; i++)
 		obstacle->bitmaps[i] = loadBitmap(fullPath("villain.bmp"),x,y);
 	return obstacle;
 }
 
 void update_obstacle(Obstacle* obstacle){
-	for(int i = 0; i < 3; i++){
+	int i;
+	for(i = 0; i < 3; i++){
 		if(obstacle->bitmaps[i]->y + 55 < vg_get_v_res())
 			obstacle->bitmaps[i]->y += 1;
 	}
@@ -25,7 +27,15 @@ Game* create_game(){
 	game->background = loadBitmap(fullPath("game_background.bmp"),0,0);
 	game->player = loadBitmap(fullPath("buzz.bmp"),50,530);
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
-	/*OBSTACLE ARRAY*/
+	game->obstacles = (Obstacle**)(malloc(5*sizeof(Obstacle*)));
+	int i;
+	for(i = 0; i < 5; i++){
+		int empty = rand() % 2; //Determine if empty space or enemy's there
+		if(!empty)
+			game->obstacles[i] = create_obstacle(50*(i+1),50);
+		else
+			game->obstacles[i] = NULL;
+	}
 	game->state = GAME_RUNNING;
 	return game;
 }
@@ -33,7 +43,11 @@ Game* create_game(){
 void update_game(Game* game){
 	//Update objects' positions
 	update_mouse(game->mouse);
-	/*OBSTACLE ARRAY*/
+	int i;
+	for(i = 0; i < 5; i++){
+		if(game->obstacles[i] != NULL)
+			update_obstacle(game->obstacles[i]);
+	}
 	if(game->mouse->packet[0] & BIT(4)) //Negative x delta
 		game->player->x -= ABS_VALUE(TWOSCOMPLEMENT(game->mouse->packet[1]));
 	else //Positive x delta
@@ -42,7 +56,10 @@ void update_game(Game* game){
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
 	drawBitmap(game->player,game->secondary_buffer,ALIGN_LEFT);
-	/*OBSTACLE ARRAY*/
+	for(i = 0; i < 5; i++){
+		if(game->obstacles[i] != NULL)
+			draw_obstacle(game->obstacles[i],game->secondary_buffer);
+	}
 }
 
 void draw_game(Game* game){
@@ -50,11 +67,14 @@ void draw_game(Game* game){
 }
 
 void delete_game(Game* game){
-	free(game->obstacle);
 	delete_mouse(game->mouse);
 	deleteBitmap(game->background);
 	deleteBitmap(game->player);
-	/*OBSTACLE ARRAY*/
+	int i;
+	for(i = 0; i < 5; i++){
+		if(game->obstacles[i] != NULL)
+			free(game->obstacles[i]);
+	}
 	free(game->secondary_buffer);
 	free(game);
 }
