@@ -19,7 +19,7 @@ void draw_obstacle(Obstacle* obstacle, char* buffer);
 typedef enum gamestate_t {GAME_RUNNING, GAME_OVER} gamestate;
 
 typedef struct{
-	Obstacle** obstacle;
+	Obstacle** obstacles;
 	Mouse* mouse;
 	Bitmap* background;
 	Bitmap* player;
