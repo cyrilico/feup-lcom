@@ -24,13 +24,13 @@ int main(int argc, char **argv) {
 
 	Dispatcher* dispatcher = create_dispatcher();
 
-	while(dispatcher->state != EXIT_PROGRAM) {
-		if(dispatcher->state == MAIN_MENU) {
-			printf("Update Dispatcher\n");
+	while(1) {
+		if(dispatcher->state == MAIN_MENU)
 			process_main_menu(dispatcher);
-		}
-		else
+		else if(dispatcher->state == GAME)
 			process_game(dispatcher);
+		else //dispatcher->state == EXIT_PROGRAM
+			break;
 	}
 
 	delete_dispatcher(dispatcher);

@@ -32,6 +32,7 @@ typedef struct{
 	Button* play_button;
 	Button* exit_button;
 	Mouse* mouse;
+	Keyboard* keyboard;
 	Bitmap* background;
 	char* secondary_buffer;
 
@@ -40,4 +41,5 @@ typedef struct{
 
 Menu* create_menu();
 void draw_menu(Menu* menu);
+void update_menu(Menu* menu, int kbd_or_mouse); //0 if kbd caused the update, 1 if mouse caused the update
 void delete_menu(Menu* menu);

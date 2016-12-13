@@ -7,7 +7,7 @@ Obstacle* create_obstacle(int x, int y){
 	obstacle->lives = rand()%3+1;
 	int i;
 	for(i = 0; i < 3; i++)
-		obstacle->bitmaps[i] = loadBitmap(fullPath("obstacle0.bmp"),x,y);
+		obstacle->bitmaps[i] = loadBitmap(fullPath("villain.bmp"),x,y);
 	return obstacle;
 }
 
@@ -24,12 +24,13 @@ void draw_obstacle(Obstacle* obstacle, char* buffer){
 }
 
 Game* create_game(){
-	Game* game = (Game*)(malloc(sizeof(Game)));
+	Game* game = (Game*)(malloc(sizeof(Game))); if(game == NULL) printf("Merdou a criar game\n");
 	game->mouse = create_mouse();
 	game->background = loadBitmap(fullPath("game_background.bmp"),0,0);
 	game->player = loadBitmap(fullPath("buzz.bmp"),50,530);
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
-	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
+	if(game->secondary_buffer == NULL) printf("Olha merdou no buffer\n");
+	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*))); if(game->obstacles == NULL) printf("Merdou nos obstacles\n");
 	int i;
 	for(i = 0; i < N_OBSTACLES; i++){
 		int empty = rand() % 2; //Determine if empty space or enemy's there
@@ -73,7 +74,7 @@ void delete_game(Game* game){
 	deleteBitmap(game->background);
 	deleteBitmap(game->player);
 	int i;
-	for(i = 0; i < 5; i++){
+	for(i = 0; i < N_OBSTACLES; i++){
 		if(game->obstacles[i] != NULL)
 			free(game->obstacles[i]);
 	}
