@@ -116,6 +116,7 @@ Mouse* create_mouse(){
 	new_mouse->left_button_state = RELEASED;
 	new_mouse->crosshair = loadBitmap(fullPath("crosshair.bmp"),100,100); //Mouse starts at (x,y)=(100,100)
 	new_mouse->byteID = 0;
+	new_mouse->packet_byte = 0;
 	new_mouse->number_of_packets = 0;
 	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
 	return new_mouse;

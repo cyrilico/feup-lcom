@@ -297,3 +297,36 @@ int kbd_leds_loop(unsigned short n, unsigned short *leds){
 		return 0;
 	}
 }
+
+/*------------------------------------------------*/
+
+Keyboard* create_keyboard(){
+	Keyboard* keyboard = (Keyboard*)(malloc(sizeof(Keyboard)));
+	keyboard->scancode = 0;
+	keyboard->scancode_aux = 0;
+	keyboard->read_again = 0;
+
+	return keyboard;
+}
+
+void read_scancode(Keyboard* keyboard){
+	unsigned long code = kbd_read_code();
+	if(code != -1){
+		if(keyboard->read_again == 1){
+			code = code << 8;
+			code |= keyboard->scancode_aux;
+			keyboard->scancode = code;
+			keyboard->read_again = 0;
+		}
+		else if(code == TWO_BYTE_SCANCODE){
+			keyboard->scancode_aux = code;
+			keyboard->read_again = 1;
+		}
+		else
+			keyboard->scancode = code;
+	}
+}
+
+void delete_keyboard(Keyboard* keyboard){
+	free(keyboard);
+}

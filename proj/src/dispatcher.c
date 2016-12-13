@@ -17,10 +17,6 @@ void process_main_menu(Dispatcher* dispatcher) {
 	int ipc_status;
 	message msg;
 
-	unsigned short number_of_packets = 0; //number of full packets processed
-	unsigned short counter = 0;
-	long byte; //Auxiliar variable that will store each byte read
-
 	while(menu->state == NOT_DONE) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
 			continue;
@@ -28,25 +24,31 @@ void process_main_menu(Dispatcher* dispatcher) {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE:
 				if(msg.NOTIFY_ARG & dispatcher->irq_mouse) {
-					sys_inb(OUT_BUF, &byte);
-					if(counter == 0){
-						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
-							menu->mouse->packet[counter++] = (unsigned char)byte;
+					sys_inb(OUT_BUF, &(menu->mouse->packet_byte));
+					if(menu->mouse->byteID == 0){
+						if(menu->mouse->packet_byte & BIT(3)) //Valid first byte (or at least we hope so)
+							menu->mouse->packet[menu->mouse->byteID++] = (unsigned char)(menu->mouse->packet_byte);
 						else{
 							printf("Invalid first byte, trying again\n");
 							continue;
 						}
 					}
 					else{
-						menu->mouse->packet[counter++] = (unsigned char)byte;
-						printf("Increment counter\n");
-						if(counter > 2){
+						menu->mouse->packet[menu->mouse->byteID++] = (unsigned char)(menu->mouse->packet_byte);
+						if(menu->mouse->byteID == 3){
 							mouse_print_packet(menu->mouse->packet);
-							counter = 0;
-							if(++number_of_packets != 1)
-								update_menu(menu);
+							menu->mouse->byteID = 0;
+							if(++(menu->mouse->number_of_packets) != 1){
+								update_mouse(menu->mouse);
+								update_menu(menu,MOUSE_UPDATE);
+							}
 						}
 					}
+				}
+				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd){
+					read_scancode(menu->keyboard);
+					if(!menu->keyboard->read_again) //Full scancode processed, analyze its consequences
+						update_menu(menu,KBD_UPDATE);
 				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer)
 					draw_menu(menu);
@@ -79,10 +81,10 @@ void process_game(Dispatcher* dispatcher) {
 	int ipc_status;
 	message msg;
 
-	unsigned short number_of_packets = 0; //number of full packets processed
 	unsigned short counter = 0;
 	int update = 0;
-	long byte; //Auxiliar variable that will store each byte read
+
+	long byte;
 
 	while(game->state != GAME_OVER) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
@@ -91,15 +93,15 @@ void process_game(Dispatcher* dispatcher) {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE:
 				if(msg.NOTIFY_ARG & dispatcher->irq_mouse) {
-					sys_inb(OUT_BUF, &byte);
+					sys_inb(OUT_BUF, &(game->mouse->packet_byte));
 					if(game->mouse->byteID == 0){
-						if(byte & BIT(3)) //Valid first byte (or at least we hope so)
-							game->mouse->packet[game->mouse->byteID++] = (unsigned char)byte;
+						if(game->mouse->packet_byte & BIT(3)) //Valid first byte (or at least we hope so)
+							game->mouse->packet[game->mouse->byteID++] = (unsigned char)(game->mouse->packet_byte);
 						else
 							continue;
 					}
 					else{
-						game->mouse->packet[game->mouse->byteID++] = (unsigned char)byte;
+						game->mouse->packet[game->mouse->byteID++] = (unsigned char)(game->mouse->packet_byte);
 						if(game->mouse->byteID == 3){
 							mouse_print_packet(game->mouse->packet);
 							game->mouse->byteID = 0;
@@ -108,6 +110,8 @@ void process_game(Dispatcher* dispatcher) {
 						}
 					}
 				}
+				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd)
+					sys_inb(OUT_BUF, &byte);
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer){
 					counter = (counter+1)%2;
 					update_game(game);
@@ -124,8 +128,6 @@ void process_game(Dispatcher* dispatcher) {
 					if(counter)
 						draw_game(game);
 				}
-				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd)
-					sys_inb(OUT_BUF, &byte);
 				break;
 			default:
 				break;
@@ -140,5 +142,5 @@ void delete_dispatcher(Dispatcher* dispatcher) {
 		kbd_unsubscribe_int();
 		mouse_unsubscribe_int();
 		free(dispatcher);
-	}
+}
 
