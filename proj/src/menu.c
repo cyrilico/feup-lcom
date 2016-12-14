@@ -50,7 +50,7 @@ void update_menu(Menu* menu, int kbd_or_mouse){
 		else if(lbreleased && mouseInExitButton)
 			menu->state = EXIT_CHOSEN;
 
-		//Prepare next frame (TO DO: add condition later to only prepare new frame if mouse hasn't moved maybe?)
+		//Prepare next frame (TO DO: add condition later to only prepare new frame if mouse has moved maybe?)
 		drawBitmap(menu->background,menu->secondary_buffer,ALIGN_LEFT);
 		draw_mouse(menu->mouse,menu->secondary_buffer);
 	}

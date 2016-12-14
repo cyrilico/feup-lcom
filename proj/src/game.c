@@ -23,14 +23,52 @@ void draw_obstacle(Obstacle* obstacle, char* buffer){
 	drawBitmap(obstacle->bitmaps[obstacle->lives],buffer,ALIGN_LEFT);
 }
 
+void delete_obstacle(Obstacle* obstacle){
+	int i;
+	for(i = 0; i < 3; i++)
+		deleteBitmap(obstacle->bitmaps[i]);
+	free(obstacle);
+}
+
+Player* create_player(){
+	Player* player = (Player*)(malloc(sizeof(Player)));
+	player->alive = 1;
+	int player_start_x = rand()%(vg_get_h_res()/2) + LEFT_LIMIT; //Random starting position
+	player->bitmap = loadBitmap(fullPath("buzz.bmp"), player_start_x, PLAYER_START_Y);
+	/*TO DO: initialization of remaining structures (when they're created in Player 'class' */
+	return player;
+}
+
+void update_player(Player* player, Mouse* mouse){
+	if(mouse->packet[0] & BIT(4)){ //Negative x delta
+		player->bitmap->x -= ABS_VALUE(TWOSCOMPLEMENT(mouse->packet[1]));
+		if(player->bitmap->x < LEFT_LIMIT)
+			player->bitmap->x = LEFT_LIMIT;
+	}
+	else{ //Positive x delta
+		player->bitmap->x += mouse->packet[1];
+		if(player->bitmap->x + player->bitmap->bitmapInfoHeader.width > RIGHT_LIMIT)
+			player->bitmap->x = RIGHT_LIMIT - player->bitmap->bitmapInfoHeader.width;
+	}
+}
+
+void draw_player(Player* player, char* buffer){
+	drawBitmap(player->bitmap,buffer,ALIGN_LEFT);
+}
+
+void delete_player(Player* player){
+	deleteBitmap(player->bitmap);
+	free(player);
+}
+
 Game* create_game(){
-	Game* game = (Game*)(malloc(sizeof(Game))); if(game == NULL) printf("Merdou a criar game\n");
+	Game* game = (Game*)(malloc(sizeof(Game)));
 	game->mouse = create_mouse();
+	game->keyboard = create_keyboard();
 	game->background = loadBitmap(fullPath("game_background.bmp"),0,0);
-	game->player = loadBitmap(fullPath("buzz.bmp"),50,530);
+	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
-	if(game->secondary_buffer == NULL) printf("Olha merdou no buffer\n");
-	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*))); if(game->obstacles == NULL) printf("Merdou nos obstacles\n");
+	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
 	int i;
 	for(i = 0; i < N_OBSTACLES; i++){
 		int empty = rand() % 2; //Determine if empty space or enemy's there
@@ -51,14 +89,11 @@ void update_game(Game* game){
 		if(game->obstacles[i] != NULL)
 			update_obstacle(game->obstacles[i]);
 	}
-	/*if(game->mouse->packet[0] & BIT(4)) //Negative x delta
-		game->player->x -= ABS_VALUE(TWOSCOMPLEMENT(game->mouse->packet[1]));
-	else //Positive x delta
-		game->player->x += game->mouse->packet[1];
-	*/
+	//update_player(game->player,game->mouse);
+
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
-	drawBitmap(game->player,game->secondary_buffer,ALIGN_LEFT);
+	draw_player(game->player,game->secondary_buffer);
 	for(i = 0; i < N_OBSTACLES; i++){
 		if(game->obstacles[i] != NULL)
 			draw_obstacle(game->obstacles[i],game->secondary_buffer);
@@ -71,12 +106,13 @@ void draw_game(Game* game){
 
 void delete_game(Game* game){
 	delete_mouse(game->mouse);
+	delete_keyboard(game->keyboard);
 	deleteBitmap(game->background);
-	deleteBitmap(game->player);
+	delete_player(game->player);
 	int i;
 	for(i = 0; i < N_OBSTACLES; i++){
 		if(game->obstacles[i] != NULL)
-			free(game->obstacles[i]);
+			delete_obstacle(game->obstacles[i]);
 	}
 	free(game->secondary_buffer);
 	free(game);
