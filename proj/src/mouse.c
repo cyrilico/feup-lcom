@@ -1,5 +1,8 @@
 #include "mouse.h"
 
+#define MOUSE_WIDTH 10
+#define MOUSE_HEIGHT 10
+
 int hookid_mouse = 23;
 
 int mouse_subscribe_int() {
@@ -123,6 +126,15 @@ Mouse* create_mouse(){
 }
 
 void draw_mouse(Mouse* mouse, char* buffer){
+	if(mouse->crosshair->x < 0)
+		mouse->crosshair->x = 0;
+	if(mouse->crosshair->y < 0)
+		mouse->crosshair->y = 0;
+
+	if(mouse->crosshair->x > vg_get_h_res() - MOUSE_WIDTH)
+		mouse->crosshair->x = vg_get_h_res() - MOUSE_WIDTH;
+	if(mouse->crosshair->y > vg_get_v_res() - MOUSE_HEIGHT)
+		mouse->crosshair->y =  vg_get_v_res() - MOUSE_HEIGHT;
 	drawBitmap(mouse->crosshair, buffer, ALIGN_LEFT);
 }
 
