@@ -1,6 +1,6 @@
 #include "game.h"
 
-#define N_OBSTACLES 13
+#define N_OBSTACLES 10
 
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));
@@ -14,7 +14,7 @@ Obstacle* create_obstacle(int x, int y){
 void update_obstacle(Obstacle* obstacle){
 	int i;
 	for(i = 0; i < 3; i++){
-		if(obstacle->bitmaps[i]->y + 55 < vg_get_v_res())
+		if(obstacle->bitmaps[i]->y + OBSTACLE_HEIGHT < vg_get_v_res())
 			obstacle->bitmaps[i]->y += 1;
 	}
 }
@@ -73,7 +73,7 @@ Game* create_game(){
 	for(i = 0; i < N_OBSTACLES; i++){
 		int empty = rand() % 2; //Determine if empty space or enemy's there
 		if(!empty)
-			game->obstacles[i] = create_obstacle(50*(i+1),50);
+			game->obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT);
 		else
 			game->obstacles[i] = NULL;
 	}

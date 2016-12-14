@@ -1,8 +1,5 @@
 #include "mouse.h"
 
-#define MOUSE_WIDTH 10
-#define MOUSE_HEIGHT 10
-
 int hookid_mouse = 23;
 
 int mouse_subscribe_int() {
@@ -126,15 +123,6 @@ Mouse* create_mouse(){
 }
 
 void draw_mouse(Mouse* mouse, char* buffer){
-	if(mouse->crosshair->x < 0)
-		mouse->crosshair->x = 0;
-	if(mouse->crosshair->y < 0)
-		mouse->crosshair->y = 0;
-
-	if(mouse->crosshair->x > vg_get_h_res() - MOUSE_WIDTH)
-		mouse->crosshair->x = vg_get_h_res() - MOUSE_WIDTH;
-	if(mouse->crosshair->y > vg_get_v_res() - MOUSE_HEIGHT)
-		mouse->crosshair->y =  vg_get_v_res() - MOUSE_HEIGHT;
 	drawBitmap(mouse->crosshair, buffer, ALIGN_LEFT);
 }
 
@@ -159,6 +147,17 @@ void update_mouse(Mouse* mouse){
 		else
 			mouse->left_button_was_released = 0;
 	}
+
+	//Limit mouse to screen
+	if(mouse->crosshair->x < 0)
+		mouse->crosshair->x = 0;
+	if(mouse->crosshair->y < 0)
+		mouse->crosshair->y = 0;
+
+	if(mouse->crosshair->x > vg_get_h_res() - mouse->crosshair->bitmapInfoHeader.width)
+		mouse->crosshair->x = vg_get_h_res() - mouse->crosshair->bitmapInfoHeader.width;
+	if(mouse->crosshair->y > vg_get_v_res() - mouse->crosshair->bitmapInfoHeader.height)
+		mouse->crosshair->y =  vg_get_v_res() - mouse->crosshair->bitmapInfoHeader.height;
 }
 
 void delete_mouse(Mouse* mouse){
