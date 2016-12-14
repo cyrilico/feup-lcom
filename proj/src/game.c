@@ -7,7 +7,7 @@ Obstacle* create_obstacle(int x, int y){
 	obstacle->lives = rand()%3+1;
 	int i;
 	for(i = 0; i < 3; i++)
-		obstacle->bitmaps[i] = loadBitmap(fullPath("villain.bmp"),x,y);
+		obstacle->bitmaps[i] = loadBitmap(fullPath("obstacle0.bmp"),x,y);
 	return obstacle;
 }
 
