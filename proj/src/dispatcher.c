@@ -84,15 +84,13 @@ void process_game(Dispatcher* dispatcher) {
 	unsigned short counter = 0;
 	int update = 0;
 
-	long byte;
-
 	while(game->state != GAME_OVER) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
 			continue;
 		if (is_ipc_notify(ipc_status)) {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE:
-				if(msg.NOTIFY_ARG & dispatcher->irq_mouse) {
+				if(msg.NOTIFY_ARG & dispatcher->irq_mouse){
 					sys_inb(OUT_BUF, &(game->mouse->packet_byte));
 					if(game->mouse->byteID == 0){
 						if(game->mouse->packet_byte & BIT(3)) //Valid first byte (or at least we hope so)
@@ -110,20 +108,18 @@ void process_game(Dispatcher* dispatcher) {
 						}
 					}
 				}
-				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd)
-					sys_inb(OUT_BUF, &byte);
+				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd){
+					read_scancode(game->keyboard);
+					if(!game->keyboard->read_again && game->keyboard->scancode == ESC_BREAK) //Full scancode processed, analyze its consequences
+						game->state = GAME_OVER;
+				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer){
 					counter = (counter+1)%2;
 					update_game(game);
 					if(update){
 						update = 0;
 						update_mouse(game->mouse);
-						if(game->mouse->packet[0] & BIT(4)) //Negative x delta
-							game->player->x -= ABS_VALUE(TWOSCOMPLEMENT(game->mouse->packet[1]));
-						else //Positive x delta
-							game->player->x += game->mouse->packet[1];
-						if(game->mouse->left_button_was_released) //just to test if alternation between main menu and game is ok
-							game->state = GAME_OVER;
+						update_player(game->player, game->mouse);
 					}
 					if(counter)
 						draw_game(game);

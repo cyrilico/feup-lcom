@@ -26,6 +26,9 @@ Button* create_button(int x, int y, int width, int height);
 int mouse_on_button(Button* button, Mouse* mouse);
 void delete_button(Button* button);
 
+#define KBD_UPDATE 0
+#define MOUSE_UPDATE 1
+
 typedef enum menustate_t {NOT_DONE, PLAY_CHOSEN, EXIT_CHOSEN} menustate;
 
 typedef struct{

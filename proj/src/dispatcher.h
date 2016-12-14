@@ -3,9 +3,6 @@
 #include "menu.h"
 #include "game.h"
 
-#define KBD_UPDATE 0
-#define MOUSE_UPDATE 1
-
 typedef enum dispatcherstate_t {MAIN_MENU,GAME,EXIT_PROGRAM} dispatcherstate;
 
 typedef struct{
