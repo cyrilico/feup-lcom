@@ -20,6 +20,7 @@
 #define DISABLE_SCANCODES 0xF5
 #define ENABLE_SCANCODES 0xF4
 #define ESC_BREAK 0x81
+#define A_BREAK 0x9E
 
 #define IRQ_MOUSE 12
 #define MAX_X_TOLERANCE 1

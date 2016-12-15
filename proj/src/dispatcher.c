@@ -112,6 +112,8 @@ void process_game(Dispatcher* dispatcher) {
 					read_scancode(game->keyboard);
 					if(!game->keyboard->read_again && game->keyboard->scancode == ESC_BREAK) //Full scancode processed, analyze its consequences
 						game->state = GAME_OVER;
+					else if(!game->keyboard->read_again && game->keyboard->scancode == A_BREAK) //Shoot bullet
+						remove_bullet_shot(game);
 				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer){
 					counter = (counter+1)%2;
