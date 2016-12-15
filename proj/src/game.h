@@ -36,7 +36,7 @@ typedef struct{
 }Player;
 
 Player* create_player();
-void update_player_mouse(Player* player, Mouse* mouse); //Update player position based on latest mouse packet
+void update_player_mouse(Player* player, Mouse* mouse, char* buffer); //Update player position based on latest mouse packet
 void update_player_collision(Player* player, char* buffer); //Update player position in case of eventual collision
 void draw_player(Player* player, char* buffer);
 void delete_player(Player* player);

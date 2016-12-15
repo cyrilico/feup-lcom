@@ -121,7 +121,7 @@ void process_game(Dispatcher* dispatcher) {
 					if(update){
 						update = 0;
 						update_mouse(game->mouse);
-						update_player_mouse(game->player, game->mouse);
+						update_player_mouse(game->player, game->mouse, game->secondary_buffer);
 					}
 					if(counter)
 						draw_game(game);

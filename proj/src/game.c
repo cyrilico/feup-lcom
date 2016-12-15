@@ -64,7 +64,10 @@ Player* create_player(){
 	return player;
 }
 
-void update_player_mouse(Player* player, Mouse* mouse){
+void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
+
+	int previous_x = player->bitmap->x;
+
 	if(mouse->packet[0] & BIT(4)){ //Negative x delta
 		player->bitmap->x -= ABS_VALUE(TWOSCOMPLEMENT(mouse->packet[1]));
 		if(player->bitmap->x < LEFT_LIMIT)
@@ -75,6 +78,18 @@ void update_player_mouse(Player* player, Mouse* mouse){
 		if(player->bitmap->x + player->bitmap->bitmapInfoHeader.width > RIGHT_LIMIT)
 			player->bitmap->x = RIGHT_LIMIT - player->bitmap->bitmapInfoHeader.width;
 	}
+
+	int counter;
+	unsigned long currentPixelLeft;
+	unsigned long currentPixelRight;
+
+	for(counter = 0; counter < player->bitmap->bitmapInfoHeader.height; counter ++) {
+		currentPixelLeft = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bits_per_pixel()/8);
+		currentPixelRight = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x + player->bitmap->bitmapInfoHeader.width + 1)*vg_get_bits_per_pixel()/8);
+		if(currentPixelLeft != BLACK || currentPixelRight != BLACK)
+			player->bitmap->x = previous_x;
+	}
+
 	int i;
 	for(i = 0; i < N_BULLETS; i++){
 		if(player->bullets[i] != NULL){
@@ -85,10 +100,10 @@ void update_player_mouse(Player* player, Mouse* mouse){
 }
 
 void update_player_collision(Player* player, char* buffer){
-	unsigned long firstPixel = *(buffer + ((player->bitmap->y-1)*vg_get_h_res() + player->bitmap->x)*vg_get_bits_per_pixel()/8);
-	unsigned long lastPixel =  *(buffer + ((player->bitmap->y-1)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+	unsigned long topLeftPixel = *(buffer + ((player->bitmap->y-1)*vg_get_h_res() + player->bitmap->x)*vg_get_bits_per_pixel()/8);
+	unsigned long topRightPixel =  *(buffer + ((player->bitmap->y-1)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
 
-	if(firstPixel != BLACK || lastPixel != BLACK)
+	if(topLeftPixel != BLACK || topRightPixel != BLACK)
 		player->bitmap->y++;
 	else if(player->bitmap->y != PLAYER_START_Y)
 		player->bitmap->y--;
