@@ -36,6 +36,15 @@ Player* create_player(){
 	int player_start_x = rand()%(vg_get_h_res()/2) + LEFT_LIMIT; //Random starting position
 	player->bitmap = loadBitmap(fullPath("buzz.bmp"), player_start_x, PLAYER_START_Y);
 	/*TO DO: initialization of remaining structures (when they're created in Player 'class' */
+	player->numbers = (Bitmap**)malloc(10*sizeof(Bitmap*));
+	int i;
+	/* \/ Save technique for later: fast load of all number bitmaps \/ */
+	/*for(i = 0; i < 10; i++){
+		char temp[10];
+		sprintf(temp,"%d.bmp",i);
+		player->numbers[i] = loadBitmap(fullPath(temp),25,300);
+	}
+	*/
 	return player;
 }
 
