@@ -16,8 +16,9 @@ typedef struct{
 }Obstacle;
 
 Obstacle* create_obstacle(int x, int y);
-void update_obstacle(Obstacle* obstacle);
+int update_obstacle(Obstacle* obstacle); //Updates obstacle position, checking if it goes off-screen aswell. Returns 0 if new position is inscreen, 1 otherwise
 void draw_obstacle(Obstacle* obstacle, char* buffer);
+int obstacle_off_screen(Obstacle* obstacle); //Checks if obstacle is out of the screen. Returns 1 if it is, 0 otherwise
 void delete_obstacle(Obstacle* obstacle);
 
 //Screen limits for player (can't touch the stars on the sides - you don't want to go infinity! (props Rui Ribeiro) - each side stars zone has 50px of width
@@ -27,15 +28,15 @@ void delete_obstacle(Obstacle* obstacle);
 #define PLAYER_DEATH_TOLERANCE 5
 
 typedef struct{
-	int alive; //0 if dead (which means game over), set (to 1?) if alive
 	/*TO DO: add attribute to keep track of player's score (one for minutes and one for seconds,
-	assuming score will be the amount of time he survives - easier to process, avoids unecessary calculations and extra time wasting*/
+	assuming score will be the amount of time he survives - easier to process, avoids unecessary calculations and extra time wasting)*/
 	/*TO DO: add information about bullet count (an array of MAX_BULLETS size?)*/
 	Bitmap* bitmap;
 }Player;
 
 Player* create_player();
-void update_player(Player* player, Mouse* mouse);
+void update_player_mouse(Player* player, Mouse* mouse); //Update player position based on latest mouse packet
+void update_player_collision(Player* player, char* buffer); //Update player position in case of eventual collision
 void draw_player(Player* player, char* buffer);
 void delete_player(Player* player);
 
