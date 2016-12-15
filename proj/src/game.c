@@ -2,6 +2,9 @@
 
 #define N_OBSTACLES 10
 #define BLACK 0
+#define N_BULLETS 5
+#define BULLET_HEIGHT 12
+#define BULLET_OFFSET 37
 
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));
@@ -54,6 +57,10 @@ Player* create_player(){
 		player->numbers[i] = loadBitmap(fullPath(temp),25,300);
 	}
 	*/
+	player->bullets = (Bitmap**)(malloc(N_BULLETS*sizeof(Bitmap*)));
+	int i;
+	for(i = 0; i < N_BULLETS; i++)
+		player->bullets[i] = loadBitmap(fullPath("bullet.bmp"),player->bitmap->x+BULLET_OFFSET,player->bitmap->y-BULLET_HEIGHT);
 	return player;
 }
 
@@ -68,6 +75,13 @@ void update_player_mouse(Player* player, Mouse* mouse){
 		if(player->bitmap->x + player->bitmap->bitmapInfoHeader.width > RIGHT_LIMIT)
 			player->bitmap->x = RIGHT_LIMIT - player->bitmap->bitmapInfoHeader.width;
 	}
+	int i;
+	for(i = 0; i < N_BULLETS; i++){
+		if(player->bullets[i] != NULL){
+			player->bullets[i]->x = player->bitmap->x+BULLET_OFFSET;
+			player->bullets[i]->y = player->bitmap->y-BULLET_HEIGHT;
+		}
+	}
 }
 
 void update_player_collision(Player* player, char* buffer){
@@ -78,6 +92,14 @@ void update_player_collision(Player* player, char* buffer){
 		player->bitmap->y++;
 	else if(player->bitmap->y != PLAYER_START_Y)
 		player->bitmap->y--;
+
+	int i;
+	for(i = 0; i < N_BULLETS; i++){
+		if(player->bullets[i] != NULL){
+			player->bullets[i]->x = player->bitmap->x+BULLET_OFFSET;
+			player->bullets[i]->y = player->bitmap->y-BULLET_HEIGHT;
+		}
+	}
 }
 
 void draw_player(Player* player, char* buffer){
@@ -86,6 +108,11 @@ void draw_player(Player* player, char* buffer){
 
 void delete_player(Player* player){
 	deleteBitmap(player->bitmap);
+	int i;
+	for(i = 0; i < N_BULLETS; i++){
+		if(player->bullets[i] != NULL)
+			deleteBitmap(player->bullets[i]);
+	}
 	free(player);
 }
 
@@ -105,8 +132,30 @@ Game* create_game(){
 		else
 			game->obstacles[i] = NULL;
 	}
+	game->bullets = (Bitmap**)(malloc(N_BULLETS*sizeof(Bitmap*)));
+	for(i = 0; i < N_BULLETS; i++)
+		game->bullets[i] = NULL;
 	game->state = GAME_RUNNING;
 	return game;
+}
+
+void remove_bullet_shot(Game* game){
+	int i, j;
+	int found = 0;
+	for(i = N_BULLETS-1; i >= 0; i--){
+		if(found)
+			break;
+		if(game->player->bullets[i] != NULL){
+			found = 1;
+			for(j = 0; j < N_BULLETS; j++){
+				if(game->bullets[j] == NULL){
+					game->bullets[j] = game->player->bullets[i];
+					game->player->bullets[i] = NULL;
+					break;
+				}
+			}
+		}
+	}
 }
 
 void update_game(Game* game){
@@ -137,6 +186,15 @@ void update_game(Game* game){
 		}
 	}
 
+	//Update shot bullets' positions
+	for(i = 0; i < N_BULLETS; i++){
+		if(game->bullets[i] != NULL){
+			game->bullets[i]->y--;
+			if(game->bullets[i] == 0)
+				game->bullets[i] = NULL;
+		}
+	}
+
 	update_player_collision(game->player,game->secondary_buffer);
 
 	//Prepare next frame
@@ -147,6 +205,11 @@ void update_game(Game* game){
 			draw_obstacle(game->obstacles[i],game->secondary_buffer);
 	}
 	draw_player(game->player,game->secondary_buffer);
+
+	for(i = 0; i < N_BULLETS; i++){
+		if(game->bullets[i] != NULL)
+			drawBitmap(game->bullets[i],game->secondary_buffer,ALIGN_LEFT);
+	}
 
 	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
 		game->state = GAME_OVER;
@@ -165,6 +228,10 @@ void delete_game(Game* game){
 	for(i = 0; i < N_OBSTACLES; i++){
 		if(game->obstacles[i] != NULL)
 			delete_obstacle(game->obstacles[i]);
+	}
+	for(i = 0; i < N_BULLETS; i++){
+		if(game->bullets[i] != NULL)
+			deleteBitmap(game->bullets[i]);
 	}
 	free(game->secondary_buffer);
 	free(game);

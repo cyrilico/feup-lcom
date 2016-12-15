@@ -31,6 +31,7 @@ typedef struct{
 	/*TO DO: add attribute to keep track of player's score (one for minutes and one for seconds,
 	assuming score will be the amount of time he survives - easier to process, avoids unecessary calculations and extra time wasting)*/
 	/*TO DO: add information about bullet count (an array of MAX_BULLETS size?)*/
+	Bitmap** bullets;
 	Bitmap* bitmap;
 }Player;
 
@@ -49,10 +50,12 @@ typedef struct{
 	Bitmap* background;
 	Player* player;
 	char* secondary_buffer;
+	Bitmap** bullets;
 	gamestate state;
 }Game;
 
 Game* create_game();
 void update_game(Game* game);
 void draw_game(Game* game);
+void remove_bullet_shot(Game* game); //Removes a bullet from Player's array and puts it into Game's array (only if there's at least one not NULL pointer in Player's)
 void delete_game(Game* game);
