@@ -79,7 +79,19 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 			player->bitmap->x = RIGHT_LIMIT - player->bitmap->bitmapInfoHeader.width;
 	}
 
-	int counter;
+
+	unsigned long topPixelLeft = *(buffer + ((player->bitmap->y)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bits_per_pixel()/8);
+	unsigned long topPixelRight = *(buffer + ((player->bitmap->y)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+
+	unsigned long middlePixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bits_per_pixel()/8);
+	unsigned long middlePixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+
+	unsigned long bottomPixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bits_per_pixel()/8);
+	unsigned long bottomPixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+
+	if(topPixelLeft != BLACK || topPixelRight != BLACK || middlePixelLeft != BLACK || middlePixelRight != BLACK || bottomPixelLeft != BLACK || bottomPixelRight != BLACK)
+		player->bitmap->x = previous_x;
+	/*int counter;
 	unsigned long currentPixelLeft;
 	unsigned long currentPixelRight;
 
@@ -88,7 +100,7 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 		currentPixelRight = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x + player->bitmap->bitmapInfoHeader.width + 1)*vg_get_bits_per_pixel()/8);
 		if(currentPixelLeft != BLACK || currentPixelRight != BLACK)
 			player->bitmap->x = previous_x;
-	}
+	}*/
 
 	int i;
 	for(i = 0; i < N_BULLETS; i++){
