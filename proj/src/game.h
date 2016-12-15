@@ -23,7 +23,8 @@ void delete_obstacle(Obstacle* obstacle);
 //Screen limits for player (can't touch the stars on the sides - you don't want to go infinity! (props Rui Ribeiro) - each side stars zone has 50px of width
 #define LEFT_LIMIT 50
 #define RIGHT_LIMIT 750
-#define PLAYER_START_Y 530
+#define PLAYER_START_Y 460
+#define PLAYER_DEATH_TOLERANCE 5
 
 typedef struct{
 	int alive; //0 if dead (which means game over), set (to 1?) if alive
