@@ -36,7 +36,6 @@ Player* create_player(){
 	int player_start_x = rand()%(vg_get_h_res()/2) + LEFT_LIMIT; //Random starting position
 	player->bitmap = loadBitmap(fullPath("buzz.bmp"), player_start_x, PLAYER_START_Y);
 	/*TO DO: initialization of remaining structures (when they're created in Player 'class' */
-	player->numbers = (Bitmap**)malloc(10*sizeof(Bitmap*));
 	int i;
 	/* \/ Save technique for later: fast load of all number bitmaps \/ */
 	/*for(i = 0; i < 10; i++){
@@ -62,6 +61,16 @@ void update_player(Player* player, Mouse* mouse){
 }
 
 void draw_player(Player* player, char* buffer){
+
+	//Collision Verification - change to update_player or standalone function? If prior, need access to buffer in update player
+	unsigned long firstPixel = *(buffer + ((player->bitmap->y-1)*vg_get_h_res() + player->bitmap->x)*vg_get_bits_per_pixel()/8);
+	unsigned long lastPixel =  *(buffer + ((player->bitmap->y-1)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+
+	if(firstPixel != 0x00 || lastPixel != 0x00)
+		player->bitmap->y++;
+	else if(player->bitmap->y != PLAYER_START_Y)
+		player->bitmap->y--;
+
 	drawBitmap(player->bitmap,buffer,ALIGN_LEFT);
 }
 
@@ -102,11 +111,15 @@ void update_game(Game* game){
 
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
-	draw_player(game->player,game->secondary_buffer);
+
 	for(i = 0; i < N_OBSTACLES; i++){
 		if(game->obstacles[i] != NULL)
 			draw_obstacle(game->obstacles[i],game->secondary_buffer);
 	}
+	draw_player(game->player,game->secondary_buffer);
+
+	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
+		game->state = GAME_OVER;
 }
 
 void draw_game(Game* game){
