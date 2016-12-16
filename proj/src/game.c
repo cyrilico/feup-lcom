@@ -2,16 +2,21 @@
 
 #define N_OBSTACLES 10
 #define BLACK 0
-#define N_BULLETS 5
+#define N_BULLETS 100
 #define BULLET_HEIGHT 12
 #define BULLET_OFFSET 37
+#define OBSTACLE_SPEED 3
+#define BULLET_SPEED 3
 
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));
 	obstacle->lives = rand()%3+1;
 	int i;
-	for(i = 0; i < 3; i++)
-		obstacle->bitmaps[i] = loadBitmap(fullPath("obstacle0.bmp"),x,y);
+	for(i = 0; i < 3; i++){
+		char temp[15];
+		sprintf(temp,"obstacle%d.bmp",i+1);
+		obstacle->bitmaps[i] = loadBitmap(fullPath(temp),x,y);
+	}
 	return obstacle;
 }
 
@@ -21,18 +26,18 @@ int update_obstacle(Obstacle* obstacle){
 	else{
 		int i;
 		for(i = 0; i < 3; i++)
-			obstacle->bitmaps[i]->y += 1;
+			obstacle->bitmaps[i]->y += OBSTACLE_SPEED;
 
 		return 0;
 	}
 }
 
 void draw_obstacle(Obstacle* obstacle, char* buffer){
-	drawBitmap(obstacle->bitmaps[obstacle->lives],buffer,ALIGN_LEFT);
+	drawBitmap(obstacle->bitmaps[obstacle->lives-1],buffer,ALIGN_LEFT);
 }
 
 int obstacle_off_screen(Obstacle* obstacle){
-	if(obstacle->bitmaps[0]->y + 1 == vg_get_v_res())
+	if(obstacle->bitmaps[0]->y + 1 >= vg_get_v_res())
 		return 1;
 	else
 		return 0;
@@ -112,11 +117,11 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 }
 
 void update_player_collision(Player* player, char* buffer){
-	unsigned long topLeftPixel = *(buffer + ((player->bitmap->y-1)*vg_get_h_res() + player->bitmap->x)*vg_get_bits_per_pixel()/8);
-	unsigned long topRightPixel =  *(buffer + ((player->bitmap->y-1)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+	unsigned long topLeftPixel = *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + player->bitmap->x)*vg_get_bits_per_pixel()/8);
+	unsigned long topRightPixel =  *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
 
 	if(topLeftPixel != BLACK || topRightPixel != BLACK)
-		player->bitmap->y++;
+		player->bitmap->y += OBSTACLE_SPEED;
 	else if(player->bitmap->y != PLAYER_START_Y)
 		player->bitmap->y--;
 
@@ -216,8 +221,8 @@ void update_game(Game* game){
 	//Update shot bullets' positions
 	for(i = 0; i < N_BULLETS; i++){
 		if(game->bullets[i] != NULL){
-			game->bullets[i]->y--;
-			if(game->bullets[i] == 0)
+			game->bullets[i]->y -= BULLET_SPEED;
+			if(game->bullets[i]->y <= 0)
 				game->bullets[i] = NULL;
 		}
 	}

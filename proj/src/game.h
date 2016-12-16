@@ -7,8 +7,8 @@
 #include "video_gr.h"
 #include "utils.h"
 
-#define OBSTACLE_WIDTH 56
-#define OBSTACLE_HEIGHT 56
+#define OBSTACLE_WIDTH 66
+#define OBSTACLE_HEIGHT 66
 
 typedef struct{
 	unsigned int lives;
