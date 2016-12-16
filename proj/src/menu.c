@@ -65,6 +65,7 @@ void delete_menu(Menu* menu){
 	delete_keyboard(menu->keyboard);
 	delete_button(menu->play_button);
 	delete_button(menu->exit_button);
+	deleteBitmap(menu->background);
 	free(menu->secondary_buffer);
 	free(menu);
 }
