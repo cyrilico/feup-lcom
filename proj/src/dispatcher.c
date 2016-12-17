@@ -10,6 +10,7 @@ Dispatcher* create_dispatcher() {
 	return dispatcher;
 }
 
+/*
 void process_main_menu(Dispatcher* dispatcher) {
 
 	Menu* menu = create_menu();
@@ -52,8 +53,9 @@ void process_main_menu(Dispatcher* dispatcher) {
 	}
 
 	delete_menu(menu);
-}
+} */
 
+/*
 void process_game(Dispatcher* dispatcher) {
 
 	Game* game = create_game();
@@ -71,7 +73,7 @@ void process_game(Dispatcher* dispatcher) {
 					read_scancode(game->keyboard);
 					if(key_detected(game->keyboard, ESC_BREAK))
 						game->state = GAME_OVER;
-					else if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /*TO DO: Layer this piece of code */
+					else if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ //TO DO: Layer this piece of code
 						if(add_bullet_shot(game,game->player->bitmap->x,game->player->bitmap->y) == 1)
 							update_number_of_bullets(game->player);
 					}
@@ -94,6 +96,81 @@ void process_game(Dispatcher* dispatcher) {
 	}
 	dispatcher->state = MAIN_MENU;
 }
+*/
+
+void interrupt_handler(Dispatcher* dispatcher) {
+
+	Menu* menu = NULL;
+	Game* game = NULL;
+
+	if(dispatcher->state == MAIN_MENU) {
+		menu = create_menu();
+		printf("Created menu\n");
+	}
+	else {//dispatcher->state == GAME
+		game = create_game();
+		printf("Created game\n");
+	}
+	unsigned short counter = 0;
+
+	dispatcherstate initial_state = dispatcher->state;
+
+	while(initial_state == dispatcher->state) {
+		if (driver_receive(ANY, &(dispatcher->msg), &(dispatcher->ipc_status)) != 0 )
+			continue;
+		if (is_ipc_notify(dispatcher->ipc_status)) {
+			switch (_ENDPOINT_P((dispatcher->msg).m_source)) {
+			case HARDWARE:
+				if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_mouse) {
+
+					if(dispatcher->state == MAIN_MENU) {
+						read_packet_byte(menu->mouse);
+						if(full_packet_received(menu->mouse));
+						update_menu(menu,MOUSE_UPDATE);
+					}
+					else
+						read_packet_byte(game->mouse);
+
+				}
+				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_kbd){
+
+					if(dispatcher->state == GAME) {
+						read_scancode(game->keyboard);
+						if(key_detected(game->keyboard, ESC_BREAK))
+							game->state = GAME_OVER;
+						else if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /*TO DO: Layer this piece of code */
+							if(add_bullet_shot(game,game->player->bitmap->x,game->player->bitmap->y) == 1)
+								update_number_of_bullets(game->player);
+						}
+					}
+
+				}
+				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_timer){
+
+					if(dispatcher->state == MAIN_MENU)
+						draw_menu(menu);
+					else {
+						update_draw_state(game);
+						update_game(game);
+						if(full_packet_received(game->mouse)){
+							reset_packet_state(game->mouse);
+							update_player_mouse(game->player, game->mouse, game->secondary_buffer);
+						}
+						if(game->drawstate == DRAW)
+							draw_game(game);
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+
+		//Check for dispatcher state changes
+		state_handler(dispatcher, menu, game);
+	}
+
+}
 
 void delete_dispatcher(Dispatcher* dispatcher) {
 		timer_unsubscribe_int();
@@ -103,3 +180,26 @@ void delete_dispatcher(Dispatcher* dispatcher) {
 		free(dispatcher);
 }
 
+void state_handler(Dispatcher* dispatcher, Menu* menu, Game* game) {
+	if(dispatcher->state == MAIN_MENU && menu->state != NOT_DONE && menu != NULL) {
+		switch(menu->state){
+		case PLAY_CHOSEN:
+			dispatcher->state = GAME;
+			break;
+		case EXIT_CHOSEN:
+			dispatcher->state = EXIT_PROGRAM;
+			break;
+		default:
+			break;
+		}
+		printf("Deleting menu\n");
+		delete_menu(menu);
+		printf("Menu deleted\n");
+	}
+	else if(dispatcher->state == GAME && game->state == GAME_OVER && game != NULL) {
+		dispatcher->state = MAIN_MENU;
+		printf("Deleting game\n");
+		delete_game(game);
+		printf("Game deleted\n");
+	}
+}

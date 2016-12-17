@@ -25,10 +25,8 @@ int main(int argc, char **argv) {
 	Dispatcher* dispatcher = create_dispatcher();
 
 	while(1) {
-		if(dispatcher->state == MAIN_MENU)
-			process_main_menu(dispatcher);
-		else if(dispatcher->state == GAME)
-			process_game(dispatcher);
+		if(dispatcher->state != EXIT_PROGRAM)
+			interrupt_handler(dispatcher);
 		else //dispatcher->state == EXIT_PROGRAM
 			break;
 	}
