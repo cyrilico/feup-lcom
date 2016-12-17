@@ -1,13 +1,5 @@
 #include "game.h"
 
-#define N_OBSTACLES 10
-#define BLACK 0
-#define N_BULLETS 100
-#define BULLET_HEIGHT 12
-#define BULLET_OFFSET 37
-#define OBSTACLE_SPEED 3
-#define BULLET_SPEED 3
-
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));
 	obstacle->lives = rand()%3+1;
@@ -62,10 +54,8 @@ Player* create_player(){
 		player->numbers[i] = loadBitmap(fullPath(temp),25,300);
 	}
 	*/
-	player->bullets = (Bitmap**)(malloc(N_BULLETS*sizeof(Bitmap*)));
-	int i;
-	for(i = 0; i < N_BULLETS; i++)
-		player->bullets[i] = loadBitmap(fullPath("new_bullet.bmp"),player->bitmap->x+BULLET_OFFSET,player->bitmap->y-BULLET_HEIGHT);
+	player->number_of_bullets = N_BULLETS;
+
 	return player;
 }
 
@@ -106,14 +96,6 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 		if(currentPixelLeft != BLACK || currentPixelRight != BLACK)
 			player->bitmap->x = previous_x;
 	}*/
-
-	int i;
-	for(i = 0; i < N_BULLETS; i++){
-		if(player->bullets[i] != NULL){
-			player->bullets[i]->x = player->bitmap->x+BULLET_OFFSET;
-			player->bullets[i]->y = player->bitmap->y-BULLET_HEIGHT;
-		}
-	}
 }
 
 void update_player_collision(Player* player, char* buffer){
@@ -124,14 +106,6 @@ void update_player_collision(Player* player, char* buffer){
 		player->bitmap->y += OBSTACLE_SPEED;
 	else if(player->bitmap->y != PLAYER_START_Y)
 		player->bitmap->y--;
-
-	int i;
-	for(i = 0; i < N_BULLETS; i++){
-		if(player->bullets[i] != NULL){
-			player->bullets[i]->x = player->bitmap->x+BULLET_OFFSET;
-			player->bullets[i]->y = player->bitmap->y-BULLET_HEIGHT;
-		}
-	}
 }
 
 void draw_player(Player* player, char* buffer){
@@ -140,54 +114,70 @@ void draw_player(Player* player, char* buffer){
 
 void delete_player(Player* player){
 	deleteBitmap(player->bitmap);
-	int i;
-	for(i = 0; i < N_BULLETS; i++){
-		if(player->bullets[i] != NULL)
-			deleteBitmap(player->bullets[i]);
-	}
 	free(player);
+}
+
+Bullet* create_bullet(int x, int y){
+	Bullet* bullet = (Bullet*)(malloc(sizeof(Bullet)));
+	bullet->bitmap = loadBitmap(fullPath("new_bullet.bmp"), x, y);
+	return bullet;
+}
+
+int update_bullet(Bullet* bullet){
+	bullet->bitmap->y -= BULLET_SPEED;
+	if(bullet->bitmap->y <= 0)
+		return 1;
+	else
+		return 0;
+}
+
+int bullet_obstacle_collision(Bullet* bullet, Obstacle* obstacle){
+	int bullet_x = bullet->bitmap->x;
+	int bullet_y = bullet->bitmap->y;
+	int obstacle_x = obstacle->bitmaps[0]->x;
+	int obstacle_y = obstacle->bitmaps[0]->y;
+	int obstacle_width = obstacle->bitmaps[0]->bitmapInfoHeader.width;
+	int obstacle_height = obstacle->bitmaps[0]->bitmapInfoHeader.height;
+
+	int alligned_x_axis = (bullet_x >= obstacle_x && bullet_x <= obstacle_x + obstacle_width ? 1 : 0);
+	int alligned_y_axis = (bullet_y <= obstacle_y + obstacle_height && bullet_y >= obstacle_y ? 1 : 0);
+
+	if(alligned_x_axis && alligned_y_axis)
+		return 1;
+	else
+		return 0;
+}
+
+void draw_bullet(Bullet* bullet, char* buffer){
+	drawBitmap(bullet->bitmap,buffer,ALIGN_LEFT);
+}
+
+void delete_bullet(Bullet* bullet){
+	deleteBitmap(bullet->bitmap);
+	free(bullet);
 }
 
 Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
 	game->mouse = create_mouse();
 	game->keyboard = create_keyboard();
-	game->background = loadBitmap(fullPath("game_background.bmp"),0,0);
+	game->background = loadBitmap(fullPath("new_game_background.bmp"),0,0);
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
 	int i;
 	for(i = 0; i < N_OBSTACLES; i++){
-		int empty = rand() % 2; //Determine if empty space or enemy's there
+		int empty = rand() % EMPTY_FACTOR; //Determine if empty space or enemy's there
 		if(!empty)
 			game->obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT);
 		else
 			game->obstacles[i] = NULL;
 	}
-	game->bullets = (Bitmap**)(malloc(N_BULLETS*sizeof(Bitmap*)));
+	game->bullets = (Bullet**)(malloc(MAX_BULLETS_ON_SCREEN*sizeof(Bullet*)));
 	for(i = 0; i < N_BULLETS; i++)
 		game->bullets[i] = NULL;
 	game->state = GAME_RUNNING;
 	return game;
-}
-
-void remove_bullet_shot(Game* game){
-	int i, j;
-	int found = 0;
-	for(i = N_BULLETS-1; i >= 0; i--){
-		if(found)
-			break;
-		if(game->player->bullets[i] != NULL){
-			found = 1;
-			for(j = 0; j < N_BULLETS; j++){
-				if(game->bullets[j] == NULL){
-					game->bullets[j] = game->player->bullets[i];
-					game->player->bullets[i] = NULL;
-					break;
-				}
-			}
-		}
-	}
 }
 
 void update_game(Game* game){
@@ -210,7 +200,7 @@ void update_game(Game* game){
 		}
 
 		for(i = 0; i < N_OBSTACLES; i++){
-			int empty = rand() % 2; //Determine if empty space or enemy's there
+			int empty = rand() % EMPTY_FACTOR; //Determine if empty space or enemy's there
 			if(!empty)
 				game->obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT);
 			else
@@ -219,10 +209,10 @@ void update_game(Game* game){
 	}
 
 	//Update shot bullets' positions
-	for(i = 0; i < N_BULLETS; i++){
+	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL){
-			game->bullets[i]->y -= BULLET_SPEED;
-			if(game->bullets[i]->y <= 0)
+			off_screen = update_bullet(game->bullets[i]);
+			if(off_screen)
 				game->bullets[i] = NULL;
 		}
 	}
@@ -238,13 +228,28 @@ void update_game(Game* game){
 	}
 	draw_player(game->player,game->secondary_buffer);
 
-	for(i = 0; i < N_BULLETS; i++){
+	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL)
-			drawBitmap(game->bullets[i],game->secondary_buffer,ALIGN_LEFT);
+			draw_bullet(game->bullets[i],game->secondary_buffer);
 	}
 
+	/* TO DO: Layer this (function to detect if player has lost) */
 	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
 		game->state = GAME_OVER;
+}
+
+int add_bullet_shot(Game* game, int x, int y){
+	int success = 0;
+	int i;
+	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
+		if(game->bullets[i] == NULL){
+			game->bullets[i] = create_bullet(x+BULLET_OFFSET,y-BULLET_HEIGHT);
+			success = 1;
+			break;
+		}
+	}
+
+	return success;
 }
 
 void draw_game(Game* game){
@@ -261,9 +266,9 @@ void delete_game(Game* game){
 		if(game->obstacles[i] != NULL)
 			delete_obstacle(game->obstacles[i]);
 	}
-	for(i = 0; i < N_BULLETS; i++){
+	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL)
-			deleteBitmap(game->bullets[i]);
+			delete_bullet(game->bullets[i]);
 	}
 	free(game->secondary_buffer);
 	free(game);

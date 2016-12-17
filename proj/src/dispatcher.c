@@ -14,26 +14,23 @@ void process_main_menu(Dispatcher* dispatcher) {
 
 	Menu* menu = create_menu();
 
-	int ipc_status;
-	message msg;
-
 	while(menu->state == NOT_DONE) {
-		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
+		if (driver_receive(ANY, &(dispatcher->msg), &(dispatcher->ipc_status)) != 0 )
 			continue;
-		if (is_ipc_notify(ipc_status)) {
-			switch (_ENDPOINT_P(msg.m_source)) {
+		if (is_ipc_notify(dispatcher->ipc_status)) {
+			switch (_ENDPOINT_P((dispatcher->msg).m_source)) {
 			case HARDWARE:
-				if(msg.NOTIFY_ARG & dispatcher->irq_mouse) {
+				if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_mouse) {
 					read_packet_byte(menu->mouse);
 					if(full_packet_received(menu->mouse));
 						update_menu(menu,MOUSE_UPDATE);
 				}
-				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd){
+				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_kbd){
 					read_scancode(menu->keyboard);
 					if(full_scancode_received(menu->keyboard))
 						update_menu(menu,KBD_UPDATE);
 				}
-				else if(msg.NOTIFY_ARG & dispatcher->irq_timer)
+				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_timer)
 					draw_menu(menu);
 				break;
 			default:
@@ -60,29 +57,27 @@ void process_main_menu(Dispatcher* dispatcher) {
 void process_game(Dispatcher* dispatcher) {
 
 	Game* game = create_game();
-
-	int ipc_status;
-	message msg;
-
 	unsigned short counter = 0;
 
 	while(game->state != GAME_OVER) {
-		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
+		if (driver_receive(ANY, &(dispatcher->msg), &(dispatcher->ipc_status)) != 0 )
 			continue;
-		if (is_ipc_notify(ipc_status)) {
-			switch (_ENDPOINT_P(msg.m_source)) {
+		if (is_ipc_notify(dispatcher->ipc_status)) {
+			switch (_ENDPOINT_P((dispatcher->msg).m_source)) {
 			case HARDWARE:
-				if(msg.NOTIFY_ARG & dispatcher->irq_mouse)
+				if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_mouse)
 					read_packet_byte(game->mouse);
-				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd){
+				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_kbd){
 					read_scancode(game->keyboard);
 					/* TO DO: Turn 'if' content into a function (ex: scancode_received(scancode). return 1 if yes, 0 if no */
 					if(key_detected(game->keyboard, ESC_BREAK))
 						game->state = GAME_OVER;
-					else if(key_detected(game->keyboard, A_BREAK)) //Shoot bullet
-						remove_bullet_shot(game);
+					else if(key_detected(game->keyboard, A_BREAK) && game->player->number_of_bullets > 0){ /*TO DO: Layer this piece of code */
+						if(add_bullet_shot(game,game->player->bitmap->x,game->player->bitmap->y) == 1)
+							game->player->number_of_bullets--;
+					}
 				}
-				else if(msg.NOTIFY_ARG & dispatcher->irq_timer){
+				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_timer){
 					counter = (counter+1)%2;
 					update_game(game);
 					if(full_packet_received(game->mouse)){
@@ -105,6 +100,7 @@ void delete_dispatcher(Dispatcher* dispatcher) {
 		timer_unsubscribe_int();
 		kbd_unsubscribe_int();
 		mouse_unsubscribe_int();
+
 		free(dispatcher);
 }
 
