@@ -173,7 +173,7 @@ void delete_mouse(Mouse* mouse){
 }
 
 void mouse_print_packet(unsigned char packet[]){
-	printf("B1=0x%x ", packet[0]);
+/*	printf("B1=0x%x ", packet[0]);
 	printf("B2=0x%x ", packet[1]);
 	printf("B3=0x%x ", packet[2]);
 	printf("LB=%u ", packet[0] & BIT(0));
@@ -183,5 +183,5 @@ void mouse_print_packet(unsigned char packet[]){
 	printf("YOV=%u ", (packet[0] & BIT(7))>>7);
 	printf("X=%d ", ((packet[0] & BIT(4)) ? TWOSCOMPLEMENT(packet[1]) : packet[1]));
 	printf("Y=%d\n\n", ((packet[0] & BIT(5)) ? TWOSCOMPLEMENT(packet[2]) : packet[2]));
-
+*/
 }

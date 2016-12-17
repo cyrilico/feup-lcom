@@ -16,8 +16,12 @@ typedef struct{
 } Dispatcher;
 
 Dispatcher* create_dispatcher();
+/*
 void process_main_menu(Dispatcher* dispatcher);
-void process_game(Dispatcher* dispatcher);
+void process_game(Dispatcher* dispatcher);*/
 void delete_dispatcher(Dispatcher* dispatcher);
 
 
+void interrupt_handler(Dispatcher* dispatcher);
+
+void state_handler(Dispatcher* dispatcher, Menu* menu, Game* game);

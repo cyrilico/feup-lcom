@@ -105,6 +105,7 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 
 	if(topPixelLeft != BLACK || topPixelRight != BLACK || middlePixelLeft != BLACK || middlePixelRight != BLACK || bottomPixelLeft != BLACK || bottomPixelRight != BLACK)
 		player->bitmap->x = previous_x;
+
 	/*int counter;
 	unsigned long currentPixelLeft;
 	unsigned long currentPixelRight;
@@ -307,10 +308,15 @@ void draw_game(Game* game){
 }
 
 void delete_game(Game* game){
+	printf("1\n");
 	delete_mouse(game->mouse);
+	printf("2\n");
 	delete_keyboard(game->keyboard);
+	printf("3\n");
 	deleteBitmap(game->background);
+	printf("4\n");
 	delete_player(game->player);
+	printf("5\n");
 	int i;
 	for(i = 0; i < N_OBSTACLES; i++){
 		if(game->obstacles[i] != NULL)
@@ -320,6 +326,8 @@ void delete_game(Game* game){
 		if(game->bullets[i] != NULL)
 			delete_bullet(game->bullets[i]);
 	}
+	printf("Cheguei até ao free em delete_game\n");
 	free(game->secondary_buffer);
+	printf("Vou fazer free ao game\n");
 	free(game);
 }
