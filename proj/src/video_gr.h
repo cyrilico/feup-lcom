@@ -36,9 +36,6 @@ void *vg_init(unsigned short mode);
  */
 int vg_exit(void);
 
-int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color, char* buffer);
-int vg_fill_screen(unsigned int xi, unsigned int yi, unsigned int width, unsigned int height, unsigned long color);
-
 unsigned int vg_get_h_res();
 unsigned int vg_get_v_res();
 unsigned int vg_get_bits_per_pixel();

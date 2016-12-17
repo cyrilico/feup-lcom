@@ -79,37 +79,6 @@ void* vg_init(unsigned short mode){
 	return (void *)video_mem;
 }
 
-
-int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color, char* buffer) {
-	if(x > h_res || y > v_res)
-		return -1;
-	char* position = video_mem + (y*h_res + x)*bits_per_pixel/8;
-	int i = 0;
-	while(i < bits_per_pixel/8) {
-		*(position++) = (color >> (i* 8));
-		i++;
-	}
-	return 0;
-}
-
-
-int vg_fill_screen(unsigned int xi, unsigned int yi, unsigned int width, unsigned int height, unsigned long color)  {
-	unsigned int x = xi;
-	unsigned int y = yi;
-
-	while(y < yi+height) {
-		while(x < xi+width) {
-			if(vg_fill_pixel(x++, y, color, video_mem) != OK){
-				vg_exit();
-				return -1;
-			}
-		}
-		y++;
-		x = xi;
-	}
-	return 0;
-}
-
 unsigned int vg_get_h_res(){
 	return h_res;
 }
