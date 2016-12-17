@@ -30,7 +30,7 @@ void process_main_menu(Dispatcher* dispatcher) {
 				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd){
 					read_scancode(menu->keyboard);
-					if(!menu->keyboard->read_again) //Full scancode processed, analyze its consequences (TO DO: Turn 'if' content into a function for reading purposes)
+					if(full_scancode_received(menu->keyboard))
 						update_menu(menu,KBD_UPDATE);
 				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer)
@@ -77,9 +77,9 @@ void process_game(Dispatcher* dispatcher) {
 				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd){
 					read_scancode(game->keyboard);
 					/* TO DO: Turn 'if' content into a function (ex: scancode_received(scancode). return 1 if yes, 0 if no */
-					if(!game->keyboard->read_again && game->keyboard->scancode == ESC_BREAK)
+					if(key_detected(game->keyboard, ESC_BREAK))
 						game->state = GAME_OVER;
-					else if(!game->keyboard->read_again && game->keyboard->scancode == A_BREAK) //Shoot bullet
+					else if(key_detected(game->keyboard, A_BREAK)) //Shoot bullet
 						remove_bullet_shot(game);
 				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer){
