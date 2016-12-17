@@ -42,6 +42,25 @@ void delete_obstacle(Obstacle* obstacle){
 	free(obstacle);
 }
 
+void generate_obstacle_line(Obstacle** obstacles, int line_size){
+	int i;
+	for(i = 0; i < N_OBSTACLES; i++){
+		int empty = rand() % EMPTY_FACTOR; //Determine if empty space or enemy's there
+		if(!empty)
+			obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT);
+		else
+			obstacles[i] = NULL;
+	}
+}
+
+void delete_obstacle_line(Obstacle** obstacles, int line_size){
+	int i;
+	for(i = 0; i < line_size; i++){
+		if(obstacles[i] != NULL)
+			delete_obstacle(obstacles[i]);
+	}
+}
+
 Player* create_player(){
 	Player* player = (Player*)(malloc(sizeof(Player)));
 	int player_start_x = rand()%(vg_get_h_res()/2) + LEFT_LIMIT; //Random starting position
@@ -108,6 +127,17 @@ void update_player_collision(Player* player, char* buffer){
 		player->bitmap->y--;
 }
 
+void update_number_of_bullets(Player* player){
+	player->number_of_bullets--;
+}
+
+int player_has_bullets(Player* player){
+	if(player->number_of_bullets > 0)
+		return 1;
+	else
+		return 0;
+}
+
 void draw_player(Player* player, char* buffer){
 	drawBitmap(player->bitmap,buffer,ALIGN_LEFT);
 }
@@ -132,14 +162,17 @@ int update_bullet(Bullet* bullet){
 }
 
 int bullet_obstacle_collision(Bullet* bullet, Obstacle* obstacle){
-	int bullet_x = bullet->bitmap->x;
+	int bullet_top_left_x = bullet->bitmap->x;
 	int bullet_y = bullet->bitmap->y;
+	int bullet_top_right_x = bullet_top_left_x + bullet->bitmap->bitmapInfoHeader.width;
 	int obstacle_x = obstacle->bitmaps[0]->x;
 	int obstacle_y = obstacle->bitmaps[0]->y;
 	int obstacle_width = obstacle->bitmaps[0]->bitmapInfoHeader.width;
 	int obstacle_height = obstacle->bitmaps[0]->bitmapInfoHeader.height;
 
-	int alligned_x_axis = (bullet_x >= obstacle_x && bullet_x <= obstacle_x + obstacle_width ? 1 : 0);
+	int top_left_x_alligned = (bullet_top_left_x >= obstacle_x && bullet_top_left_x <= obstacle_x + obstacle_width ? 1 : 0);
+	int top_right_x_alligned = (bullet_top_right_x >= obstacle_x && bullet_top_right_x <= obstacle_x + obstacle_width ? 1 : 0);
+	int alligned_x_axis = top_left_x_alligned | top_right_x_alligned;
 	int alligned_y_axis = (bullet_y <= obstacle_y + obstacle_height && bullet_y >= obstacle_y ? 1 : 0);
 
 	if(alligned_x_axis && alligned_y_axis)
@@ -165,19 +198,23 @@ Game* create_game(){
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
-	int i;
-	for(i = 0; i < N_OBSTACLES; i++){
-		int empty = rand() % EMPTY_FACTOR; //Determine if empty space or enemy's there
-		if(!empty)
-			game->obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT);
-		else
-			game->obstacles[i] = NULL;
-	}
+	generate_obstacle_line(game->obstacles,N_OBSTACLES);
 	game->bullets = (Bullet**)(malloc(MAX_BULLETS_ON_SCREEN*sizeof(Bullet*)));
+	int i;
 	for(i = 0; i < N_BULLETS; i++)
 		game->bullets[i] = NULL;
+	game->drawstate = DONTDRAW;
 	game->state = GAME_RUNNING;
 	return game;
+}
+
+int determine_index(int x){
+	int i;
+	for(i = 0; i < N_OBSTACLES; i++){
+		if(x >= (i+1)*OBSTACLE_WIDTH && x <= (i+1)*OBSTACLE_WIDTH + 66)
+			return i;
+	}
+	return -1;
 }
 
 void update_game(Game* game){
@@ -191,29 +228,35 @@ void update_game(Game* game){
 			off_screen = update_obstacle(game->obstacles[i]);
 	}
 
-	/* TO DO: Add more layering to this (function to delete array of obstacles, function to generate array of obstacles) */
 	//If current obstacle line if off screen, generate a new one
 	if(off_screen){
-		for(i = 0; i < N_OBSTACLES; i++){
-			if(game->obstacles[i] != NULL)
-				delete_obstacle(game->obstacles[i]);
-		}
-
-		for(i = 0; i < N_OBSTACLES; i++){
-			int empty = rand() % EMPTY_FACTOR; //Determine if empty space or enemy's there
-			if(!empty)
-				game->obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT);
-			else
-				game->obstacles[i] = NULL;
-		}
+		delete_obstacle_line(game->obstacles,N_OBSTACLES);
+		generate_obstacle_line(game->obstacles,N_OBSTACLES);
 	}
 
 	//Update shot bullets' positions
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL){
 			off_screen = update_bullet(game->bullets[i]);
-			if(off_screen)
+			if(off_screen){
+				delete_bullet(game->bullets[i]);
 				game->bullets[i] = NULL;
+			}
+			else{
+				int index = determine_index(game->bullets[i]->bitmap->x);
+				if(index != -1){
+					if(game->obstacles[index] != NULL){
+						if(bullet_obstacle_collision(game->bullets[i],game->obstacles[index])){
+							delete_bullet(game->bullets[i]);
+							game->bullets[i] = NULL;
+							if(--(game->obstacles[index]->lives) == 0){
+								delete_obstacle(game->obstacles[index]);
+								game->obstacles[index] = NULL;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -236,6 +279,13 @@ void update_game(Game* game){
 	/* TO DO: Layer this (function to detect if player has lost) */
 	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
 		game->state = GAME_OVER;
+}
+
+void update_draw_state(Game* game){
+	if(game->drawstate == DONTDRAW)
+		game->drawstate = DRAW;
+	else
+		game->drawstate = DONTDRAW;
 }
 
 int add_bullet_shot(Game* game, int x, int y){

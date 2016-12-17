@@ -29,6 +29,8 @@ int update_obstacle(Obstacle* obstacle); //Updates obstacle position, checking i
 void draw_obstacle(Obstacle* obstacle, char* buffer);
 int obstacle_off_screen(Obstacle* obstacle); //Checks if obstacle is out of the screen. Returns 1 if it is, 0 otherwise
 void delete_obstacle(Obstacle* obstacle);
+void generate_obstacle_line(Obstacle** obstacles, int line_size); //generates a random obstacle line in array 'obstacles'
+void delete_obstacle_line(Obstacle** obstacles, int line_size); //deletes entire obstacle line stored in 'obstacles'
 
 //Screen limits for player (can't touch the stars on the sides - you don't want to go infinity! (props Rui Ribeiro) - each side stars zone has 50px of width
 #define LEFT_LIMIT 75
@@ -46,6 +48,8 @@ typedef struct{
 Player* create_player();
 void update_player_mouse(Player* player, Mouse* mouse, char* buffer); //Update player position based on latest mouse packet
 void update_player_collision(Player* player, char* buffer); //Update player position in case of eventual collision
+void update_number_of_bullets(Player* player); //Decrements number of bullets of 'player'
+int player_has_bullets(Player* player); //Returns 1 if player's number of bullets is > 0, 0 otherwise
 void draw_player(Player* player, char* buffer);
 void delete_player(Player* player);
 
@@ -61,6 +65,7 @@ void draw_bullet(Bullet* bullet, char* buffer);
 void delete_bullet(Bullet* bullet);
 
 typedef enum gamestate_t {GAME_RUNNING, GAME_OVER} gamestate;
+typedef enum gamedrawstate_t {DONTDRAW, DRAW} gamedrawstate;
 
 typedef struct{
 	Obstacle** obstacles;
@@ -70,11 +75,13 @@ typedef struct{
 	Player* player;
 	char* secondary_buffer;
 	Bullet** bullets;
+	gamedrawstate drawstate;
 	gamestate state;
 }Game;
 
 Game* create_game();
 void update_game(Game* game);
+void update_draw_state(Game* game);
 void draw_game(Game* game);
-int add_bullet_shot(Game* game, int x, int y); //Tries to shoot a bullet at (x,y) by adding it to the game object (it may not be possible if MAX_BULLETS bullets are already on screen). Returns 1 if successful, 0 otherwise
+int add_bullet_shot(Game* game, int x, int y); //Tries to shoot a bullet from player (whose position is (x,y)) by adding it to the game object (it may not be possible if MAX_BULLETS bullets are already on screen). Returns 1 if successful, 0 otherwise
 void delete_game(Game* game);
