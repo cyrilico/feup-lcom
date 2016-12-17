@@ -14,4 +14,6 @@ typedef struct{
 
 Keyboard* create_keyboard();
 void read_scancode(Keyboard* keyboard);
+int full_scancode_received(Keyboard* keyboard); //returns 1 if yes (if read_again == 0), 0 otherwise
+int key_detected(Keyboard* keyboard, unsigned long key); //returns 1 if 'key' was pressed, 0 otherwise
 void delete_keyboard(Keyboard* keyboard);

@@ -120,6 +120,20 @@ void read_scancode(Keyboard* keyboard){
 	}
 }
 
+int full_scancode_received(Keyboard* keyboard){
+	if(keyboard->read_again == 0)
+		return 1;
+	else
+		return 0;
+}
+
+int key_detected(Keyboard* keyboard, unsigned long key){
+	if(full_scancode_received(keyboard) && keyboard->scancode == key)
+		return 1;
+	else
+		return 0;
+}
+
 void delete_keyboard(Keyboard* keyboard){
 	free(keyboard);
 }

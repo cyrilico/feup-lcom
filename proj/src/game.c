@@ -65,7 +65,7 @@ Player* create_player(){
 	player->bullets = (Bitmap**)(malloc(N_BULLETS*sizeof(Bitmap*)));
 	int i;
 	for(i = 0; i < N_BULLETS; i++)
-		player->bullets[i] = loadBitmap(fullPath("bullet.bmp"),player->bitmap->x+BULLET_OFFSET,player->bitmap->y-BULLET_HEIGHT);
+		player->bullets[i] = loadBitmap(fullPath("new_bullet.bmp"),player->bitmap->x+BULLET_OFFSET,player->bitmap->y-BULLET_HEIGHT);
 	return player;
 }
 
