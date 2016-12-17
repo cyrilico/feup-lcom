@@ -24,30 +24,13 @@ void process_main_menu(Dispatcher* dispatcher) {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE:
 				if(msg.NOTIFY_ARG & dispatcher->irq_mouse) {
-					sys_inb(OUT_BUF, &(menu->mouse->packet_byte));
-					if(menu->mouse->byteID == 0){
-						if(menu->mouse->packet_byte & BIT(3)) //Valid first byte (or at least we hope so)
-							menu->mouse->packet[menu->mouse->byteID++] = (unsigned char)(menu->mouse->packet_byte);
-						else{
-							printf("Invalid first byte, trying again\n");
-							continue;
-						}
-					}
-					else{
-						menu->mouse->packet[menu->mouse->byteID++] = (unsigned char)(menu->mouse->packet_byte);
-						if(menu->mouse->byteID == 3){
-							mouse_print_packet(menu->mouse->packet);
-							menu->mouse->byteID = 0;
-							if(++(menu->mouse->number_of_packets) != 1){
-								update_mouse(menu->mouse);
-								update_menu(menu,MOUSE_UPDATE);
-							}
-						}
-					}
+					read_packet_byte(menu->mouse);
+					if(full_packet_received(menu->mouse));
+						update_menu(menu,MOUSE_UPDATE);
 				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd){
 					read_scancode(menu->keyboard);
-					if(!menu->keyboard->read_again) //Full scancode processed, analyze its consequences
+					if(!menu->keyboard->read_again) //Full scancode processed, analyze its consequences (TO DO: Turn 'if' content into a function for reading purposes)
 						update_menu(menu,KBD_UPDATE);
 				}
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer)
@@ -82,7 +65,6 @@ void process_game(Dispatcher* dispatcher) {
 	message msg;
 
 	unsigned short counter = 0;
-	int update = 0;
 
 	while(game->state != GAME_OVER) {
 		if (driver_receive(ANY, &msg, &ipc_status) != 0 )
@@ -90,27 +72,12 @@ void process_game(Dispatcher* dispatcher) {
 		if (is_ipc_notify(ipc_status)) {
 			switch (_ENDPOINT_P(msg.m_source)) {
 			case HARDWARE:
-				if(msg.NOTIFY_ARG & dispatcher->irq_mouse){
-					sys_inb(OUT_BUF, &(game->mouse->packet_byte));
-					if(game->mouse->byteID == 0){
-						if(game->mouse->packet_byte & BIT(3)) //Valid first byte (or at least we hope so)
-							game->mouse->packet[game->mouse->byteID++] = (unsigned char)(game->mouse->packet_byte);
-						else
-							continue;
-					}
-					else{
-						game->mouse->packet[game->mouse->byteID++] = (unsigned char)(game->mouse->packet_byte);
-						if(game->mouse->byteID == 3){
-							mouse_print_packet(game->mouse->packet);
-							game->mouse->byteID = 0;
-							if(++(game->mouse->number_of_packets) != 1)
-								update = 1;
-						}
-					}
-				}
+				if(msg.NOTIFY_ARG & dispatcher->irq_mouse)
+					read_packet_byte(game->mouse);
 				else if(msg.NOTIFY_ARG & dispatcher->irq_kbd){
 					read_scancode(game->keyboard);
-					if(!game->keyboard->read_again && game->keyboard->scancode == ESC_BREAK) //Full scancode processed, analyze its consequences
+					/* TO DO: Turn 'if' content into a function (ex: scancode_received(scancode). return 1 if yes, 0 if no */
+					if(!game->keyboard->read_again && game->keyboard->scancode == ESC_BREAK)
 						game->state = GAME_OVER;
 					else if(!game->keyboard->read_again && game->keyboard->scancode == A_BREAK) //Shoot bullet
 						remove_bullet_shot(game);
@@ -118,9 +85,8 @@ void process_game(Dispatcher* dispatcher) {
 				else if(msg.NOTIFY_ARG & dispatcher->irq_timer){
 					counter = (counter+1)%2;
 					update_game(game);
-					if(update){
-						update = 0;
-						update_mouse(game->mouse);
+					if(full_packet_received(game->mouse)){
+						reset_packet_state(game->mouse);
 						update_player_mouse(game->player, game->mouse, game->secondary_buffer);
 					}
 					if(counter)

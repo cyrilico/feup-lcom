@@ -80,50 +80,45 @@ int mouse_write_byte(unsigned char byte){
 	return 0;
 }
 
-void mouse_event_handler(state *st, event evt, short *y_variation, short desired_length) {
-	switch (*st) {
-	case INIT:
-		if( evt == RDOWN ){
-			*st = DRAW;
-		}
-		break;
-	case DRAW:
-		if( evt == MOVE ) {
-			if(desired_length < 0) {
-				if (*y_variation <= desired_length){ //Make length a global variable so it can be accessed here?
-					*st = COMP;
-				}
-			}
-			else{
-				if (*y_variation >= desired_length){ //Make length a global variable so it can be accessed here?
-					*st = COMP;
-				}
-			}
-		} else if( evt == RUP ) {
-			*st = INIT;
-			*y_variation = 0;
-		}
-		break;
-	default:
-		break;
-	}
-}
-
 /* --------------------- */
+
+#define MOUSE_START_X 100
+#define MOUSE_START_Y 100
 
 Mouse* create_mouse(){
 	Mouse* new_mouse = (Mouse*)(malloc(sizeof(Mouse)));
 	new_mouse->left_button_state = RELEASED;
-	new_mouse->crosshair = loadBitmap(fullPath("crosshair.bmp"),100,100); //Mouse starts at (x,y)=(100,100)
+	new_mouse->crosshair = loadBitmap(fullPath("crosshair.bmp"),MOUSE_START_X,MOUSE_START_Y);
 	new_mouse->byteID = 0;
 	new_mouse->packet_byte = 0;
-	new_mouse->number_of_packets = 0;
+	new_mouse->packet_state = RECEIVING;
+
 	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
+
 	return new_mouse;
 }
 
 void draw_mouse(Mouse* mouse, char* buffer){
 	drawBitmap(mouse->crosshair, buffer, ALIGN_LEFT);
+}
+
+void read_packet_byte(Mouse* mouse){
+	sys_inb(OUT_BUF, &(mouse->packet_byte));
+	if(mouse->byteID == 0){
+		if(mouse->packet_byte & BIT(3)) //Synchronize. If <> 0, it's a valid first byte (or at least we hope so)
+			mouse->packet[mouse->byteID++] = (unsigned char)(mouse->packet_byte);
+		else //Off-sync, so ignore byte and wait for a synced packet
+			return;
+	}
+	else{
+		mouse->packet[mouse->byteID++] = (unsigned char)(mouse->packet_byte);
+		if(mouse->byteID == 3){
+			mouse_print_packet(mouse->packet);
+			mouse->byteID = 0;
+			update_mouse(mouse);
+			mouse->packet_state = RECEIVED;
+		}
+	}
 }
 
 void update_mouse(Mouse* mouse){
@@ -158,6 +153,17 @@ void update_mouse(Mouse* mouse){
 		mouse->crosshair->x = vg_get_h_res() - mouse->crosshair->bitmapInfoHeader.width;
 	if(mouse->crosshair->y > vg_get_v_res() - mouse->crosshair->bitmapInfoHeader.height)
 		mouse->crosshair->y =  vg_get_v_res() - mouse->crosshair->bitmapInfoHeader.height;
+}
+
+int full_packet_received(Mouse* mouse){
+	if(mouse->packet_state == RECEIVED)
+		return 1;
+	else
+		return 0;
+}
+
+void reset_packet_state(Mouse* mouse){
+	mouse->packet_state = RECEIVING;
 }
 
 void delete_mouse(Mouse* mouse){
