@@ -104,10 +104,12 @@ void interrupt_handler(Dispatcher* dispatcher) {
 	Game* game = NULL;
 
 	if(dispatcher->state == MAIN_MENU) {
+		printf("Creating menu\n");
 		menu = create_menu();
 		printf("Created menu\n");
 	}
 	else {//dispatcher->state == GAME
+		printf("Creating game\n");
 		game = create_game();
 		printf("Created game\n");
 	}
@@ -133,8 +135,12 @@ void interrupt_handler(Dispatcher* dispatcher) {
 
 				}
 				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_kbd){
-
-					if(dispatcher->state == GAME) {
+					if(dispatcher->state == MAIN_MENU) {
+						read_scancode(menu->keyboard);
+						if(full_scancode_received(menu->keyboard))
+							update_menu(menu,KBD_UPDATE);
+					}
+					else {
 						read_scancode(game->keyboard);
 						if(key_detected(game->keyboard, ESC_BREAK))
 							game->state = GAME_OVER;
@@ -181,25 +187,31 @@ void delete_dispatcher(Dispatcher* dispatcher) {
 }
 
 void state_handler(Dispatcher* dispatcher, Menu* menu, Game* game) {
-	if(dispatcher->state == MAIN_MENU && menu->state != NOT_DONE && menu != NULL) {
-		switch(menu->state){
-		case PLAY_CHOSEN:
-			dispatcher->state = GAME;
-			break;
-		case EXIT_CHOSEN:
-			dispatcher->state = EXIT_PROGRAM;
-			break;
-		default:
-			break;
+	if(menu != NULL) {
+		if(dispatcher->state == MAIN_MENU && menu->state != NOT_DONE) {
+			switch(menu->state){
+			case PLAY_CHOSEN:
+				dispatcher->state = GAME;
+				break;
+			case EXIT_CHOSEN:
+				dispatcher->state = EXIT_PROGRAM;
+				break;
+			default:
+				break;
+			}
+			printf("Deleting menu\n");
+			delete_menu(menu);
+			menu = NULL;
+			printf("Menu deleted\n");
 		}
-		printf("Deleting menu\n");
-		delete_menu(menu);
-		printf("Menu deleted\n");
 	}
-	else if(dispatcher->state == GAME && game->state == GAME_OVER && game != NULL) {
-		dispatcher->state = MAIN_MENU;
-		printf("Deleting game\n");
-		delete_game(game);
-		printf("Game deleted\n");
+	else if(game != NULL) {
+		if(dispatcher->state == GAME && game->state == GAME_OVER) {
+			dispatcher->state = MAIN_MENU;
+			printf("Deleting game\n");
+			delete_game(game);
+			game = NULL;
+			printf("Game deleted\n");
+		}
 	}
 }

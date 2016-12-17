@@ -193,7 +193,7 @@ void delete_bullet(Bullet* bullet){
 
 Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
-	game->mouse = create_mouse();
+	game->mouse = create_game_mouse();
 	game->keyboard = create_keyboard();
 	game->background = loadBitmap(fullPath("new_game_background.bmp"),0,0);
 	game->player = create_player();
@@ -308,15 +308,10 @@ void draw_game(Game* game){
 }
 
 void delete_game(Game* game){
-	printf("1\n");
-	delete_mouse(game->mouse);
-	printf("2\n");
 	delete_keyboard(game->keyboard);
-	printf("3\n");
+	delete_game_mouse(game->mouse);
 	deleteBitmap(game->background);
-	printf("4\n");
 	delete_player(game->player);
-	printf("5\n");
 	int i;
 	for(i = 0; i < N_OBSTACLES; i++){
 		if(game->obstacles[i] != NULL)
@@ -326,8 +321,6 @@ void delete_game(Game* game){
 		if(game->bullets[i] != NULL)
 			delete_bullet(game->bullets[i]);
 	}
-	printf("Cheguei até ao free em delete_game\n");
 	free(game->secondary_buffer);
-	printf("Vou fazer free ao game\n");
 	free(game);
 }
