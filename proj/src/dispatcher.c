@@ -69,22 +69,21 @@ void process_game(Dispatcher* dispatcher) {
 					read_packet_byte(game->mouse);
 				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_kbd){
 					read_scancode(game->keyboard);
-					/* TO DO: Turn 'if' content into a function (ex: scancode_received(scancode). return 1 if yes, 0 if no */
 					if(key_detected(game->keyboard, ESC_BREAK))
 						game->state = GAME_OVER;
-					else if(key_detected(game->keyboard, A_BREAK) && game->player->number_of_bullets > 0){ /*TO DO: Layer this piece of code */
+					else if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /*TO DO: Layer this piece of code */
 						if(add_bullet_shot(game,game->player->bitmap->x,game->player->bitmap->y) == 1)
-							game->player->number_of_bullets--;
+							update_number_of_bullets(game->player);
 					}
 				}
 				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_timer){
-					counter = (counter+1)%2;
+					update_draw_state(game);
 					update_game(game);
 					if(full_packet_received(game->mouse)){
 						reset_packet_state(game->mouse);
 						update_player_mouse(game->player, game->mouse, game->secondary_buffer);
 					}
-					if(counter)
+					if(game->drawstate == DRAW)
 						draw_game(game);
 				}
 				break;
