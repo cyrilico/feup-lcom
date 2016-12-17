@@ -98,6 +98,18 @@ Mouse* create_mouse(){
 	return new_mouse;
 }
 
+Mouse* create_game_mouse() {
+	Mouse* new_mouse = (Mouse*)(malloc(sizeof(Mouse)));
+	new_mouse->left_button_state = RELEASED;
+	new_mouse->byteID = 0;
+	new_mouse->packet_byte = 0;
+	new_mouse->packet_state = RECEIVING;
+
+	mouse_write_byte(ENABLE_MOUSE_DATA_REPORTING);
+
+	return new_mouse;
+}
+
 void draw_mouse(Mouse* mouse, char* buffer){
 	drawBitmap(mouse->crosshair, buffer, ALIGN_LEFT);
 }
@@ -172,8 +184,13 @@ void delete_mouse(Mouse* mouse){
 	free(mouse);
 }
 
+void delete_game_mouse(Mouse* mouse) {
+	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
+	free(mouse);
+}
+
 void mouse_print_packet(unsigned char packet[]){
-/*	printf("B1=0x%x ", packet[0]);
+	printf("B1=0x%x ", packet[0]);
 	printf("B2=0x%x ", packet[1]);
 	printf("B3=0x%x ", packet[2]);
 	printf("LB=%u ", packet[0] & BIT(0));
@@ -183,5 +200,4 @@ void mouse_print_packet(unsigned char packet[]){
 	printf("YOV=%u ", (packet[0] & BIT(7))>>7);
 	printf("X=%d ", ((packet[0] & BIT(4)) ? TWOSCOMPLEMENT(packet[1]) : packet[1]));
 	printf("Y=%d\n\n", ((packet[0] & BIT(5)) ? TWOSCOMPLEMENT(packet[2]) : packet[2]));
-*/
 }
