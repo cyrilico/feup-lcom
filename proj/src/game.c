@@ -210,7 +210,7 @@ Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
 	game->mouse = create_game_mouse();
 	game->keyboard = create_keyboard();
-	game->background = loadBitmap(fullPath("new_game_background.bmp"),0,0);
+	game->background = loadBitmap(fullPath("new_game_background2.bmp"),0,0);
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
@@ -291,12 +291,10 @@ void update_game(Game* game){
 
 	//Draw player score
 	/* TO DO: Update its display location) */
-	draw_number(game->player->score_minutes,10,270,game->secondary_buffer);
-	draw_number(game->player->score_seconds,10,300,game->secondary_buffer);
+	draw_number(game->player->score_minutes,3,270,game->secondary_buffer);
+	draw_number(game->player->score_seconds,39,270,game->secondary_buffer);
 
 	//Draw player current number of bullets
-	drawBitmap(loadBitmap(fullPath("bullet_show.bmp"),5,400),game->secondary_buffer,ALIGN_LEFT);
-	drawBitmap(loadBitmap(fullPath("multiplier.bmp"),15,400),game->secondary_buffer,ALIGN_LEFT);
 	draw_number(game->player->number_of_bullets,31,400,game->secondary_buffer);
 
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
