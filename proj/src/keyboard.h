@@ -6,10 +6,12 @@ unsigned long kbd_read_code();
 unsigned long kbd_write_code(unsigned char cmd);
 void kbd_print_code(unsigned long code);
 
+typedef enum scancodestate_t {READ_AGAIN, FULLY_READ} scancodestate;
+
 typedef struct{
 	unsigned long scancode;
 	unsigned long scancode_aux; //In case of two byte scancodes
-	int read_again; //In case of two byte scancodes. Also serves as control (if set to 1, means that scancode does not hold a ready to be processed code)
+	scancodestate codestatus; //In case of two byte scancodes. Also serves as control
 }Keyboard;
 
 Keyboard* create_keyboard();

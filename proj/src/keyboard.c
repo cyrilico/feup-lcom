@@ -97,7 +97,7 @@ Keyboard* create_keyboard(){
 	Keyboard* keyboard = (Keyboard*)(malloc(sizeof(Keyboard)));
 	keyboard->scancode = 0;
 	keyboard->scancode_aux = 0;
-	keyboard->read_again = 0;
+	keyboard->codestatus = FULLY_READ;
 
 	return keyboard;
 }
@@ -105,15 +105,15 @@ Keyboard* create_keyboard(){
 void read_scancode(Keyboard* keyboard){
 	unsigned long code = read_scancode_asm();
 	if(code != -1){
-		if(keyboard->read_again == 1){
+		if(keyboard->codestatus == READ_AGAIN){
 			code = code << 8;
 			code |= keyboard->scancode_aux;
 			keyboard->scancode = code;
-			keyboard->read_again = 0;
+			keyboard->codestatus = FULLY_READ;
 		}
 		else if(code == TWO_BYTE_SCANCODE){
 			keyboard->scancode_aux = code;
-			keyboard->read_again = 1;
+			keyboard->codestatus = READ_AGAIN;
 		}
 		else
 			keyboard->scancode = code;
@@ -121,7 +121,7 @@ void read_scancode(Keyboard* keyboard){
 }
 
 int full_scancode_received(Keyboard* keyboard){
-	if(keyboard->read_again == 0)
+	if(keyboard->codestatus == FULLY_READ)
 		return 1;
 	else
 		return 0;
