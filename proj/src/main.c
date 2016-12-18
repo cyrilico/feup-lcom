@@ -11,11 +11,8 @@
 int main(int argc, char **argv) {
 	/* Initialize service */
 	sef_startup();
-	/*
-	 * //Remove from commentary style if assembly files are used
-	 * // Enable IO-sensitive operations for ourselves
-	 * sys_enable_iop(SELF);
-	*/
+	/* Enable IO-sensitive operations for ourselves */
+	sys_enable_iop(SELF);
 
 	srand(time(NULL));
 

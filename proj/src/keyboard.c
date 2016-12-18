@@ -103,7 +103,7 @@ Keyboard* create_keyboard(){
 }
 
 void read_scancode(Keyboard* keyboard){
-	unsigned long code = kbd_read_code();
+	unsigned long code = read_scancode_asm();
 	if(code != -1){
 		if(keyboard->read_again == 1){
 			code = code << 8;
