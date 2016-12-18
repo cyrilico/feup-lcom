@@ -6,10 +6,10 @@
 #define IN_BUF 0x60
 #define OUT_BUF 0x60
 #define GET_MSB 0xFF00
-#define OBF BIT(0)
-#define IBF BIT(1)
-#define TIMEOUT BIT(6)
-#define PARITY BIT(7)
+#define OBF 0x1 //BIT(0)
+#define IBF 0x2 //BIT(1)
+#define TIMEOUT 0x40 //BIT(6)
+#define PARITY 0x80 //BIT(7)
 #define OK 0
 #define NTRIES 5
 #define TWO_BYTE_SCANCODE 0xE0
