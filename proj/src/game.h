@@ -11,7 +11,7 @@
 #define OBSTACLE_HEIGHT 66
 #define N_OBSTACLES 9
 #define BLACK 0
-#define N_BULLETS 100
+#define N_BULLETS 50
 #define MAX_BULLETS_ON_SCREEN 5
 #define BULLET_HEIGHT 12
 #define BULLET_OFFSET 37
@@ -39,8 +39,9 @@ void delete_obstacle_line(Obstacle** obstacles, int line_size); //deletes entire
 #define PLAYER_DEATH_TOLERANCE 5
 
 typedef struct{
-	/*TO DO: add attribute to keep track of player's score (one for minutes and one for seconds,
-	assuming score will be the amount of time he survives - easier to process, avoids unecessary calculations and extra time wasting)*/
+	unsigned int score_minutes;
+	unsigned int score_seconds;
+	int score_aux; //Counts timer0 interrupts to increment score at each second (really just counting the time...)
 	unsigned int number_of_bullets;
 	Bitmap* bitmap;
 }Player;
@@ -50,6 +51,7 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer); //Update p
 void update_player_collision(Player* player, char* buffer); //Update player position in case of eventual collision
 void update_number_of_bullets(Player* player); //Decrements number of bullets of 'player'
 int player_has_bullets(Player* player); //Returns 1 if player's number of bullets is > 0, 0 otherwise
+void update_player_score(Player* player);
 void draw_player(Player* player, char* buffer);
 void delete_player(Player* player);
 

@@ -44,7 +44,7 @@ void delete_obstacle(Obstacle* obstacle){
 
 void generate_obstacle_line(Obstacle** obstacles, int line_size){
 	int i;
-	for(i = 0; i < N_OBSTACLES; i++){
+	for(i = 0; i < line_size; i++){
 		int empty = rand() % EMPTY_FACTOR; //Determine if empty space or enemy's there
 		if(!empty)
 			obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT);
@@ -65,6 +65,9 @@ Player* create_player(){
 	Player* player = (Player*)(malloc(sizeof(Player)));
 	int player_start_x = rand()%(vg_get_h_res()/2) + LEFT_LIMIT; //Random starting position
 	player->bitmap = loadBitmap(fullPath("buzz.bmp"), player_start_x, PLAYER_START_Y);
+	player->score_minutes = 0;
+	player->score_seconds = 0;
+	player->score_aux = 0;
 	/*TO DO: initialization of remaining structures (when they're created in Player 'class' */
 	/* \/ Save technique for later: fast load of all number bitmaps \/ */
 	/*for(i = 0; i < 10; i++){
@@ -93,15 +96,15 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 			player->bitmap->x = RIGHT_LIMIT - player->bitmap->bitmapInfoHeader.width;
 	}
 
+	/* TO DO: Try to optimize lateral collision testing */
+	unsigned long topPixelLeft = *(buffer + ((player->bitmap->y)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+	unsigned long topPixelRight = *(buffer + ((player->bitmap->y)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-	unsigned long topPixelLeft = *(buffer + ((player->bitmap->y)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bits_per_pixel()/8);
-	unsigned long topPixelRight = *(buffer + ((player->bitmap->y)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+	unsigned long middlePixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+	unsigned long middlePixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-	unsigned long middlePixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bits_per_pixel()/8);
-	unsigned long middlePixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
-
-	unsigned long bottomPixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bits_per_pixel()/8);
-	unsigned long bottomPixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+	unsigned long bottomPixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+	unsigned long bottomPixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
 	if(topPixelLeft != BLACK || topPixelRight != BLACK || middlePixelLeft != BLACK || middlePixelRight != BLACK || bottomPixelLeft != BLACK || bottomPixelRight != BLACK)
 		player->bitmap->x = previous_x;
@@ -111,16 +114,16 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 	unsigned long currentPixelRight;
 
 	for(counter = 0; counter < player->bitmap->bitmapInfoHeader.height; counter ++) {
-		currentPixelLeft = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bits_per_pixel()/8);
-		currentPixelRight = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x + player->bitmap->bitmapInfoHeader.width + 1)*vg_get_bits_per_pixel()/8);
+		currentPixelLeft = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+		currentPixelRight = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x + player->bitmap->bitmapInfoHeader.width + 1)*vg_get_bytes_per_pixel());
 		if(currentPixelLeft != BLACK || currentPixelRight != BLACK)
 			player->bitmap->x = previous_x;
 	}*/
 }
 
 void update_player_collision(Player* player, char* buffer){
-	unsigned long topLeftPixel = *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + player->bitmap->x)*vg_get_bits_per_pixel()/8);
-	unsigned long topRightPixel =  *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bits_per_pixel()/8);
+	unsigned long topLeftPixel = *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + player->bitmap->x)*vg_get_bytes_per_pixel());
+	unsigned long topRightPixel =  *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
 	if(topLeftPixel != BLACK || topRightPixel != BLACK)
 		player->bitmap->y += OBSTACLE_SPEED;
@@ -137,6 +140,18 @@ int player_has_bullets(Player* player){
 		return 1;
 	else
 		return 0;
+}
+
+void update_player_score(Player* player){
+	player->score_aux++;
+	if(player->score_aux == 60){
+		player->score_aux = 0;
+		player->score_seconds++;
+		if(player->score_seconds == 60){
+			player->score_seconds = 0;
+			player->score_minutes++;
+		}
+	}
 }
 
 void draw_player(Player* player, char* buffer){
@@ -262,6 +277,7 @@ void update_game(Game* game){
 	}
 
 	update_player_collision(game->player,game->secondary_buffer);
+	update_player_score(game->player);
 
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
@@ -270,7 +286,18 @@ void update_game(Game* game){
 		if(game->obstacles[i] != NULL)
 			draw_obstacle(game->obstacles[i],game->secondary_buffer);
 	}
+
 	draw_player(game->player,game->secondary_buffer);
+
+	//Draw player score
+	/* TO DO: Update its display location) */
+	draw_number(game->player->score_minutes,10,270,game->secondary_buffer);
+	draw_number(game->player->score_seconds,10,300,game->secondary_buffer);
+
+	//Draw player current number of bullets
+	drawBitmap(loadBitmap(fullPath("bullet_show.bmp"),5,400),game->secondary_buffer,ALIGN_LEFT);
+	drawBitmap(loadBitmap(fullPath("multiplier.bmp"),15,400),game->secondary_buffer,ALIGN_LEFT);
+	draw_number(game->player->number_of_bullets,35,400,game->secondary_buffer);
 
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL)

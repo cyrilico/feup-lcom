@@ -38,7 +38,7 @@ int vg_exit(void);
 
 unsigned int vg_get_h_res();
 unsigned int vg_get_v_res();
-unsigned int vg_get_bits_per_pixel();
+unsigned int vg_get_bytes_per_pixel();
 char* vg_get_video_mem();
 unsigned int vg_get_window_size();
 

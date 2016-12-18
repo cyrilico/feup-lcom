@@ -125,7 +125,7 @@ void read_packet_byte(Mouse* mouse){
 	else{
 		mouse->packet[mouse->byteID++] = (unsigned char)(mouse->packet_byte);
 		if(mouse->byteID == 3){
-			mouse_print_packet(mouse->packet);
+			//mouse_print_packet(mouse->packet);
 			mouse->byteID = 0;
 			update_mouse(mouse);
 			mouse->packet_state = RECEIVED;
