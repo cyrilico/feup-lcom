@@ -297,7 +297,7 @@ void update_game(Game* game){
 	//Draw player current number of bullets
 	drawBitmap(loadBitmap(fullPath("bullet_show.bmp"),5,400),game->secondary_buffer,ALIGN_LEFT);
 	drawBitmap(loadBitmap(fullPath("multiplier.bmp"),15,400),game->secondary_buffer,ALIGN_LEFT);
-	draw_number(game->player->number_of_bullets,35,400,game->secondary_buffer);
+	draw_number(game->player->number_of_bullets,31,400,game->secondary_buffer);
 
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL)

@@ -21,14 +21,13 @@ const char* fullPath(const char* filename){
 }
 
 void draw_number(int number, int x, int y, char* buffer){
-	printf("ola\n");
 	int msd = number/10; //msd = most significant digit
 	int lsd = number%10; //lsd = least significant digit
 	char msd_file[10];
 	char lsd_file[10];
 	sprintf(msd_file,"%d.bmp",msd);
 	sprintf(lsd_file,"%d.bmp",lsd);
-	printf("Cheguei aqui e os nomes dos ficheiros são %s e %s\n", msd_file, lsd_file);
+	/*printf("Cheguei aqui e os nomes dos ficheiros são %s e %s\n", msd_file, lsd_file);*/
 	Bitmap* msd_bitmap = loadBitmap(fullPath(msd_file),x,y);
 	Bitmap* lsd_bitmap = loadBitmap(fullPath(lsd_file),x+NUMBER_WIDTH,y);
 	drawBitmap(msd_bitmap,buffer,ALIGN_LEFT);
