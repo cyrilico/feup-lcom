@@ -29,7 +29,7 @@ Menu* create_menu(){
 	menu->exit_button = create_button(EXIT_BUTTON_X,EXIT_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT);
 	menu->mouse = create_mouse();
 	menu->keyboard = create_keyboard();
-	menu->background = loadBitmap(fullPath("menu_background.bmp"),0,0);
+	menu->background = loadBitmap(fullPath("new_menu_background.bmp"),0,0);
 	menu->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 
 	menu->state = NOT_DONE;
