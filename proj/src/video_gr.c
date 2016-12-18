@@ -87,8 +87,8 @@ unsigned int vg_get_v_res(){
 	return v_res;
 }
 
-unsigned int vg_get_bits_per_pixel(){
-	return bits_per_pixel;
+unsigned int vg_get_bytes_per_pixel(){
+	return bits_per_pixel/8;
 }
 
 char* vg_get_video_mem(){
