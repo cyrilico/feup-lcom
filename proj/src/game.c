@@ -3,6 +3,7 @@
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));
 	obstacle->lives = rand()%3+1;
+	obstacle->const_lives = obstacle->lives;
 	int i;
 	for(i = 0; i < 3; i++){
 		char temp[15];
@@ -64,18 +65,16 @@ void delete_obstacle_line(Obstacle** obstacles, int line_size){
 Player* create_player(){
 	Player* player = (Player*)(malloc(sizeof(Player)));
 	int player_start_x = rand()%(vg_get_h_res()/2) + LEFT_LIMIT; //Random starting position
+	/*TO DO: Change buzz bitmap to a green-screen like one and update drawBitmap so it doesn't draw that color (otherwise, when INVINCIBLE bonus is on and buzz
+	 * goes over an obstacle, it shows his black background. ALTERNATIVE: Make him Super buzz and instead of going over it, make him destroy it just by touching
+	 * it (and gain the respective amount of bullets, of course)
+	 */
 	player->bitmap = loadBitmap(fullPath("buzz.bmp"), player_start_x, PLAYER_START_Y);
+	player->bonus = NO_BONUS;
 	player->score_minutes = 0;
 	player->score_seconds = 0;
 	player->score_aux = 0;
-	/*TO DO: initialization of remaining structures (when they're created in Player 'class' */
-	/* \/ Save technique for later: fast load of all number bitmaps \/ */
-	/*for(i = 0; i < 10; i++){
-		char temp[10];
-		sprintf(temp,"%d.bmp",i);
-		player->numbers[i] = loadBitmap(fullPath(temp),25,300);
-	}
-	*/
+	/*TO DO: initialization of remaining structures (when they're created in Player 'class') */
 	player->number_of_bullets = N_BULLETS;
 
 	return player;
@@ -122,24 +121,39 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 }
 
 void update_player_collision(Player* player, char* buffer){
-	unsigned long topLeftPixel = *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + player->bitmap->x)*vg_get_bytes_per_pixel());
-	unsigned long topRightPixel =  *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
+	if(player->bonus != INVINCIBLE){
+		unsigned long topLeftPixel = *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + player->bitmap->x)*vg_get_bytes_per_pixel());
+		unsigned long topRightPixel =  *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-	if(topLeftPixel != BLACK || topRightPixel != BLACK)
-		player->bitmap->y += OBSTACLE_SPEED;
-	else if(player->bitmap->y != PLAYER_START_Y)
-		player->bitmap->y--;
+		if(topLeftPixel != BLACK || topRightPixel != BLACK)
+			player->bitmap->y += OBSTACLE_SPEED;
+		else if(player->bitmap->y != PLAYER_START_Y)
+			player->bitmap->y--;
+	}
 }
 
 void update_number_of_bullets(Player* player){
-	player->number_of_bullets--;
+	if(player->bonus != INFINITE_AMMO)
+		player->number_of_bullets--;
 }
 
 int player_has_bullets(Player* player){
-	if(player->number_of_bullets > 0)
+	if(player->bonus == INFINITE_AMMO)
+		return 1;
+	else if(player->number_of_bullets > 0)
 		return 1;
 	else
 		return 0;
+}
+
+void generate_bonus(Player* player){
+	int bonus = rand() % NUMBER_OF_BONUSES;
+	if(bonus == 0)
+		player->bonus = INVINCIBLE;
+	else
+		player->bonus = INFINITE_AMMO;
+
+	player->bonus_timer = BONUS_DURATION;
 }
 
 void update_player_score(Player* player){
@@ -147,10 +161,18 @@ void update_player_score(Player* player){
 	if(player->score_aux == 60){
 		player->score_aux = 0;
 		player->score_seconds++;
+		update_player_bonus(player);
 		if(player->score_seconds == 60){
 			player->score_seconds = 0;
 			player->score_minutes++;
 		}
+	}
+}
+
+void update_player_bonus(Player* player){
+	if(player->bonus != NO_BONUS){
+		if(--(player->bonus_timer) == 0)
+			player->bonus = NO_BONUS;
 	}
 }
 
@@ -165,7 +187,7 @@ void delete_player(Player* player){
 
 Bullet* create_bullet(int x, int y){
 	Bullet* bullet = (Bullet*)(malloc(sizeof(Bullet)));
-	bullet->bitmap = loadBitmap(fullPath("new_bullet.bmp"), x, y);
+	bullet->bitmap = loadBitmap(fullPath("bullet.bmp"), x, y);
 	return bullet;
 }
 
@@ -224,13 +246,19 @@ Game* create_game(){
 	return game;
 }
 
-int determine_index(int x){
+int determine_index(int bullet_x){
 	int i;
 	for(i = 0; i < N_OBSTACLES; i++){
-		if(x >= (i+1)*OBSTACLE_WIDTH && x <= (i+1)*OBSTACLE_WIDTH + 66)
+		if(bullet_x >= (i+1)*OBSTACLE_WIDTH && bullet_x <= (i+1)*OBSTACLE_WIDTH + 66)
 			return i;
 	}
 	return -1;
+}
+
+void game_state_handler(Game* game){
+	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
+		game->state = GAME_OVER;
+	/*TO DO: Maybe add a pause state (then, on interrupts, we simply read the values and ignore them, not updating anything, unless it's the pause key again) */
 }
 
 void update_game(Game* game){
@@ -266,6 +294,7 @@ void update_game(Game* game){
 							delete_bullet(game->bullets[i]);
 							game->bullets[i] = NULL;
 							if(--(game->obstacles[index]->lives) == 0){
+								game->player->number_of_bullets += game->obstacles[index]->const_lives * BULLET_GAIN_FACTOR;
 								delete_obstacle(game->obstacles[index]);
 								game->obstacles[index] = NULL;
 							}
@@ -278,6 +307,8 @@ void update_game(Game* game){
 
 	update_player_collision(game->player,game->secondary_buffer);
 	update_player_score(game->player);
+	if(game->player->score_seconds % BONUS_FREQUENCY == 0 && game->player->score_seconds+game->player->score_minutes != 0)
+		generate_bonus(game->player);
 
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
@@ -302,9 +333,19 @@ void update_game(Game* game){
 			draw_bullet(game->bullets[i],game->secondary_buffer);
 	}
 
-	/* TO DO: Layer this (function to detect if player has lost) */
-	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
-		game->state = GAME_OVER;
+	/* Update this later (print bonus instead of number corresponding to it)
+	 * SIDE NOTE: When it's calculating the next bonus to give to the player, it prints out 0 and 1 like a mod 2 sequence (0,1,0,1,0,1)
+	 * very fast until one is finally chosen and remains in the screen. No idea why this happens BUT IT'S FUCKING COOL
+	 * TO DO: Change bonus activation to key-pressing detecting mechanism (timer is already used to control its duration so using keyboard for something
+	 * other than shooting will show good use of 'simultaneous' interrupts */
+	if(game->player->bonus == INVINCIBLE)
+		draw_number(0, 30, 500, game->secondary_buffer);
+	else if(game->player->bonus == INFINITE_AMMO)
+		draw_number(1, 30, 500, game->secondary_buffer);
+	else //bonus = NO_BONUS
+		draw_number(2, 30, 500, game->secondary_buffer);
+
+	game_state_handler(game);
 }
 
 void update_draw_state(Game* game){
