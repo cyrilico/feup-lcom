@@ -21,12 +21,15 @@ int main(int argc, char **argv) {
 
 	Dispatcher* dispatcher = create_dispatcher();
 
-	while(1) {
+	/*while(1) {
 		if(dispatcher->state != EXIT_PROGRAM)
 			interrupt_handler(dispatcher);
 		else //dispatcher->state == EXIT_PROGRAM
 			break;
-	}
+	}*/
+
+	while(dispatcher->state != EXIT_PROGRAM)
+		interrupt_handler(dispatcher);
 
 	delete_dispatcher(dispatcher);
 	return exit_graphic_mode();
