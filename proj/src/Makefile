@@ -1,7 +1,7 @@
 COMPILER_TYPE= gnu
 CC=gcc
 PROG= proj
-SRCS= main.c vbe.c video_gr.c timer.c keyboard.c mouse.c bitmap.c utils.c menu.c dispatcher.c game.c read_scancode_asm.S
+SRCS= bitmap.c dispatcher.c game.c keyboard.c main.c menu.c mouse.c read_scancode_asm.S rtc.c timer.c utils.c vbe.c video_gr.c
 CCFLAGS= -Wall
 DPADD+= ${LIBDRIVER} ${LIBSYS}
 LDADD+= -llm -ldriver -lsys
