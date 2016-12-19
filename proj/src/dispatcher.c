@@ -113,7 +113,6 @@ void interrupt_handler(Dispatcher* dispatcher) {
 		game = create_game();
 		printf("Created game\n");
 	}
-	unsigned short counter = 0;
 
 	dispatcherstate initial_state = dispatcher->state;
 
@@ -144,7 +143,7 @@ void interrupt_handler(Dispatcher* dispatcher) {
 						read_scancode(game->keyboard);
 						if(key_detected(game->keyboard, ESC_BREAK))
 							game->state = GAME_OVER;
-						else if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /*TO DO: Layer this piece of code */
+						else if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /* Shooting key: A */
 							if(add_bullet_shot(game,game->player->bitmap->x,game->player->bitmap->y) == 1)
 								update_number_of_bullets(game->player);
 						}
