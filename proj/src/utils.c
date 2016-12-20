@@ -36,6 +36,15 @@ void draw_number(int number, int x, int y, char* buffer){
 	deleteBitmap(lsd_bitmap);
 }
 
+int rgb (unsigned char r, unsigned char g, unsigned char b) {
+
+	int red = r >> 3;
+	int green = g >> 2;
+	int blue = b >> 3;
+
+	return (red << 11 | green << 5 | blue);
+}
+
 int start_graphic_mode(){
 	return (vg_init(0x114) != NULL ? 0 : -1);
 }

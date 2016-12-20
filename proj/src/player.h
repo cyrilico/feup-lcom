@@ -24,6 +24,7 @@ typedef struct{
 	unsigned int bonus_timer; //holds and controls bonus duration (set to macro BONUS_DURATION, which holds the default value in seconds). is decremented until 0 every time score_seconds is incremented
 	bonusstate bonus;
 	Bitmap* bitmap;
+	Bitmap* bitmap_shield;
 }Player;
 
 Player* create_player();
