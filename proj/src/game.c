@@ -122,7 +122,7 @@ void update_game(Game* game){
 
 	update_player_collision(game->player,game->secondary_buffer);
 	update_player_score(game->player);
-	if(game->player->score_seconds % BONUS_FREQUENCY == 0 && game->player->score_seconds+game->player->score_minutes != 0)
+	if(game->player->score_seconds % BONUS_FREQUENCY == 0 && game->player->score_seconds+game->player->score_minutes != 0 && game->player->score_aux == 0)
 		generate_bonus(game->player);
 
 	//Prepare next frame
@@ -132,6 +132,7 @@ void update_game(Game* game){
 		if(game->obstacles[i] != NULL)
 			draw_obstacle(game->obstacles[i],game->secondary_buffer);
 	}
+
 
 	draw_player(game->player,game->secondary_buffer);
 

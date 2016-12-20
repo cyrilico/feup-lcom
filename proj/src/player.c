@@ -8,7 +8,8 @@ Player* create_player(){
 	 * goes over an obstacle, it shows his black background. ALTERNATIVE: Make him Super buzz and instead of going over it, make him destroy it just by touching
 	 * it (and gain the respective amount of bullets, of course)
 	 */
-	player->bitmap = loadBitmap(fullPath("buzz.bmp"), player_start_x, PLAYER_START_Y);
+	player->bitmap = loadBitmap(fullPath("buzz_pink.bmp"), player_start_x, PLAYER_START_Y);
+	player->bitmap_shield = loadBitmap(fullPath("buzz_shield.bmp"), player_start_x, PLAYER_START_Y);
 	player->bonus = NO_BONUS;
 	player->score_minutes = 0;
 	player->score_seconds = 0;
@@ -57,6 +58,10 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 		if(currentPixelLeft != BLACK || currentPixelRight != BLACK)
 			player->bitmap->x = previous_x;
 	}*/
+
+	//Update shield bitmap position
+	player->bitmap_shield->x = player->bitmap->x;
+	player->bitmap_shield->y = player->bitmap->y;
 }
 
 void update_player_collision(Player* player, char* buffer){
@@ -116,10 +121,13 @@ void update_player_bonus(Player* player){
 }
 
 void draw_player(Player* player, char* buffer){
+	if(player->bonus == INVINCIBLE)
+		drawBitmap(player->bitmap_shield, buffer, ALIGN_LEFT);
 	drawBitmap(player->bitmap,buffer,ALIGN_LEFT);
 }
 
 void delete_player(Player* player){
 	deleteBitmap(player->bitmap);
+	deleteBitmap(player->bitmap_shield);
 	free(player);
 }

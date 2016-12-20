@@ -35,7 +35,7 @@ void *vg_init(unsigned short mode);
  * @return 0 upon success, non-zero upon failure
  */
 int vg_exit(void);
-
+int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color, char* buffer);
 unsigned int vg_get_h_res();
 unsigned int vg_get_v_res();
 unsigned int vg_get_bytes_per_pixel();
