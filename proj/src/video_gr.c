@@ -79,18 +79,6 @@ void* vg_init(unsigned short mode){
 	return (void *)video_mem;
 }
 
-int vg_fill_pixel(unsigned int x, unsigned int y, unsigned long color, char* buffer) {
-    if(x > h_res || y > v_res)
-        return -1;
-
-    char* position = video_mem + (y*h_res + x)*vg_get_bytes_per_pixel();
-    int i = 0;
-    while(i < bits_per_pixel/8)
-    	*(position++) = (color >> (i++ * 8));
-    	i++;
-    return 0;
-}
-
 unsigned int vg_get_h_res(){
 	return h_res;
 }
