@@ -10,7 +10,7 @@
 #define RIGHT_LIMIT 725
 #define PLAYER_START_Y 460
 #define PLAYER_DEATH_TOLERANCE 5
-#define NUMBER_OF_BONUSES 4
+#define NUMBER_OF_BONUSES 3
 #define BONUS_DURATION 5
 #define BONUS_FREQUENCY 10 //every 10 seconds, a new bonus
 

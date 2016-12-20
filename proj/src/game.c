@@ -47,8 +47,8 @@ Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
 	game->mouse = create_game_mouse();
 	game->keyboard = create_keyboard();
-	game->background = loadBitmap(fullPath("new_game_background2.bmp"),0,0);
-	game->background_menu = loadBitmap(fullPath("score_background.bmp"),0,0);
+	game->background = loadBitmap(fullPath("new_game_background3.bmp"),0,0);
+	game->background_score = loadBitmap(fullPath("score_background.bmp"),0,0);
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
@@ -73,7 +73,7 @@ int determine_index(int bullet_x){
 
 void game_state_handler(Game* game){
 	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
-		game->state = GAME_SCORE;
+		game->state = GAME_OVER; /* TO DO: Change later when final scoreboard screen is implemented */
 	/*TO DO: Maybe add a pause state (then, on interrupts, we simply read the values and ignore them, not updating anything, unless it's the pause key again) */
 }
 
@@ -150,17 +150,13 @@ void update_game(Game* game){
 			draw_bullet(game->bullets[i],game->secondary_buffer);
 	}
 
-	/* Update this later (print bonus instead of number corresponding to it)
-	 * SIDE NOTE: When it's calculating the next bonus to give to the player, it prints out 0 and 1 like a mod 2 sequence (0,1,0,1,0,1)
-	 * very fast until one is finally chosen and remains in the screen. No idea why this happens BUT IT'S FUCKING COOL
-	 * TO DO: Change bonus activation to key-pressing detecting mechanism (timer is already used to control its duration so using keyboard for something
-	 * other than shooting will show good use of 'simultaneous' interrupts */
+	//Draw current player bonus information
 	if(game->player->bonus == INVINCIBLE)
-		draw_number(0, 30, 500, game->secondary_buffer);
+		drawBitmap(loadBitmap(fullPath("invincibility.bmp"),5,485), game->secondary_buffer, ALIGN_LEFT);
 	else if(game->player->bonus == INFINITE_AMMO)
-		draw_number(1, 30, 500, game->secondary_buffer);
+		drawBitmap(loadBitmap(fullPath("infiniteammo.bmp"),10,485), game->secondary_buffer, ALIGN_LEFT);
 	else //bonus = NO_BONUS
-		draw_number(2, 30, 500, game->secondary_buffer);
+		drawBitmap(loadBitmap(fullPath("nobonus.bmp"),10,485), game->secondary_buffer, ALIGN_LEFT);
 
 	game_state_handler(game);
 }
