@@ -48,6 +48,7 @@ Game* create_game(){
 	game->mouse = create_game_mouse();
 	game->keyboard = create_keyboard();
 	game->background = loadBitmap(fullPath("new_game_background2.bmp"),0,0);
+	game->background_menu = loadBitmap(fullPath("score_background.bmp"),0,0);
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
@@ -72,7 +73,7 @@ int determine_index(int bullet_x){
 
 void game_state_handler(Game* game){
 	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
-		game->state = GAME_OVER;
+		game->state = GAME_SCORE;
 	/*TO DO: Maybe add a pause state (then, on interrupts, we simply read the values and ignore them, not updating anything, unless it's the pause key again) */
 }
 
