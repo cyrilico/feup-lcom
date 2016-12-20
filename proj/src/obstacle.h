@@ -19,5 +19,5 @@ int update_obstacle(Obstacle* obstacle); //Updates obstacle position, checking i
 void draw_obstacle(Obstacle* obstacle, char* buffer);
 int obstacle_off_screen(Obstacle* obstacle); //Checks if obstacle is out of the screen. Returns 1 if it is, 0 otherwise
 void delete_obstacle(Obstacle* obstacle);
-void generate_obstacle_line(Obstacle** obstacles, int line_size); //generates a random obstacle line in array 'obstacles'
+void generate_obstacle_line(Obstacle** obstacles, int line_size, int line_number); //generates a random obstacle line in array 'obstacles'
 void delete_obstacle_line(Obstacle** obstacles, int line_size); //deletes entire obstacle line stored in 'obstacles'

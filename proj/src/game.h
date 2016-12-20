@@ -15,6 +15,8 @@
 #define BULLET_OFFSET 37
 #define BULLET_SPEED 3
 #define BULLET_GAIN_FACTOR 1
+#define N_OBSTACLE_LINES 2
+#define RANDOM_OBSTACLE_FACTOR 50
 
 
 //Not really necessary, but good for reading purposes
@@ -32,7 +34,7 @@ typedef enum gamestate_t {GAME_RUNNING, GAME_SCORE, GAME_OVER} gamestate;
 typedef enum gamedrawstate_t {DONTDRAW, DRAW} gamedrawstate;
 
 typedef struct{
-	Obstacle** obstacles;
+	Obstacle*** obstacles;
 	Mouse* mouse;
 	Keyboard* keyboard;
 	Bitmap* background;
@@ -45,7 +47,7 @@ typedef struct{
 }Game;
 
 Game* create_game();
-int determine_index(int bullet_x); //Determines the index of the obstacle (in the line) to test collision with (avoids testing for all and thus more calculations). Returns -1 if no obstacle in bullet's way
+int determine_index(int bullet_x); //Determines the index of the obstacle (in the first line) to test collision with (avoids testing for all and thus more calculations which would slow the game). Returns -1 if no obstacle in bullet's way
 void update_game(Game* game);
 void game_state_handler(Game* game);
 void update_draw_state(Game* game);

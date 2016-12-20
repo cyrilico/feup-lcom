@@ -5,16 +5,16 @@
 
 #define N_BULLETS 50
 
-//Screen limits for player (can't touch the stars on the sides - you don't want to go infinity! (props Rui Ribeiro) - each side stars zone has 50px of width
+//Screen limits for player (can't touch the stars on the sides - you don't want to go infinity! (props Rui Ribeiro) - each side stars zone has 75px of width
 #define LEFT_LIMIT 75
 #define RIGHT_LIMIT 725
 #define PLAYER_START_Y 460
 #define PLAYER_DEATH_TOLERANCE 5
-#define NUMBER_OF_BONUSES 3
+#define NUMBER_OF_BONUSES 3 /* TO DO: Change this to a more random function (don't just use %) */
 #define BONUS_DURATION 5
 #define BONUS_FREQUENCY 10 //every 10 seconds, a new bonus
 
-typedef enum bonusstate_t {NO_BONUS,INVINCIBLE,INFINITE_AMMO} bonusstate; /* TO DO: Add bitmap when invincible (rectangle around him?) and draw it when it's on */
+typedef enum bonusstate_t {NO_BONUS,INVINCIBLE,INFINITE_AMMO} bonusstate;
 
 typedef struct{
 	unsigned int score_minutes;
