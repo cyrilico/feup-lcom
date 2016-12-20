@@ -28,7 +28,7 @@ int update_bullet(Bullet* bullet); //updates bullet's position. returns 1 if bul
 void draw_bullet(Bullet* bullet, char* buffer);
 void delete_bullet(Bullet* bullet);
 
-typedef enum gamestate_t {GAME_RUNNING, GAME_OVER} gamestate;
+typedef enum gamestate_t {GAME_RUNNING, GAME_SCORE, GAME_OVER} gamestate;
 typedef enum gamedrawstate_t {DONTDRAW, DRAW} gamedrawstate;
 
 typedef struct{
@@ -36,6 +36,7 @@ typedef struct{
 	Mouse* mouse;
 	Keyboard* keyboard;
 	Bitmap* background;
+	Bitmap* background_score;
 	Player* player;
 	char* secondary_buffer;
 	Bullet** bullets;
