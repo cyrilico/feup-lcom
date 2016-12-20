@@ -4,17 +4,12 @@
 Player* create_player(){
 	Player* player = (Player*)(malloc(sizeof(Player)));
 	int player_start_x = rand()%(vg_get_h_res()/2) + LEFT_LIMIT; //Random starting position
-	/*TO DO: Change buzz bitmap to a green-screen like one and update drawBitmap so it doesn't draw that color (otherwise, when INVINCIBLE bonus is on and buzz
-	 * goes over an obstacle, it shows his black background. ALTERNATIVE: Make him Super buzz and instead of going over it, make him destroy it just by touching
-	 * it (and gain the respective amount of bullets, of course)
-	 */
 	player->bitmap = loadBitmap(fullPath("buzz.bmp"), player_start_x, PLAYER_START_Y);
 	player->bitmap_shield = loadBitmap(fullPath("buzz_shield.bmp"), player_start_x, PLAYER_START_Y);
 	player->bonus = NO_BONUS;
 	player->score_minutes = 0;
 	player->score_seconds = 0;
 	player->score_aux = 0;
-	/*TO DO: initialization of remaining structures (when they're created in Player 'class') */
 	player->number_of_bullets = N_BULLETS;
 
 	return player;
@@ -91,7 +86,7 @@ int player_has_bullets(Player* player){
 }
 
 void generate_bonus(Player* player){
-	int bonus = rand() % NUMBER_OF_BONUSES;
+	int bonus = rand() % NUMBER_OF_BONUSES; /* TO DO: Create a more generous 'kind of hash' function */
 	if(bonus == 0)
 		player->bonus = INVINCIBLE;
 	else

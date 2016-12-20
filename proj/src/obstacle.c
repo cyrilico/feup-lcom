@@ -44,12 +44,12 @@ void delete_obstacle(Obstacle* obstacle){
 	free(obstacle);
 }
 
-void generate_obstacle_line(Obstacle** obstacles, int line_size){
+void generate_obstacle_line(Obstacle** obstacles, int line_size, int line_number){
 	int i;
 	for(i = 0; i < line_size; i++){
 		int empty = rand() % EMPTY_FACTOR; //Determine if empty space or enemy's there
 		if(!empty)
-			obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT);
+			obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT*(1+line_number));
 		else
 			obstacles[i] = NULL;
 	}

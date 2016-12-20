@@ -51,10 +51,20 @@ Game* create_game(){
 	game->background_score = loadBitmap(fullPath("score_background.bmp"),0,0);
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
-	game->obstacles = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
-	generate_obstacle_line(game->obstacles,N_OBSTACLES);
-	game->bullets = (Bullet**)(malloc(MAX_BULLETS_ON_SCREEN*sizeof(Bullet*)));
+	game->obstacles = (Obstacle***)(malloc(N_OBSTACLE_LINES*sizeof(Obstacle**)));
 	int i;
+	for(i = 0; i < N_OBSTACLE_LINES; i++){
+		game->obstacles[i] = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
+		int empty = rand() % RANDOM_OBSTACLE_FACTOR;
+		if(empty % 2 == 0){
+			int j;
+			for(j = 0; j < N_OBSTACLES; j++)
+				game->obstacles[i][j] = NULL;
+		}
+		else
+			generate_obstacle_line(game->obstacles[i],N_OBSTACLES,i);
+	}
+	game->bullets = (Bullet**)(malloc(MAX_BULLETS_ON_SCREEN*sizeof(Bullet*)));
 	for(i = 0; i < N_BULLETS; i++)
 		game->bullets[i] = NULL;
 	game->drawstate = DONTDRAW;
@@ -79,40 +89,56 @@ void game_state_handler(Game* game){
 
 void update_game(Game* game){
 	//Update objects' positions
-	//update_mouse(game->mouse);
-	//update_player_mouse(game->player,game->mouse);
-	int i;
-	int off_screen;
-	for(i = 0; i < N_OBSTACLES; i++){
-		if(game->obstacles[i] != NULL)
-			off_screen = update_obstacle(game->obstacles[i]);
+	int i, j;
+	int off_screen[2];
+	for(i = 0; i < N_OBSTACLE_LINES; i++){
+		for(j = 0; j < N_OBSTACLES; j++){
+			if(game->obstacles[i][j] != NULL)
+				off_screen[i] = update_obstacle(game->obstacles[i][j]);
+			else
+				off_screen[i] = 1;
+		}
 	}
 
-	//If current obstacle line if off screen, generate a new one
-	if(off_screen){
-		delete_obstacle_line(game->obstacles,N_OBSTACLES);
-		generate_obstacle_line(game->obstacles,N_OBSTACLES);
+	//If current obstacle lines are off screen, generate new ones
+	if(off_screen[0] && off_screen[1]){
+		for(i = 0; i < N_OBSTACLE_LINES; i++){
+			delete_obstacle_line(game->obstacles[i],N_OBSTACLES);
+			generate_obstacle_line(game->obstacles[i],N_OBSTACLES,i);
+		}
 	}
 
+	int bullet_off_screen;
 	//Update shot bullets' positions
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL){
-			off_screen = update_bullet(game->bullets[i]);
-			if(off_screen){
+			bullet_off_screen = update_bullet(game->bullets[i]);
+			if(bullet_off_screen){
 				delete_bullet(game->bullets[i]);
 				game->bullets[i] = NULL;
 			}
 			else{
 				int index = determine_index(game->bullets[i]->bitmap->x);
 				if(index != -1){
-					if(game->obstacles[index] != NULL){
-						if(bullet_obstacle_collision(game->bullets[i],game->obstacles[index])){
+					if(game->obstacles[1][index] != NULL){
+						if(bullet_obstacle_collision(game->bullets[i],game->obstacles[1][index])){
 							delete_bullet(game->bullets[i]);
 							game->bullets[i] = NULL;
-							if(--(game->obstacles[index]->lives) == 0){
-								game->player->number_of_bullets += game->obstacles[index]->const_lives * BULLET_GAIN_FACTOR;
-								delete_obstacle(game->obstacles[index]);
-								game->obstacles[index] = NULL;
+							if(--(game->obstacles[1][index]->lives) == 0){
+								game->player->number_of_bullets += game->obstacles[1][index]->const_lives * BULLET_GAIN_FACTOR;
+								delete_obstacle(game->obstacles[1][index]);
+								game->obstacles[1][index] = NULL;
+							}
+						}
+					}
+					else if(game->obstacles[0][index] != NULL){
+						if(bullet_obstacle_collision(game->bullets[i],game->obstacles[0][index])){
+							delete_bullet(game->bullets[i]);
+							game->bullets[i] = NULL;
+							if(--(game->obstacles[0][index]->lives) == 0){
+								game->player->number_of_bullets += game->obstacles[0][index]->const_lives * BULLET_GAIN_FACTOR;
+								delete_obstacle(game->obstacles[0][index]);
+								game->obstacles[0][index] = NULL;
 							}
 						}
 					}
@@ -129,16 +155,17 @@ void update_game(Game* game){
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
 
-	for(i = 0; i < N_OBSTACLES; i++){
-		if(game->obstacles[i] != NULL)
-			draw_obstacle(game->obstacles[i],game->secondary_buffer);
+	for(i = 0; i < N_OBSTACLE_LINES; i++){
+		for(j = 0; j < N_OBSTACLES; j++){
+			if(game->obstacles[i][j] != NULL)
+				draw_obstacle(game->obstacles[i][j],game->secondary_buffer);
+		}
 	}
 
 
 	draw_player(game->player,game->secondary_buffer);
 
 	//Draw player score
-	/* TO DO: Update its display location) */
 	draw_number(game->player->score_minutes,3,270,game->secondary_buffer);
 	draw_number(game->player->score_seconds,39,270,game->secondary_buffer);
 
@@ -155,7 +182,7 @@ void update_game(Game* game){
 		drawBitmap(loadBitmap(fullPath("invincibility.bmp"),5,485), game->secondary_buffer, ALIGN_LEFT);
 	else if(game->player->bonus == INFINITE_AMMO)
 		drawBitmap(loadBitmap(fullPath("infiniteammo.bmp"),10,485), game->secondary_buffer, ALIGN_LEFT);
-	else //bonus = NO_BONUS
+	else //bonus == NO_BONUS
 		drawBitmap(loadBitmap(fullPath("nobonus.bmp"),10,485), game->secondary_buffer, ALIGN_LEFT);
 
 	game_state_handler(game);
@@ -191,10 +218,12 @@ void delete_game(Game* game){
 	delete_game_mouse(game->mouse);
 	deleteBitmap(game->background);
 	delete_player(game->player);
-	int i;
-	for(i = 0; i < N_OBSTACLES; i++){
-		if(game->obstacles[i] != NULL)
-			delete_obstacle(game->obstacles[i]);
+	int i, j;
+	for(i = 0; i < N_OBSTACLE_LINES; i++){
+		for(j = 0; j < N_OBSTACLES; j++){
+			if(game->obstacles[i][j] != NULL)
+				delete_obstacle(game->obstacles[i][j]);
+		}
 	}
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL)
