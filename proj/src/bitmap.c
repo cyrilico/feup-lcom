@@ -112,45 +112,19 @@ void drawBitmap(Bitmap* bmp, char* buffer, Alignment alignment) {
     char* bufferStartPos;
     char* imgStartPos;
 
-/*
-    int i, j;
-     for (i = 0; i < height; i++) {
-        int pos = bmp->y + height - 1 - i;
-        if (pos < 0 || pos >= vg_get_v_res())
-            continue;
-        for (j = 0; j < width; j++) {
-            bufferStartPos = buffer;
-            bufferStartPos += bmp->x * 2 + pos * vg_get_h_res() * 2 + 2*j;
-            imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2 + 2*j;
-            if ( (*imgStartPos | (*(imgStartPos+1) << 8)) != PINK)
-                memcpy(bufferStartPos, imgStartPos, 2);
-        }
-    }
-*/
-
     int i;
     for (i = 0; i < height; i++) {
-
     	int pos = bmp->y + height - 1 - i;
 
-        if (pos < 0 || pos >= vg_get_v_res())
-            continue;
+    	if (pos < 0 || pos >= vg_get_v_res())
+    		continue;
 
-        bufferStartPos = buffer;
-        bufferStartPos += bmp->x * 2 + pos * vg_get_h_res() * 2;
+    	bufferStartPos = buffer;
+    	bufferStartPos += bmp->x * 2 + pos * vg_get_h_res() * 2;
 
-        imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;
+    	imgStartPos = bmp->bitmapData + xCorrection * 2 + i * width * 2;
 
-        int j = 0;
-        while(j < width){
-            if((*imgStartPos << 8) | (*imgStartPos+1) != PINK) {
-            	*bufferStartPos = *imgStartPos;
-            	*(bufferStartPos+1) = *(imgStartPos+1);
-            }
-            bufferStartPos+= 2;
-            imgStartPos+= 2;
-            j++;
-        }
+    	memcpy(bufferStartPos, imgStartPos, drawWidth * 2);
     }
 }
 
