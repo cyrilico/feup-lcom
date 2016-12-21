@@ -91,6 +91,65 @@ void kbd_print_code(unsigned long code) {
 	}
 }
 
+const char* scancode_to_letter(unsigned long code){
+	switch(code){
+	case A_BREAK:
+		return "a";
+	case B_BREAK:
+		return "b";
+	case C_BREAK:
+		return "c";
+	case D_BREAK:
+		return "d";
+	case E_BREAK:
+		return "e";
+	case F_BREAK:
+		return "f";
+	case G_BREAK:
+		return "g";
+	case H_BREAK:
+		return "h";
+	case I_BREAK:
+		return "i";
+	case J_BREAK:
+		return "j";
+	case K_BREAK:
+		return "k";
+	case L_BREAK:
+		return "l";
+	case M_BREAK:
+		return "m";
+	case N_BREAK:
+		return "n";
+	case O_BREAK:
+		return "o";
+	case P_BREAK:
+		return "p";
+	case Q_BREAK:
+		return "q";
+	case R_BREAK:
+		return "r";
+	case S_BREAK:
+		return "s";
+	case T_BREAK:
+		return "t";
+	case U_BREAK:
+		return "u";
+	case V_BREAK:
+		return "v";
+	case W_BREAK:
+		return "w";
+	case X_BREAK:
+		return "x";
+	case Y_BREAK:
+		return "y";
+	case Z_BREAK:
+		return "z";
+	default:
+		return "";
+	}
+}
+
 /*------------------------------------------------*/
 
 Keyboard* create_keyboard(){
