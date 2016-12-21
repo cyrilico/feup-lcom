@@ -42,11 +42,11 @@ unsigned long* rtc_get(int time_or_date){
 	 * (could always do a couple of prefix -- in the end but nah) */
 	if(time_or_date == 0){ //Read time
 		sys_outb(RTC_ADDR_REG, SECREG);
-		sys_inb(RTC_DATA_REG, result);
+		sys_inb(RTC_DATA_REG, result+2);
 		sys_outb(RTC_ADDR_REG, MINREG);
 		sys_inb(RTC_DATA_REG, result+1);
 		sys_outb(RTC_ADDR_REG, HOUREG);
-		sys_inb(RTC_DATA_REG, result+2);
+		sys_inb(RTC_DATA_REG, result);
 	}
 	else{ //Read date
 		sys_outb(RTC_ADDR_REG, DAYREG);

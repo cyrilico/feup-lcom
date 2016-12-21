@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string.h>
-#include "stdio.h"
+#include <stdio.h>
 #include "bitmap.h"
 #include "video_gr.h"
 
@@ -18,7 +18,6 @@
 #define BLUE 0x001F
 #define GREEN 0x07E0
 
-int file_exists(const char* filename); //Why is this useful? Will leave until start working on RTC but the file will always be the same, so...
 const char* fullPath(const char* filename);
 void draw_number(int number, int x, int y, char* buffer);
 int start_graphic_mode();

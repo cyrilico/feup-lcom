@@ -5,6 +5,7 @@ int kbd_unsubscribe_int();
 unsigned long kbd_read_code();
 unsigned long kbd_write_code(unsigned char cmd);
 void kbd_print_code(unsigned long code);
+const char* scancode_to_letter(unsigned long code); //transforms breakcodes into the respective letter
 
 typedef enum scancodestate_t {READ_AGAIN, FULLY_READ} scancodestate;
 
