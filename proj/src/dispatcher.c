@@ -147,7 +147,7 @@ void interrupt_handler(Dispatcher* dispatcher) {
 					else { //dispatcher->state == GAME
 						read_scancode(game->keyboard);
 						if(key_detected(game->keyboard, ESC_BREAK))
-							game->state = GAME_OVER;
+							game->state++; //GAME_RUNNING to GAME_SCORE and GAME_SCORE to GAME_OVER
 
 						if(game->state == GAME_RUNNING) {
 							if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /* Shooting key: A */
@@ -155,9 +155,9 @@ void interrupt_handler(Dispatcher* dispatcher) {
 									update_number_of_bullets(game->player);
 							}
 						}
-						else //game->state == GAME_SCORE
-							if(scancode_to_letter(game->keyboard->scancode) != "")
-								update_game_score(game);
+						else {//game->state == GAME_SCORE
+							/*TO DO: handle keyboard interrupts while saving score */
+						}
 					}
 				}
 				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_timer){
@@ -166,7 +166,10 @@ void interrupt_handler(Dispatcher* dispatcher) {
 						draw_menu(menu);
 					else { //dispatcher->state == GAME
 						update_draw_state(game);
-						update_game(game);
+						if(game->state == GAME_RUNNING)
+							update_game(game);
+						else //game->state == GAME_SCORE
+							update_game_score(game);
 						if(game->drawstate == DRAW)
 							draw_game(game);
 					}
