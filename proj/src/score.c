@@ -69,7 +69,10 @@ void draw_score(Score* score, int x, int y, char* buffer){
 }
 
 void draw_scores(Score** scores, int number_of_scores, int x, int y, char* buffer){
-	/* TO DO: Implement this */
+	int i;
+	for(i = 0; i < number_of_scores; i++) {
+		draw_score(scores[i],x,y + i*HIGHSCORE_GAP,buffer);
+	}
 }
 
 void write_score_to_file(Score* score){
@@ -87,13 +90,39 @@ Score** read_scores_from_file(){
 	unsigned int score_seconds;
 	char name[NAME_LENGTH];
 	int i = 0;
-	while (fscanf(scoresfile,"%s %d %d %d %d %d %d %d %d\n", name, &date[0], &date[1], &date[2], &time[0], &time[1], &time[2], &score_minutes, &score_seconds) != EOF) {
+	while (fscanf(scoresfile,"%s %d %d %d %d %d %d %d %d\n", name, &date[0], &date[1], &date[2], &time[0], &time[1], &time[2], &time[3], &score_minutes, &score_seconds) != EOF) {
 		result[i++] = create_score(score_minutes,score_seconds,time,date,name);
 		if(feof(scoresfile)) /* TO DO: ??? confirm later */
 			break;
 	}
-	result[i] = NULL;
-	return result;
+	Score** final = (Score**)(malloc(i*sizeof(Score*)));;
+	int j;
+	for(j = 0; j < i; j++)
+		final[j] = result[j];
+	qsort(final,i,sizeof(Score*),comp_score);
+	int k;
+	for(k = 0; k < i; k++)
+		printf("%s %d %d %d %d %d %d %d %d\n", final[k]->name, final[k]->date[0], final[k]->date[1], final[k]->date[2], final[k]->time[0], final[k]->time[1], final[k]->time[2], final[k]->time[3], final[k]->points_minutes, final[k]->points_seconds);
+	return final;
+}
+
+int comp_score(const void* s1, const void* s2) {
+/*	if(s1 == NULL && s2 == NULL)
+		return 0;
+
+	if(s2 == NULL)
+		return -1;
+
+	if(s1 == NULL)
+		return 1;
+*/
+	Score* ss1 = (Score*)s1;
+	Score* ss2 = (Score*)s2;
+	if( (60*ss1->points_minutes + ss1->points_seconds) > (60*ss2->points_minutes + ss2->points_seconds))
+		return -1;
+	if( (60*ss1->points_minutes + ss1->points_seconds) == (60*ss2->points_minutes + ss2->points_seconds))
+		return 0;
+	return 1;
 }
 
 

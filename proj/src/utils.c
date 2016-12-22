@@ -2,9 +2,9 @@
 
 const char* fullPath(const char* filename){
 	char* result = (char*)malloc(256);
-	strcpy(result,"/home/lcom/lcom1617-t4g11/proj/images/"); //Damas' home version of the path
+	//strcpy(result,"/home/lcom/lcom1617-t4g11/proj/images/"); //Damas' home version of the path
 	//strcpy(result,"/home/lcom/feup2/lcom1617-t4g11/proj/images/"); //Antonio's feup version of the path
-	//strcpy(result,"/home/lcom/casa2/lcom1617-t4g11/proj/images/"); //Antonio's home version of the path
+	strcpy(result,"/home/lcom/casa2/lcom1617-t4g11/proj/images/"); //Antonio's home version of the path
 	//strcpy(result,"/home/lcom/svn/lcom1617-t4g11/proj/images/"); //Damas' FEUP version of the path
 	strcat(result,filename);
 	return result;
@@ -54,10 +54,8 @@ char* number_to_string(int number){
 }
 
 void draw_score_number(int number, int x, int y, char* buffer){
-	printf("oi tudo bem\n");
 	Bitmap* msd_bitmap = loadBitmap(fullPath(number_to_string(number/10)),x,y);
 	Bitmap* lsd_bitmap = loadBitmap(fullPath(number_to_string(number%10)),x+SCORE_BITMAP_WIDTH,y);
-	printf("bitmaps ok\n");
 	drawBitmap(msd_bitmap,buffer,ALIGN_LEFT);
 	drawBitmap(lsd_bitmap,buffer,ALIGN_LEFT);
 	deleteBitmap(msd_bitmap);

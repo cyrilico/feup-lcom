@@ -9,6 +9,7 @@ typedef struct{
 	int irq_timer;
 	int irq_kbd;
 	int irq_mouse;
+	int irq_rtc;
 
 	message msg;
 	int ipc_status;

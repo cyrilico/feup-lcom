@@ -6,6 +6,7 @@ Dispatcher* create_dispatcher() {
 	dispatcher->irq_timer = timer_subscribe_int();
 	dispatcher->irq_kbd = kbd_subscribe_int();
 	dispatcher->irq_mouse = mouse_subscribe_int();
+	dispatcher->irq_rtc = rtc_subscribe_int();
 	dispatcher->state = MAIN_MENU;
 	return dispatcher;
 }
@@ -189,6 +190,7 @@ void delete_dispatcher(Dispatcher* dispatcher) {
 		timer_unsubscribe_int();
 		kbd_unsubscribe_int();
 		mouse_unsubscribe_int();
+		rtc_unsubscribe_int();
 
 		free(dispatcher);
 }
