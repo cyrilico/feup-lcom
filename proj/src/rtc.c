@@ -63,7 +63,7 @@ unsigned long* rtc_get(int time_or_date){
 		sys_inb(RTC_DATA_REG, result+1);
 		sys_outb(RTC_ADDR_REG, YEAREG);
 		sys_inb(RTC_DATA_REG, result+2);
-		*(result+2) += 2000; //Year is a number from 0-99 so it should give out something like 16 or 17 (corresponding to 2016 and 2017). Here we're adjusting the value
+		//*(result+2) += 2000; //Year is a number from 0-99 so it should give out something like 16 or 17 (corresponding to 2016 and 2017). Here we're adjusting the value
 	}
 
 	return result;

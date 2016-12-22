@@ -45,6 +45,7 @@ void delete_bullet(Bullet* bullet){
 
 Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
+	/* What the fuck? Sometimes create_game_mouse makes program crash, sometimes create_mouse does it */
 	//game->mouse = create_game_mouse();
 	game->mouse = create_mouse();
 	game->keyboard = create_keyboard();
@@ -87,7 +88,8 @@ void game_state_handler(Game* game){
 		game->state = GAME_SCORE;
 		//Substitute background
 		deleteBitmap(game->background);
-		game->background = loadBitmap(fullPath("score_background.bmp"),0,0);
+		game->background = loadBitmap(fullPath("score_background2.bmp"),0,0);
+		game->current_highscores = read_scores_from_file();
 		game->namestate = FIRST_LETTER;
 		int i;
 		for(i = 0; i < NAME_LENGTH+1; i++)
@@ -97,7 +99,7 @@ void game_state_handler(Game* game){
 	/*TO DO: Maybe add a pause state (then, on interrupts, we simply read the values and ignore them, not updating anything, unless it's the pause key again) */
 }
 
-void update_game(Game* game){
+void update_game_running(Game* game){
 	//Update objects' positions
 	int i, j;
 	int off_screen[2];
@@ -176,11 +178,11 @@ void update_game(Game* game){
 	draw_player(game->player,game->secondary_buffer);
 
 	//Draw player score
-	draw_number(game->player->score_minutes,3,270,game->secondary_buffer);
-	draw_number(game->player->score_seconds,39,270,game->secondary_buffer);
+	draw_game_number(game->player->score_minutes,3,270,game->secondary_buffer);
+	draw_game_number(game->player->score_seconds,39,270,game->secondary_buffer);
 
 	//Draw player current number of bullets
-	draw_number(game->player->number_of_bullets,31,400,game->secondary_buffer);
+	draw_game_number(game->player->number_of_bullets,31,400,game->secondary_buffer);
 
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL)
@@ -198,9 +200,7 @@ void update_game(Game* game){
 	game_state_handler(game);
 }
 
-void update_game_score(Game* game) {
-	/* TO DO: Later this (turn into a event-state handling function) */
-	char current_key = scancode_to_letter(game->keyboard->scancode);
+void game_score_event_handler(Game* game, char current_key){
 	switch(game->namestate){
 	case FIRST_LETTER:
 		if(current_key != NOT_VALID){
@@ -249,6 +249,11 @@ void update_game_score(Game* game) {
 		}
 		break;
 	}
+}
+
+void update_game_score(Game* game) {
+	char current_key = scancode_to_letter(game->keyboard->scancode);
+	game_score_event_handler(game, current_key);
 
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
@@ -259,6 +264,10 @@ void update_game_score(Game* game) {
 			draw_letter(game->session_name[i],PLAYER_NAME_X_START+i*UNDERSCORE_GAP,PLAYER_NAME_Y_START,game->secondary_buffer);
 	}
 	/* TO DO: draw to game->secondary_buffer the highscores from highscores.txt */
+	//Testing draw_score (drawing first highscore read from file)
+	printf("Name: %s\nDate: %d/%d/%d\nTime: %d:%d:%d\n", game->current_highscores[0]->name, game->current_highscores[0]->date[0],game->current_highscores[0]->date[1],game->current_highscores[0]->date[2],game->current_highscores[0]->time[0],game->current_highscores[0]->time[1],game->current_highscores[0]->time[2]);
+	printf("Score: %d:%d\n", game->current_highscores[0]->points_minutes, game->current_highscores[0]->points_seconds);
+	draw_score(game->current_highscores[0],0,400,game->secondary_buffer);
 }
 
 
