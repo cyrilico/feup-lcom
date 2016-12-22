@@ -83,7 +83,7 @@ int determine_index(int bullet_x){
 
 void game_state_handler(Game* game){
 	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
-		game->state = GAME_OVER; /* TO DO: Change later when final scoreboard screen is implemented */
+		game->state = GAME_SCORE; /* TO DO: Change later when final scoreboard screen is implemented */
 	/*TO DO: Maybe add a pause state (then, on interrupts, we simply read the values and ignore them, not updating anything, unless it's the pause key again) */
 }
 
@@ -189,7 +189,10 @@ void update_game(Game* game){
 }
 
 void update_game_score(Game* game) {
+	/*TO DO: draw letters according to user input and read highscore file */
 
+	//Prepare next frame
+	drawBitmap(game->background_score,game->secondary_buffer,ALIGN_LEFT);
 }
 
 
