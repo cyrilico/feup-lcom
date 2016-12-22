@@ -1,11 +1,5 @@
 #pragma once
 
-#include <minix/syslib.h>
-#include <minix/drivers.h>
-#include <machine/int86.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-
 #define BIT(n) (0x01<<(n))
 #define IRQ_RTC 8
 #define RTC_ADDR_REG 0x70

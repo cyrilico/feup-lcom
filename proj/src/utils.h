@@ -19,6 +19,7 @@
 
 const char* fullPath(const char* filename);
 void draw_number(int number, int x, int y, char* buffer);
+void draw_letter(char letter, int x, int y, char* buffer);
 int start_graphic_mode();
 int exit_graphic_mode();
 

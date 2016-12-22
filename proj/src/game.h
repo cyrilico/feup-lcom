@@ -7,6 +7,8 @@
 #include "keyboard.h"
 #include "timer.h"
 #include "video_gr.h"
+#include "rtc.h"
+#include "score.h"
 #include "utils.h"
 
 #define N_BULLETS 50
@@ -18,9 +20,9 @@
 #define N_OBSTACLE_LINES 2
 #define RANDOM_OBSTACLE_FACTOR 50
 
-#define PLAYER_NAME_X_START 292
-#define PLAYER_NAME_Y_START 256
-#define UNDERSCORE_GAP 32
+#define PLAYER_NAME_X_START 296
+#define PLAYER_NAME_Y_START 266
+#define UNDERSCORE_GAP 70
 #define HIGHSCORE_NAME_X 120
 #define HIGHSCORE_NAME_Y 57
 
@@ -37,6 +39,7 @@ void draw_bullet(Bullet* bullet, char* buffer);
 void delete_bullet(Bullet* bullet);
 
 typedef enum gamestate_t {GAME_RUNNING, GAME_SCORE, GAME_OVER} gamestate;
+typedef enum scorenamestate_t {FIRST_LETTER, SECOND_LETTER, THIRD_LETTER, FOURTH_LETTER, NAME_RECEIVED} scorenamestate;
 typedef enum gamedrawstate_t {DONTDRAW, DRAW} gamedrawstate;
 
 typedef struct{
@@ -44,12 +47,14 @@ typedef struct{
 	Mouse* mouse;
 	Keyboard* keyboard;
 	Bitmap* background;
-	Bitmap* background_score;
 	Player* player;
 	char* secondary_buffer;
 	Bullet** bullets;
 	gamedrawstate drawstate;
 	gamestate state;
+	Score* session_score;
+	scorenamestate namestate;
+	char session_name[NAME_LENGTH+1];
 }Game;
 
 Game* create_game();

@@ -45,10 +45,10 @@ void delete_bullet(Bullet* bullet){
 
 Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
-	game->mouse = create_game_mouse();
+	//game->mouse = create_game_mouse();
+	game->mouse = create_mouse();
 	game->keyboard = create_keyboard();
 	game->background = loadBitmap(fullPath("new_game_background3.bmp"),0,0);
-	game->background_score = loadBitmap(fullPath("score_background.bmp"),0,0);
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 	game->obstacles = (Obstacle***)(malloc(N_OBSTACLE_LINES*sizeof(Obstacle**)));
@@ -82,8 +82,18 @@ int determine_index(int bullet_x){
 }
 
 void game_state_handler(Game* game){
-	if(game->player->bitmap->y == vg_get_v_res() - PLAYER_DEATH_TOLERANCE)
-		game->state = GAME_SCORE; /* TO DO: Change later when final scoreboard screen is implemented */
+	if(game->player->bitmap->y >= vg_get_v_res() - PLAYER_DEATH_TOLERANCE){
+		//Change state to score registering screen and initialize 'attributes' related to it
+		game->state = GAME_SCORE;
+		//Substitute background
+		deleteBitmap(game->background);
+		game->background = loadBitmap(fullPath("score_background.bmp"),0,0);
+		game->namestate = FIRST_LETTER;
+		int i;
+		for(i = 0; i < NAME_LENGTH+1; i++)
+			game->session_name[i] = 0;
+		game->session_score = create_score(game->player->score_minutes,game->player->score_seconds,rtc_get(CURRENT_TIME),rtc_get(CURRENT_DATE),game->session_name); //Current session name will be registered by user
+	}
 	/*TO DO: Maybe add a pause state (then, on interrupts, we simply read the values and ignore them, not updating anything, unless it's the pause key again) */
 }
 
@@ -189,10 +199,66 @@ void update_game(Game* game){
 }
 
 void update_game_score(Game* game) {
-	/*TO DO: draw letters according to user input and read highscore file */
+	/* TO DO: Later this (turn into a event-state handling function) */
+	char current_key = scancode_to_letter(game->keyboard->scancode);
+	switch(game->namestate){
+	case FIRST_LETTER:
+		if(current_key != NOT_VALID){
+			game->session_name[FIRST_LETTER] = current_key;
+			game->namestate = SECOND_LETTER;
+		}
+		break;
+	case SECOND_LETTER:
+		if(key_detected(game->keyboard,BACKSPACE_BREAK)){
+			game->session_name[FIRST_LETTER] = 0;
+			game->namestate = FIRST_LETTER;
+		}
+		else if(current_key != NOT_VALID){
+			game->session_name[SECOND_LETTER] = current_key;
+			game->namestate = THIRD_LETTER;
+		}
+		break;
+	case THIRD_LETTER:
+		if(key_detected(game->keyboard,BACKSPACE_BREAK)){
+			game->session_name[SECOND_LETTER] = 0;
+			game->namestate = SECOND_LETTER;
+		}
+		else if(current_key != NOT_VALID){
+			game->session_name[THIRD_LETTER] = current_key;
+			game->namestate = FOURTH_LETTER;
+		}
+		break;
+	case FOURTH_LETTER:
+		if(key_detected(game->keyboard,BACKSPACE_BREAK)){
+			game->session_name[THIRD_LETTER] = 0;
+			game->namestate = THIRD_LETTER;
+		}
+		else if(current_key != NOT_VALID){
+			game->session_name[FOURTH_LETTER] = current_key;
+			game->namestate = NAME_RECEIVED;
+		}
+		break;
+	case NAME_RECEIVED:
+		if(key_detected(game->keyboard,BACKSPACE_BREAK)){
+			game->session_name[FOURTH_LETTER] = 0;
+			game->namestate = FOURTH_LETTER;
+		}
+		else if(key_detected(game->keyboard,ENTER_BREAK)){
+			set_score_name(game->session_score,game->session_name);
+			game->state = GAME_OVER;
+		}
+		break;
+	}
 
 	//Prepare next frame
-	drawBitmap(game->background_score,game->secondary_buffer,ALIGN_LEFT);
+	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
+	int i;
+	printf("%s\n",game->session_name);
+	for(i = 0; i < NAME_LENGTH; i++){
+		if(game->session_name[i] != NOT_VALID)
+			draw_letter(game->session_name[i],PLAYER_NAME_X_START+i*UNDERSCORE_GAP,PLAYER_NAME_Y_START,game->secondary_buffer);
+	}
+	/* TO DO: draw to game->secondary_buffer the highscores from highscores.txt */
 }
 
 

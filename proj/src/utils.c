@@ -19,13 +19,22 @@ void draw_number(int number, int x, int y, char* buffer){
 	char lsd_file[10];
 	sprintf(msd_file,"%d.bmp",msd);
 	sprintf(lsd_file,"%d.bmp",lsd);
-	/*printf("Cheguei aqui e os nomes dos ficheiros são %s e %s\n", msd_file, lsd_file);*/
+	/*printf("Cheguei aqui e os nomes dos ficheiros sao %s e %s\n", msd_file, lsd_file);*/
 	Bitmap* msd_bitmap = loadBitmap(fullPath(msd_file),x,y);
 	Bitmap* lsd_bitmap = loadBitmap(fullPath(lsd_file),x+NUMBER_WIDTH,y);
 	drawBitmap(msd_bitmap,buffer,ALIGN_LEFT);
 	drawBitmap(lsd_bitmap,buffer,ALIGN_LEFT);
 	deleteBitmap(msd_bitmap);
 	deleteBitmap(lsd_bitmap);
+}
+
+void draw_letter(char letter, int x, int y, char* buffer){
+	char letter_file[10];
+	sprintf(letter_file,"%c.bmp",letter);
+	/*printf("Cheguei aqui e o nome do ficheiro e' %s\n", letter_file);*/
+	Bitmap* letter_bitmap = loadBitmap(fullPath(letter_file),x,y);
+	drawBitmap(letter_bitmap,buffer,ALIGN_LEFT);
+	deleteBitmap(letter_bitmap);
 }
 
 int start_graphic_mode(){

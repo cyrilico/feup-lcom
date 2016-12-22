@@ -11,7 +11,14 @@ Score* create_score(unsigned int new_points_minutes, unsigned int new_points_sec
 		new_score->date[i] = new_date[i];
 	for(i = 0; i < NAME_LENGTH; i++)
 		new_score->name[i] = new_name[i];
+
 	return new_score;
+}
+
+void set_score_name(Score* score, char* new_name){
+	int i;
+	for(i = 0; i < NAME_LENGTH; i++)
+		score->name[i] = new_name[i];
 }
 
 void write_score_to_file(Score* score){
