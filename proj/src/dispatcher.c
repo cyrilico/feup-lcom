@@ -168,7 +168,7 @@ void interrupt_handler(Dispatcher* dispatcher) {
 					else { //dispatcher->state == GAME
 						update_draw_state(game);
 						if(game->state == GAME_RUNNING)
-							update_game(game);
+							update_game_running(game);
 						if(game->drawstate == DRAW)
 							draw_game(game);
 					}
