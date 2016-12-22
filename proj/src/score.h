@@ -3,11 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "utils.h"
-#define SCORESFILE "/home/lcom/lcom1617-t4g11/proj/src/highscores.txt"
+#define SCORESFILE "/home/lcom/casa2/lcom1617-t4g11/proj/src/highscores.txt"
+
 #define MAX_SCORES_READ 15
 #define NAME_LENGTH 4
 #define DATE_LENGTH 3
 #define TIME_LENGTH 3
+
+#define HIGHSCORE_GAP 30
 
 typedef struct{
 	unsigned int points_minutes;
@@ -23,4 +26,6 @@ void draw_score(Score* score, int x, int y, char* buffer); //x,y represents the 
 void draw_scores(Score** scores, int number_of_scores, int x, int y, char* buffer); //x,y represents the top left corner of the first bitmap to be drawn (rest is automatically calculated)
 void write_score_to_file(Score* score);
 Score** read_scores_from_file();
+int comp_score(const void* s1, const void* s2);
 void delete_score(Score* score);
+

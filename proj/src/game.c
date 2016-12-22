@@ -88,7 +88,7 @@ void game_state_handler(Game* game){
 		game->state = GAME_SCORE;
 		//Substitute background
 		deleteBitmap(game->background);
-		game->background = loadBitmap(fullPath("score_background2.bmp"),0,0);
+		game->background = loadBitmap(fullPath("score_backgroundv2.bmp"),0,0);
 		game->current_highscores = read_scores_from_file();
 		game->namestate = FIRST_LETTER;
 		int i;
@@ -245,6 +245,7 @@ void game_score_event_handler(Game* game, char current_key){
 		}
 		else if(key_detected(game->keyboard,ENTER_BREAK)){
 			set_score_name(game->session_score,game->session_name);
+			write_score_to_file(game->session_score);
 			game->state = GAME_OVER;
 		}
 		break;
@@ -263,11 +264,11 @@ void update_game_score(Game* game) {
 		if(game->session_name[i] != NOT_VALID)
 			draw_letter(game->session_name[i],PLAYER_NAME_X_START+i*UNDERSCORE_GAP,PLAYER_NAME_Y_START,game->secondary_buffer);
 	}
-	/* TO DO: draw to game->secondary_buffer the highscores from highscores.txt */
-	//Testing draw_score (drawing first highscore read from file)
+
 	printf("Name: %s\nDate: %d/%d/%d\nTime: %d:%d:%d\n", game->current_highscores[0]->name, game->current_highscores[0]->date[0],game->current_highscores[0]->date[1],game->current_highscores[0]->date[2],game->current_highscores[0]->time[0],game->current_highscores[0]->time[1],game->current_highscores[0]->time[2]);
 	printf("Score: %d:%d\n", game->current_highscores[0]->points_minutes, game->current_highscores[0]->points_seconds);
-	draw_score(game->current_highscores[0],0,400,game->secondary_buffer);
+	draw_scores(game->current_highscores,5,20,400,game->secondary_buffer);
+
 }
 
 
