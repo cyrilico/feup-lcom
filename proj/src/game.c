@@ -188,6 +188,11 @@ void update_game(Game* game){
 	game_state_handler(game);
 }
 
+void update_game_score(Game* game) {
+
+}
+
+
 void update_draw_state(Game* game){
 	if(game->drawstate == DONTDRAW)
 		game->drawstate = DRAW;

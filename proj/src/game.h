@@ -55,6 +55,7 @@ typedef struct{
 Game* create_game();
 int determine_index(int bullet_x); //Determines the index of the obstacle (in the first line) to test collision with (avoids testing for all and thus more calculations which would slow the game). Returns -1 if no obstacle in bullet's way
 void update_game(Game* game);
+void update_game_score(Game* game);
 void game_state_handler(Game* game);
 void update_draw_state(Game* game);
 void draw_game(Game* game);
