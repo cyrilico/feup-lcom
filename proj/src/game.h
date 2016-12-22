@@ -10,7 +10,7 @@
 #include "utils.h"
 
 #define N_BULLETS 50
-#define MAX_BULLETS_ON_SCREEN 5
+#define MAX_BULLETS_ON_SCREEN 10
 #define BULLET_HEIGHT 12
 #define BULLET_OFFSET 37
 #define BULLET_SPEED 3

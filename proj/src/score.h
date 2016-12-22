@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#define SCORESFILE "/home/lcom/svn/lcom1617-t4g11/filetesting/highscores.txt"
+#define SCORESFILE fullPath("highscores.txt")
 #define MAX_SCORES_READ 15
 #define NAME_LENGTH 4
 #define DATE_LENGTH 3

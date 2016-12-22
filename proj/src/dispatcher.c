@@ -133,7 +133,8 @@ void interrupt_handler(Dispatcher* dispatcher) {
 						read_packet_byte(game->mouse);
 						if(full_packet_received(game->mouse)){
 							reset_packet_state(game->mouse);
-							update_player_mouse(game->player, game->mouse, game->secondary_buffer);
+							if(game->state == GAME_RUNNING)
+								update_player_mouse(game->player, game->mouse, game->secondary_buffer);
 						}
 					}
 
