@@ -129,8 +129,13 @@ void interrupt_handler(Dispatcher* dispatcher) {
 						if(full_packet_received(menu->mouse));
 						update_menu(menu,MOUSE_UPDATE);
 					}
-					else
+					else { //dispatcher->state == GAME
 						read_packet_byte(game->mouse);
+						if(full_packet_received(game->mouse)){
+							reset_packet_state(game->mouse);
+							update_player_mouse(game->player, game->mouse, game->secondary_buffer);
+						}
+					}
 
 				}
 				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_kbd){
@@ -139,28 +144,29 @@ void interrupt_handler(Dispatcher* dispatcher) {
 						if(full_scancode_received(menu->keyboard))
 							update_menu(menu,KBD_UPDATE);
 					}
-					else {
+					else { //dispatcher->state == GAME
 						read_scancode(game->keyboard);
 						if(key_detected(game->keyboard, ESC_BREAK))
 							game->state = GAME_OVER;
-						else if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /* Shooting key: A */
-							if(add_bullet_shot(game,game->player->bitmap->x,game->player->bitmap->y) == 1)
-								update_number_of_bullets(game->player);
-						}
-					}
 
+						if(game->state == GAME_RUNNING) {
+							if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /* Shooting key: A */
+								if(add_bullet_shot(game,game->player->bitmap->x,game->player->bitmap->y) == 1)
+									update_number_of_bullets(game->player);
+							}
+						}
+						else //game->state == GAME_SCORE
+							if(scancode_to_letter(game->keyboard->scancode) != "")
+								update_game_score(game);
+					}
 				}
 				else if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_timer){
 
 					if(dispatcher->state == MAIN_MENU)
 						draw_menu(menu);
-					else {
+					else { //dispatcher->state == GAME
 						update_draw_state(game);
 						update_game(game);
-						if(full_packet_received(game->mouse)){
-							reset_packet_state(game->mouse);
-							update_player_mouse(game->player, game->mouse, game->secondary_buffer);
-						}
 						if(game->drawstate == DRAW)
 							draw_game(game);
 					}
