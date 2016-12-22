@@ -16,7 +16,6 @@ Player* create_player(){
 }
 
 void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
-
 	int previous_x = player->bitmap->x;
 
 	if(mouse->packet[0] & BIT(4)){ //Negative x delta

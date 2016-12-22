@@ -123,13 +123,12 @@ void interrupt_handler(Dispatcher* dispatcher) {
 			switch (_ENDPOINT_P((dispatcher->msg).m_source)) {
 			case HARDWARE:
 				if((dispatcher->msg).NOTIFY_ARG & dispatcher->irq_mouse) {
-
 					if(dispatcher->state == MAIN_MENU) {
 						read_packet_byte(menu->mouse);
-						if(full_packet_received(menu->mouse));
-						update_menu(menu,MOUSE_UPDATE);
+						if(full_packet_received(menu->mouse))
+							update_menu(menu,MOUSE_UPDATE);
 					}
-					else { //dispatcher->state == GAME
+					else if(dispatcher->state == GAME){
 						read_packet_byte(game->mouse);
 						if(full_packet_received(game->mouse)){
 							reset_packet_state(game->mouse);
@@ -157,7 +156,8 @@ void interrupt_handler(Dispatcher* dispatcher) {
 							}
 						}
 						else {//game->state == GAME_SCORE
-							/*TO DO: handle keyboard interrupts while saving score */
+							if(full_scancode_received(game->keyboard))
+								update_game_score(game);
 						}
 					}
 				}
@@ -169,8 +169,6 @@ void interrupt_handler(Dispatcher* dispatcher) {
 						update_draw_state(game);
 						if(game->state == GAME_RUNNING)
 							update_game(game);
-						else //game->state == GAME_SCORE
-							update_game_score(game);
 						if(game->drawstate == DRAW)
 							draw_game(game);
 					}

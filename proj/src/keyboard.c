@@ -91,62 +91,62 @@ void kbd_print_code(unsigned long code) {
 	}
 }
 
-const char* scancode_to_letter(unsigned long code){
+char scancode_to_letter(unsigned long code){
 	switch(code){
 	case A_BREAK:
-		return "a";
+		return 'a';
 	case B_BREAK:
-		return "b";
+		return 'b';
 	case C_BREAK:
-		return "c";
+		return 'c';
 	case D_BREAK:
-		return "d";
+		return 'd';
 	case E_BREAK:
-		return "e";
+		return 'e';
 	case F_BREAK:
-		return "f";
+		return 'f';
 	case G_BREAK:
-		return "g";
+		return 'g';
 	case H_BREAK:
-		return "h";
+		return 'h';
 	case I_BREAK:
-		return "i";
+		return 'i';
 	case J_BREAK:
-		return "j";
+		return 'j';
 	case K_BREAK:
-		return "k";
+		return 'k';
 	case L_BREAK:
-		return "l";
+		return 'l';
 	case M_BREAK:
-		return "m";
+		return 'm';
 	case N_BREAK:
-		return "n";
+		return 'n';
 	case O_BREAK:
-		return "o";
+		return 'o';
 	case P_BREAK:
-		return "p";
+		return 'p';
 	case Q_BREAK:
-		return "q";
+		return 'q';
 	case R_BREAK:
-		return "r";
+		return 'r';
 	case S_BREAK:
-		return "s";
+		return 's';
 	case T_BREAK:
-		return "t";
+		return 't';
 	case U_BREAK:
-		return "u";
+		return 'u';
 	case V_BREAK:
-		return "v";
+		return 'v';
 	case W_BREAK:
-		return "w";
+		return 'w';
 	case X_BREAK:
-		return "x";
+		return 'x';
 	case Y_BREAK:
-		return "y";
+		return 'y';
 	case Z_BREAK:
-		return "z";
+		return 'z';
 	default:
-		return "";
+		return 0;
 	}
 }
 
@@ -163,6 +163,7 @@ Keyboard* create_keyboard(){
 
 void read_scancode(Keyboard* keyboard){
 	unsigned long code = read_scancode_asm();
+	printf("Received code: 0x%x\n",code);
 	if(code != -1){
 		if(keyboard->codestatus == READ_AGAIN){
 			code = code << 8;
