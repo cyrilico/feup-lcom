@@ -48,6 +48,7 @@
 #define X_BREAK 0xAD
 #define Y_BREAK 0x95
 #define Z_BREAK 0xAC
+#define NOT_VALID ""
 
 #define IRQ_MOUSE 12
 #define MAX_X_TOLERANCE 1
