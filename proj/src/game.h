@@ -18,6 +18,12 @@
 #define N_OBSTACLE_LINES 2
 #define RANDOM_OBSTACLE_FACTOR 50
 
+#define PLAYER_NAME_X_START 292
+#define PLAYER_NAME_Y_START 256
+#define UNDERSCORE_GAP 32
+#define HIGHSCORE_NAME_X 120
+#define HIGHSCORE_NAME_Y 57
+
 
 //Not really necessary, but good for reading purposes
 typedef struct{
