@@ -245,6 +245,7 @@ void game_score_event_handler(Game* game, char current_key){
 		}
 		else if(key_detected(game->keyboard,ENTER_BREAK)){
 			set_score_name(game->session_score,game->session_name);
+			printf("SESSION: %d/%d/%d %d:%d:%d %d:%d\n", game->session_score->date[0],game->session_score->date[1],game->session_score->date[2],game->session_score->time[0],game->session_score->time[1],game->session_score->time[2],game->session_score->points_minutes,game->session_score->points_seconds);
 			write_score_to_file(game->session_score);
 			game->state = GAME_OVER;
 		}
@@ -258,6 +259,8 @@ void update_game_score(Game* game) {
 
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
+
+	//Draw current session name (or part of it)
 	int i;
 	printf("%s\n",game->session_name);
 	for(i = 0; i < NAME_LENGTH; i++){
@@ -265,9 +268,8 @@ void update_game_score(Game* game) {
 			draw_letter(game->session_name[i],PLAYER_NAME_X_START+i*UNDERSCORE_GAP,PLAYER_NAME_Y_START,game->secondary_buffer);
 	}
 
-	printf("Name: %s\nDate: %d/%d/%d\nTime: %d:%d:%d\n", game->current_highscores[0]->name, game->current_highscores[0]->date[0],game->current_highscores[0]->date[1],game->current_highscores[0]->date[2],game->current_highscores[0]->time[0],game->current_highscores[0]->time[1],game->current_highscores[0]->time[2]);
-	printf("Score: %d:%d\n", game->current_highscores[0]->points_minutes, game->current_highscores[0]->points_seconds);
-	draw_scores(game->current_highscores,5,20,400,game->secondary_buffer);
+	//Draw current highscores
+	draw_scores(game->current_highscores,20,400,game->secondary_buffer);
 
 }
 
