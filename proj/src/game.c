@@ -83,7 +83,7 @@ int determine_index(int bullet_x){
 }
 
 void game_state_handler(Game* game){
-	if(game->player->bitmap->y >= vg_get_v_res() - PLAYER_DEATH_TOLERANCE){
+	if(game->player->bitmap->y >= vg_get_v_res() - PLAYER_DEATH_TOLERANCE || game->state == GAME_SCORE /*rhs is true is esc is pressed during game*/){
 		//Change state to score registering screen and initialize 'attributes' related to it
 		game->state = GAME_SCORE;
 		//Substitute background
