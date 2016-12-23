@@ -3,14 +3,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "utils.h"
-#define SCORESFILE "/home/lcom/lcom1617-t4g11/proj/src/highscores.txt"
-//#define SCORESFILE "/home/lcom/casa2/lcom1617-t4g11/proj/src/highscores.txt"
+//#define SCORESFILE "/home/lcom/lcom1617-t4g11/proj/src/highscores.txt"
+#define SCORESFILE "/home/lcom/casa2/lcom1617-t4g11/proj/src/highscores.txt"
 
 #define MAX_SCORES_READ 15
 #define NAME_LENGTH 4
 #define DATE_LENGTH 3
 #define TIME_LENGTH 3
 #define MAX_SCORES_ON_SCREEN 5
+#define SCORE_MINUTES_SIZE 2
+#define SCORE_SECONDS_SIZE 2
+
+#define SESSION_SCORE_X_START 332
+#define SESSION_SCORE_Y 145
 
 #define HIGHSCORE_GAP 30
 
