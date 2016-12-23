@@ -163,7 +163,6 @@ Keyboard* create_keyboard(){
 
 void read_scancode(Keyboard* keyboard){
 	unsigned long code = read_scancode_asm();
-	printf("Received code: 0x%x\n",code);
 	if(code != -1){
 		if(keyboard->codestatus == READ_AGAIN){
 			code = code << 8;
