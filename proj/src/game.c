@@ -260,6 +260,14 @@ void update_game_score(Game* game) {
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
 
+	//Draw current session score
+	int position_x = SESSION_SCORE_X_START;
+	draw_score_number(game->session_score->points_minutes,position_x,SESSION_SCORE_Y,game->secondary_buffer);
+	position_x += 2*SCORE_BITMAP_WIDTH; //2 numbers were drawn in above call
+	draw_colon(position_x,SESSION_SCORE_Y,game->secondary_buffer);
+	position_x += SCORE_BITMAP_WIDTH;
+	draw_score_number(game->session_score->points_seconds,position_x,SESSION_SCORE_Y,game->secondary_buffer);
+
 	//Draw current session name (or part of it)
 	int i;
 	printf("%s\n",game->session_name);

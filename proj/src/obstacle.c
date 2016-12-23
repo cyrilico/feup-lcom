@@ -3,10 +3,10 @@
 
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));
-	obstacle->lives = rand()%3+1;
+	obstacle->lives = rand() % MAX_OBSTACLE_LIVES+1;
 	obstacle->const_lives = obstacle->lives;
 	int i;
-	for(i = 0; i < 3; i++){
+	for(i = 0; i < MAX_OBSTACLE_LIVES; i++){
 		char temp[15];
 		sprintf(temp,"obstacle%d.bmp",i+1);
 		obstacle->bitmaps[i] = loadBitmap(fullPath(temp),x,y);
@@ -19,7 +19,7 @@ int update_obstacle(Obstacle* obstacle){
 		return 1;
 	else{
 		int i;
-		for(i = 0; i < 3; i++)
+		for(i = 0; i < MAX_OBSTACLE_LIVES; i++)
 			obstacle->bitmaps[i]->y += OBSTACLE_SPEED;
 
 		return 0;
@@ -39,7 +39,7 @@ int obstacle_off_screen(Obstacle* obstacle){
 
 void delete_obstacle(Obstacle* obstacle){
 	int i;
-	for(i = 0; i < 3; i++)
+	for(i = 0; i < MAX_OBSTACLE_LIVES; i++)
 		deleteBitmap(obstacle->bitmaps[i]);
 	free(obstacle);
 }

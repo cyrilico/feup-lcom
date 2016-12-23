@@ -7,11 +7,12 @@
 #define OBSTACLE_HEIGHT 66
 #define N_OBSTACLES 9
 #define EMPTY_FACTOR 2
+#define MAX_OBSTACLE_LIVES 5
 
 typedef struct{
 	unsigned int const_lives; //Same as 'lives' but will never be modified
 	unsigned int lives;
-	Bitmap* bitmaps[3]; //Different bitmap according to number of lives
+	Bitmap* bitmaps[MAX_OBSTACLE_LIVES]; //Different bitmap according to number of lives
 }Obstacle;
 
 Obstacle* create_obstacle(int x, int y);
