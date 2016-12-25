@@ -26,6 +26,7 @@ _read_scancode_asm:
         /* micros_to_ticks(DELAY_US) */
         pushl $DELAY_US
         call _micros_to_ticks
+        addl $4, %esp /* Clean stack after function as specified by convention */
         /* tickdelay(eax), with eax holding the value returned from previous call */
         pushl %eax
         call _tickdelay

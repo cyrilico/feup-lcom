@@ -38,7 +38,7 @@ int rtc_unsubscribe_int(){
 	return 0;
 }
 
-unsigned long* rtc_get(int time_or_date){
+/*unsigned long* rtc_get(int time_or_date){
 	unsigned long* result = (unsigned long*)(malloc(3*sizeof(unsigned long)));
 	unsigned long regauip = 0; //Wait for valid period to acess registers
 	do{
@@ -46,8 +46,6 @@ unsigned long* rtc_get(int time_or_date){
 		sys_inb(RTC_DATA_REG, &regauip);
 	}while(regauip & REGA_UIP);
 
-	/* Friendly reminder if you come back here later and try to change this: CAN'T USE ++ OPERATOR! Will fuck up return value
-	 * (could always do a couple of prefix -- in the end but nah) */
 	if(time_or_date == 0){ //Read time
 		sys_outb(RTC_ADDR_REG, SECREG);
 		sys_inb(RTC_DATA_REG, result+2);
@@ -63,10 +61,10 @@ unsigned long* rtc_get(int time_or_date){
 		sys_inb(RTC_DATA_REG, result+1);
 		sys_outb(RTC_ADDR_REG, YEAREG);
 		sys_inb(RTC_DATA_REG, result+2);
-		//*(result+2) += 2000; //Year is a number from 0-99 so it should give out something like 16 or 17 (corresponding to 2016 and 2017). Here we're adjusting the value
+		// *(result+2) += 2000; //Year is a number from 0-99 so it should give out something like 16 or 17 (corresponding to 2016 and 2017). Here we're adjusting the value
 	}
 
 	return result;
 }
-
+*/
 
