@@ -57,7 +57,7 @@ Game* create_game(){
 	//game->mouse = create_game_mouse();
 	game->mouse = create_mouse();
 	game->keyboard = create_keyboard();
-	game->background = loadBitmap(fullPath("new_game_background3.bmp"),0,0);
+	game->background = loadBitmap(fullPath("game_background.bmp"),0,0);
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 	game->obstacles = (Obstacle***)(malloc(N_OBSTACLE_LINES*sizeof(Obstacle**)));
@@ -96,7 +96,7 @@ void detect_game_end(Game* game){
 		game->state = GAME_SCORE;
 		//Substitute background
 		deleteBitmap(game->background);
-		game->background = loadBitmap(fullPath("score_backgroundv2.bmp"),0,0);
+		game->background = loadBitmap(fullPath("score_background.bmp"),0,0);
 		game->current_highscores = read_scores_from_file();
 		game->namestate = FIRST_LETTER;
 		int i;
