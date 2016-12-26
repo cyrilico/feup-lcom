@@ -6,7 +6,7 @@
 
 _read_scancode_asm:
 
-        mov $NTRIES, %cx
+        movl $NTRIES, %ecx
     NEXT:
         xorl %eax, %eax
         inb $STAT_REG /* assuming it returns OK, al = status read from KBD */

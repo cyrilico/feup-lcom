@@ -16,9 +16,11 @@ _rtc_get:
 		/* Create stack frame */
 		pushl %ebp
 		movl %esp, %ebp
-cycle:	movb $REGA, %al
+cycle:	cli /* Disable interrupts */
+		movb $REGA, %al
 		outb $RTC_ADDR_REG /* Send message to RTC controller stating that we want to access Register A */
 		inb $RTC_DATA_REG /* Current Register A configuration is in al */
+		sti /* (Re)enable interrupts */
 		testb $REGA_UIP, %al
 		jnz cycle /* If flag set, do not read date/time registers. Loop until it is zero */
 		movl 8(%ebp), %ecx /* Move function argument to ecx to be tested */
