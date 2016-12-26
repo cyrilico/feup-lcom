@@ -9,6 +9,7 @@
 //Screen limits for player (can't touch the stars on the sides - you don't want to go infinity! (props Rui Ribeiro) - each side stars zone has 75px of width
 #define LEFT_LIMIT 75
 #define RIGHT_LIMIT 725
+#define PLAYER_START_X 75
 #define PLAYER_START_Y 460
 #define PLAYER_DEATH_TOLERANCE 5
 #define NUMBER_OF_BONUSES 3 /* TO DO: Change this to a more random function (don't just use %) */

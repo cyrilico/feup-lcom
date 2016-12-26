@@ -4,9 +4,8 @@
 
 Player* create_player(){
 	Player* player = (Player*)(malloc(sizeof(Player)));
-	int player_start_x = rand()%(vg_get_h_res()/2) + LEFT_LIMIT; //Random starting position
-	player->bitmap = loadBitmap(fullPath("buzz.bmp"), player_start_x, PLAYER_START_Y);
-	player->bitmap_shield = loadBitmap(fullPath("buzz_shield.bmp"), player_start_x, PLAYER_START_Y);
+	player->bitmap = loadBitmap(fullPath("buzz.bmp"), PLAYER_START_X, PLAYER_START_Y);
+	player->bitmap_shield = loadBitmap(fullPath("buzz_shield.bmp"), PLAYER_START_X, PLAYER_START_Y);
 	player->bonus = NO_BONUS;
 	player->score_minutes = 0;
 	player->score_seconds = 0;
@@ -18,7 +17,6 @@ Player* create_player(){
 
 void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 	int previous_x = player->bitmap->x;
-
 	if(mouse->packet[0] & BIT(4)){ //Negative x delta
 		player->bitmap->x -= ABS_VALUE(TWOSCOMPLEMENT(mouse->packet[1]));
 		if(player->bitmap->x < LEFT_LIMIT)
@@ -30,29 +28,22 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 			player->bitmap->x = RIGHT_LIMIT - player->bitmap->bitmapInfoHeader.width;
 	}
 
-	/* TO DO: Try to optimize lateral collision testing */
-	unsigned long topPixelLeft = *(buffer + ((player->bitmap->y)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
-	unsigned long topPixelRight = *(buffer + ((player->bitmap->y)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
+	if(player->bonus != INVINCIBLE){
+		/* Testing pixels around buzz to guarantee he doesn't go over obstacles on his sides (unless he has the invincibility bonus)
+		 * Must test top, middle and bottom pixels to cover all cases
+		 */
+		unsigned long topPixelLeft = *(buffer + ((player->bitmap->y)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+		unsigned long topPixelRight = *(buffer + ((player->bitmap->y)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-	unsigned long middlePixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
-	unsigned long middlePixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
+		unsigned long middlePixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+		unsigned long middlePixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-	unsigned long bottomPixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
-	unsigned long bottomPixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
+		unsigned long bottomPixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+		unsigned long bottomPixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-	if(topPixelLeft != BLACK || topPixelRight != BLACK || middlePixelLeft != BLACK || middlePixelRight != BLACK || bottomPixelLeft != BLACK || bottomPixelRight != BLACK)
-		player->bitmap->x = previous_x;
-
-	/*int counter;
-	unsigned long currentPixelLeft;
-	unsigned long currentPixelRight;
-
-	for(counter = 0; counter < player->bitmap->bitmapInfoHeader.height; counter ++) {
-		currentPixelLeft = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
-		currentPixelRight = *(buffer + ((player->bitmap->y + counter)*vg_get_h_res() + player->bitmap->x + player->bitmap->bitmapInfoHeader.width + 1)*vg_get_bytes_per_pixel());
-		if(currentPixelLeft != BLACK || currentPixelRight != BLACK)
+		if(topPixelLeft != BLACK || topPixelRight != BLACK || middlePixelLeft != BLACK || middlePixelRight != BLACK || bottomPixelLeft != BLACK || bottomPixelRight != BLACK)
 			player->bitmap->x = previous_x;
-	}*/
+	}
 
 	//Update shield bitmap position
 	player->bitmap_shield->x = player->bitmap->x;
@@ -61,6 +52,7 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 
 void update_player_collision(Player* player, char* buffer){
 	if(player->bonus != INVINCIBLE){
+		/* Check collision on top side of Buzz with obstacles */
 		unsigned long topLeftPixel = *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + player->bitmap->x)*vg_get_bytes_per_pixel());
 		unsigned long topRightPixel =  *(buffer + ((player->bitmap->y-OBSTACLE_SPEED)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
