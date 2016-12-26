@@ -32,43 +32,36 @@ void draw_score(Score* score, int x, int y, char* buffer){
 		draw_letter(score->name[i],position_x,y,buffer);
 		position_x += SCORE_BITMAP_WIDTH;
 	}
-	printf("%d\n",position_x);
-	printf("Name drawn\n");
 	position_x += SCORE_BITMAP_WIDTH;
+
 	//Draw score date
 	for(i = 0; i < 3; i++){
 		draw_score_number(score->date[i],position_x,y,buffer);
-		position_x += SCORE_BITMAP_WIDTH;
-		position_x += SCORE_BITMAP_WIDTH; //2 numbers were drawn in above call
+		position_x += 2*SCORE_BITMAP_WIDTH; //2 numbers were drawn in above call
 		if(i != 2){ //Hasn't drawn year yet
 			draw_slash(position_x, y, buffer);
 			position_x += SCORE_BITMAP_WIDTH;
 		}
 	}
-	printf("%d\n",position_x);
-	printf("Date drawn\n");
 	position_x += SCORE_BITMAP_WIDTH;
+
 	//Draw score time (SECONDS ARE NOT DRAWN TO ALLOW MORE SPACE FOR SCORE)
 	for(i = 0; i < 2; i++){
 		draw_score_number(score->time[i],position_x,y,buffer);
-		position_x += SCORE_BITMAP_WIDTH; //2 numbers were drawn in above call
-		position_x += SCORE_BITMAP_WIDTH;
+		position_x += 2*SCORE_BITMAP_WIDTH; //2 numbers were drawn in above call
 		if(i == 0){ //Drawing hours so need a colon after it
 			draw_colon(position_x, y, buffer);
 			position_x += SCORE_BITMAP_WIDTH;
 		}
 	}
-	printf("%d\n",position_x);
-	printf("Time drawn\n");
 	position_x += SCORE_BITMAP_WIDTH;
+
 	//Draw score... score
 	draw_score_number(score->points_minutes,position_x,y,buffer);
 	position_x += 2*SCORE_BITMAP_WIDTH; //2 numbers were drawn in above call
 	draw_colon(position_x,y,buffer);
 	position_x += SCORE_BITMAP_WIDTH;
 	draw_score_number(score->points_seconds,position_x,y,buffer);
-	printf("%d\n",position_x);
-	printf("Score drawn. All drawn\n");
 }
 
 void draw_scores(Score** scores, int x, int y, char* buffer){
@@ -97,18 +90,11 @@ Score** read_scores_from_file(){
 	int i = 0;
 	while (fscanf(scoresfile,"%s %d %d %d %d %d %d %d %d\n", name, &date[0], &date[1], &date[2], &time[0], &time[1], &time[2], score_minutes, score_seconds) != EOF) {
 		result[i++] = create_score(*score_minutes,*score_seconds,time,date,name);
-		if(feof(scoresfile)) /* TO DO: ??? confirm later */
+		if(feof(scoresfile))
 			break;
 	}
 	result[i] = NULL;
-	printf("before sort\n");
-	int k;
-	for(k = 0; k < i; k++)
-			printf("%s %d %d %d %d %d %d %d %d\n", result[k]->name, result[k]->date[0], result[k]->date[1], result[k]->date[2], result[k]->time[0], result[k]->time[1], result[k]->time[2], result[k]->points_minutes, result[k]->points_seconds);
 	qsort(result,i,sizeof(Score*),comp_score);
-	printf("after sort\n");
-	for(k = 0; k < i; k++)
-		printf("%s %d %d %d %d %d %d %d %d\n", result[k]->name, result[k]->date[0], result[k]->date[1], result[k]->date[2], result[k]->time[0], result[k]->time[1], result[k]->time[2], result[k]->points_minutes, result[k]->points_seconds);
 	return result;
 }
 
@@ -124,8 +110,5 @@ int comp_score(const void* s1, const void* s2) {
 
 
 void delete_score(Score* score){
-	free(score->time);
-	free(score->date);
-	free(score->name);
 	free(score);
 }

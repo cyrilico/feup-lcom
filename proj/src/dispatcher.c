@@ -146,28 +146,19 @@ void interrupt_handler(Dispatcher* dispatcher) {
 					}
 					else { //dispatcher->state == GAME
 						read_scancode(game->keyboard);
-						printf("scancode read: 0x%x\n", game->keyboard->scancode);
-						/*if(key_detected(game->keyboard, ESC_BREAK)) {
-							game->state++; //GAME_RUNNING to GAME_SCORE and GAME_SCORE to GAME_OVER
-							game_state_handler(game);
-						}*/
 						if(game->state == GAME_RUNNING) {
 							if(key_detected(game->keyboard, A_BREAK) && player_has_bullets(game->player)){ /* Shooting key: A */
 								if(add_bullet_shot(game,game->player->bitmap->x,game->player->bitmap->y) == 1) /* If functions returns 1, sucessfully shot */
 									update_number_of_bullets(game->player);
 							}
-							else if(key_detected(game->keyboard, SPACE_BREAK)){
-								printf("Pausing game\n");
+							else if(key_detected(game->keyboard, SPACE_BREAK))
 								game->state = GAME_PAUSED;
-							}
 						}
 						else if(game->state == GAME_PAUSED){
-							if(key_detected(game->keyboard, SPACE_BREAK)){
-								printf("Unpausing game\n");
+							if(key_detected(game->keyboard, SPACE_BREAK))
 								game->state = GAME_RUNNING;
-							}
 						}
-						else {//game->state == GAME_SCORE
+						else { //game->state == GAME_SCORE
 							if(full_scancode_received(game->keyboard))
 								update_game_score(game);
 						}

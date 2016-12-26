@@ -34,6 +34,8 @@ Menu* create_menu(){
 	menu->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 
 	menu->state = NOT_DONE;
+	/*Provoke an involuntary update to guarantee menu is drawn as soon as it is created (avoid weird screens between final game screen and new menu screen)*/
+	update_menu(menu, KBD_UPDATE);
 	return menu;
 }
 
@@ -52,15 +54,15 @@ void update_menu(Menu* menu, int kbd_or_mouse){
 			menu->state = EXIT_CHOSEN;
 
 		reset_packet_state(menu->mouse);
-
-		//Prepare next frame (TO DO: add condition later to only prepare new frame if mouse has moved maybe?)
-		drawBitmap(menu->background,menu->secondary_buffer,ALIGN_LEFT);
-		draw_mouse(menu->mouse,menu->secondary_buffer);
 	}
 	else{
 		if(menu->keyboard->scancode == ESC_BREAK)
 			menu->state = EXIT_CHOSEN;
 	}
+
+	//Prepare next frame
+	drawBitmap(menu->background,menu->secondary_buffer,ALIGN_LEFT);
+	draw_mouse(menu->mouse,menu->secondary_buffer);
 }
 
 void delete_menu(Menu* menu){

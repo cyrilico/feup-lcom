@@ -103,6 +103,26 @@ void detect_game_end(Game* game){
 		for(i = 0; i < NAME_LENGTH+1; i++)
 			game->session_name[i] = 0;
 		game->session_score = create_score(game->player->score_minutes,game->player->score_seconds,rtc_get(CURRENT_TIME),rtc_get(CURRENT_DATE),game->session_name); //Current session name will be registered by user
+
+		//Prepare first frame so it doesn't get 'stuck' in GAME_RUNNING screen until user presses a key
+		drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
+
+		//Draw current session score
+		int position_x = SESSION_SCORE_X_START;
+		draw_score_number(game->session_score->points_minutes,position_x,SESSION_SCORE_Y,game->secondary_buffer);
+		position_x += 2*SCORE_BITMAP_WIDTH; //2 numbers were drawn in above call
+		draw_colon(position_x,SESSION_SCORE_Y,game->secondary_buffer);
+		position_x += SCORE_BITMAP_WIDTH;
+		draw_score_number(game->session_score->points_seconds,position_x,SESSION_SCORE_Y,game->secondary_buffer);
+
+		//Draw current session name (or part of it)
+		for(i = 0; i < NAME_LENGTH; i++){
+			if(game->session_name[i] != NOT_VALID)
+				draw_letter(game->session_name[i],PLAYER_NAME_X_START+i*UNDERSCORE_GAP,PLAYER_NAME_Y_START,game->secondary_buffer);
+		}
+
+		//Draw current highscores
+		draw_scores(game->current_highscores,20,400,game->secondary_buffer);
 	}
 }
 
@@ -252,7 +272,6 @@ void game_score_event_handler(Game* game, char current_key){
 		}
 		else if(key_detected(game->keyboard,ENTER_BREAK)){
 			set_score_name(game->session_score,game->session_name);
-			printf("SESSION: %d/%d/%d %d:%d:%d %d:%d\n", game->session_score->date[0],game->session_score->date[1],game->session_score->date[2],game->session_score->time[0],game->session_score->time[1],game->session_score->time[2],game->session_score->points_minutes,game->session_score->points_seconds);
 			write_score_to_file(game->session_score);
 			game->state = GAME_OVER;
 		}
@@ -277,7 +296,6 @@ void update_game_score(Game* game) {
 
 	//Draw current session name (or part of it)
 	int i;
-	printf("%s\n",game->session_name);
 	for(i = 0; i < NAME_LENGTH; i++){
 		if(game->session_name[i] != NOT_VALID)
 			draw_letter(game->session_name[i],PLAYER_NAME_X_START+i*UNDERSCORE_GAP,PLAYER_NAME_Y_START,game->secondary_buffer);
@@ -285,7 +303,6 @@ void update_game_score(Game* game) {
 
 	//Draw current highscores
 	draw_scores(game->current_highscores,20,400,game->secondary_buffer);
-
 }
 
 
@@ -312,7 +329,7 @@ int add_bullet_shot(Game* game, int x, int y){
 
 void draw_game(Game* game){
 	if(game->state == GAME_PAUSED)
-		drawBitmap(loadBitmap(fullPath("pause_message.bmp"),300,264),game->secondary_buffer,ALIGN_LEFT);
+		drawBitmap(loadBitmap(fullPath("pause_message.bmp"),PAUSE_MESSAGE_X,PAUSE_MESSAGE_Y),game->secondary_buffer,ALIGN_LEFT);
 	memcpy(vg_get_video_mem(),game->secondary_buffer,vg_get_window_size());
 }
 
@@ -332,6 +349,10 @@ void delete_game(Game* game){
 		if(game->bullets[i] != NULL)
 			delete_bullet(game->bullets[i]);
 	}
+	delete_score(game->session_score);
+	i = 0;
+	for(i; game->current_highscores[i] != NULL; i++)
+		delete_score(game->current_highscores[i]);
 	free(game->secondary_buffer);
 	free(game);
 }
