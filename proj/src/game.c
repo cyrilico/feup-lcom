@@ -90,8 +90,8 @@ int determine_index(int bullet_x){
 	return -1;
 }
 
-void game_state_handler(Game* game){
-	if(game->player->bitmap->y >= vg_get_v_res() - PLAYER_DEATH_TOLERANCE || game->state == GAME_SCORE /*rhs is true is esc is pressed during game*/){
+void detect_game_end(Game* game){
+	if(game->player->bitmap->y >= vg_get_v_res() - PLAYER_DEATH_TOLERANCE){
 		//Change state to score registering screen and initialize 'attributes' related to it
 		game->state = GAME_SCORE;
 		//Substitute background
@@ -104,7 +104,6 @@ void game_state_handler(Game* game){
 			game->session_name[i] = 0;
 		game->session_score = create_score(game->player->score_minutes,game->player->score_seconds,rtc_get(CURRENT_TIME),rtc_get(CURRENT_DATE),game->session_name); //Current session name will be registered by user
 	}
-	/*TO DO: Maybe add a pause state (then, on interrupts, we simply read the values and ignore them, not updating anything, unless it's the pause key again) */
 }
 
 void update_game_running(Game* game){
@@ -205,7 +204,7 @@ void update_game_running(Game* game){
 	else //bonus == NO_BONUS
 		drawBitmap(loadBitmap(fullPath("nobonus.bmp"),10,485), game->secondary_buffer, ALIGN_LEFT);
 
-	game_state_handler(game);
+	detect_game_end(game);
 }
 
 void game_score_event_handler(Game* game, char current_key){
@@ -312,6 +311,8 @@ int add_bullet_shot(Game* game, int x, int y){
 }
 
 void draw_game(Game* game){
+	if(game->state == GAME_PAUSED)
+		drawBitmap(loadBitmap(fullPath("pause_message.bmp"),300,264),game->secondary_buffer,ALIGN_LEFT);
 	memcpy(vg_get_video_mem(),game->secondary_buffer,vg_get_window_size());
 }
 
