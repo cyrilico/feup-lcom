@@ -1,5 +1,10 @@
-#include "obstacle.h"
+#include <minix/syslib.h>
+#include <minix/drivers.h>
+#include <machine/int86.h>
+#include <sys/mman.h>
+#include <sys/types.h>
 #include "utils.h"
+#include "obstacle.h"
 
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));

@@ -1,5 +1,10 @@
 #pragma once
 
+#include <minix/syslib.h>
+#include <minix/drivers.h>
+#include <machine/int86.h>
+#include <sys/mman.h>
+#include <sys/types.h>
 #include "menu.h"
 #include "game.h"
 

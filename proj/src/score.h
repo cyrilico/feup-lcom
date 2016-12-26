@@ -1,8 +1,5 @@
 #pragma once
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "utils.h"
 #define SCORESFILE "/home/lcom/lcom1617-t4g11/proj/src/highscores.txt"
 //#define SCORESFILE "/home/lcom/casa2/lcom1617-t4g11/proj/src/highscores.txt"
 

@@ -3,7 +3,11 @@
 /** @defgroup Bitmap Bitmap
  * @{
  * Functions for manipulating bitmaps.
- * All credits go to Henrique Ferrolho. We just added the information about the bitmap's coordinates on the screen to the structure.
+ * All credits go to Henrique Ferrolho, the original author of the code.
+ * Changes made:
+ * - Added the information about the bitmap's coordinates on the screen to the structure
+ * - drawBitmap function receives the destination buffer as an argument (was sending to video_mem as default)
+ *
  * Taken from http://difusal.blogspot.pt/2014/09/minixtutorial-8-loading-bmp-images.html
  */
 

@@ -1,3 +1,11 @@
+#include <minix/syslib.h>
+#include <minix/drivers.h>
+#include <machine/int86.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include "rtc.h"
+#include "video_gr.h"
+#include "utils.h"
 #include "game.h"
 
 Bullet* create_bullet(int x, int y){

@@ -1,5 +1,6 @@
-#include "player.h"
+#include "utils.h"
 #include "obstacle.h"
+#include "player.h"
 
 Player* create_player(){
 	Player* player = (Player*)(malloc(sizeof(Player)));

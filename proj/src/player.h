@@ -4,6 +4,7 @@
 #include "bitmap.h"
 
 #define N_BULLETS 50
+#define BLACK 0
 
 //Screen limits for player (can't touch the stars on the sides - you don't want to go infinity! (props Rui Ribeiro) - each side stars zone has 75px of width
 #define LEFT_LIMIT 75
