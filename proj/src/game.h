@@ -5,11 +5,7 @@
 #include "bitmap.h"
 #include "mouse.h"
 #include "keyboard.h"
-#include "timer.h"
-#include "video_gr.h"
-#include "rtc.h"
 #include "score.h"
-#include "utils.h"
 
 #define N_BULLETS 50
 #define MAX_BULLETS_ON_SCREEN 10

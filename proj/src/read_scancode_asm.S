@@ -30,6 +30,7 @@ _read_scancode_asm:
         /* tickdelay(eax), with eax holding the value returned from previous call */
         pushl %eax
         call _tickdelay
+        addl $4, %esp /* Clean stack (same reason as above) */
         loopnz NEXT
         movl $-1, %eax
 END:    ret

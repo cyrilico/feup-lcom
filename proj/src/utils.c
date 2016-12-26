@@ -1,3 +1,7 @@
+#include <string.h>
+#include <stdio.h>
+#include "bitmap.h"
+#include "video_gr.h"
 #include "utils.h"
 
 const char* fullPath(const char* filename){

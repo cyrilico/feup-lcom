@@ -1,15 +1,5 @@
 #pragma once
 
-#include <limits.h>
-#include <string.h>
-#include <errno.h>
-#include <minix/drivers.h>
-#include <minix/sysutil.h>
-#include "i8042.h"
-#include "i8254.h"
-#include "timer.h"
-#include "utils.h"
-#include "video_gr.h"
 #include "bitmap.h"
 
 typedef enum lbutton_t {RELEASED,PRESSED} lbstate;
@@ -27,7 +17,6 @@ typedef struct{
 
 int mouse_subscribe_int();
 int mouse_unsubscribe_int();
-unsigned long mouse_read_code();
 unsigned long mouse_write_code(long destination, unsigned char cmd);
 int mouse_write_byte(unsigned char byte);
 

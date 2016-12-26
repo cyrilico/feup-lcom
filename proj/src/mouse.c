@@ -1,3 +1,11 @@
+#include <limits.h>
+#include <string.h>
+#include <errno.h>
+#include <minix/drivers.h>
+#include <minix/sysutil.h>
+#include "i8042.h"
+#include "video_gr.h"
+#include "utils.h"
 #include "mouse.h"
 
 int hookid_mouse = 23;
@@ -23,28 +31,6 @@ int mouse_unsubscribe_int() {
 		return -1;
 
 	return 0;
-}
-
-unsigned long mouse_read_code(){
-	unsigned long st;
-	unsigned long data;
-	unsigned int counter = 0;
-
-	while(counter <= NTRIES) {
-		sys_inb(STAT_REG, &st);
-		/* assuming it returns OK */
-		/* loop while 8042 output buffer is empty */
-		if(st & OBF) {
-			sys_inb(OUT_BUF, &data); /* assuming it returns OK */
-			if ( (st &(PARITY | TIMEOUT)) == 0 )
-				return data;
-			else
-				return -1;
-		}
-		tickdelay(micros_to_ticks(DELAY_US));
-		counter++;
-	}
-	return -1;
 }
 
 unsigned long mouse_write_code(long destination, unsigned char cmd){

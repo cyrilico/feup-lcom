@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "utils.h"
 #include "score.h"
 
 Score* create_score(unsigned int new_points_minutes, unsigned int new_points_seconds, unsigned long* new_time, unsigned long* new_date, char* new_name){

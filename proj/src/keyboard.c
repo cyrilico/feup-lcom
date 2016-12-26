@@ -6,7 +6,6 @@
 #include "keyboard.h"
 #include "timer.h"
 #include "i8254.h"
-#include "i8042.h"
 #include "utils.h"
 
 int hookid_kbd = 10;
@@ -36,59 +35,6 @@ int kbd_unsubscribe_int() {
 		return -1;
 
 	return 0;
-}
-
-unsigned long kbd_read_code() {
-
-	unsigned long st;
-	unsigned long data;
-	unsigned int counter = 0;
-
-	while(counter <= NTRIES) {
-		sys_inb(STAT_REG, &st);
-		/* assuming it returns OK */
-		/* loop while 8042 output buffer is empty */
-		if(st & OBF) {
-			sys_inb(OUT_BUF, &data); /* assuming it returns OK */
-			if ( (st &(PARITY | TIMEOUT)) == 0 )
-				return data;
-			else
-				return -1;
-		}
-		tickdelay(micros_to_ticks(DELAY_US));
-		counter++;
-	}
-	return -1;
-}
-
-unsigned long kbd_write_code(unsigned char cmd) {
-	unsigned long st;
-	unsigned int counter = 0;
-	while( counter <= NTRIES ) {
-		sys_inb(STAT_REG, &st); /* assuming it returns OK */
-		/* loop while 8042 input buffer is not empty */
-		if( (st & IBF) == 0 ) {
-			sys_outb(IN_BUF, cmd); /* no args command */
-			return 0;
-		}
-		tickdelay(micros_to_ticks(DELAY_US));
-	}
-	return -1;
-}
-
-void kbd_print_code(unsigned long code) {
-	if(code & GET_MSB){ //Scancode has two bytes
-		if(code & BIT(15)) //Breakcode
-			printf("Breakcode: 0x%04x\n", code);
-		else
-			printf("Makecode: 0x%04x\n", code);
-	}
-	else{ //Scancode has one byte
-		if(code & BIT(7)) //Breakcode
-			printf("Breakcode: 0x%02x\n", code);
-		else
-			printf("Makecode: 0x%02x\n", code);
-	}
 }
 
 char scancode_to_letter(unsigned long code){

@@ -10,9 +10,6 @@
 #include "bitmap.h"
 #include "mouse.h"
 #include "keyboard.h"
-#include "timer.h"
-#include "video_gr.h"
-#include "utils.h"
 
 //Used for main menu buttons
 typedef struct{

@@ -1,3 +1,4 @@
+#include "utils.h"
 #include "menu.h"
 
 Button* create_button(int x, int y, int width, int height){
