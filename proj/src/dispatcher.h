@@ -39,7 +39,7 @@ typedef struct{
 	message msg;
 	int ipc_status;
 	char* pwd; /*!< String that holds the session's path - value inserted by user as service run call's argument */
-	dispatcherstate state; /*! The dispatcher's current state
+	dispatcherstate state; /*! The dispatcher's current state */
 } Dispatcher;
 
 /**

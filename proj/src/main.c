@@ -5,9 +5,8 @@
 void print_usage(char **argv)
 {
 	printf("Usage:\n"
-			"\t service run %s -args \"<path to the repository's parent directory> \n"
-			"Example : service run &s -args \"/home/feup/\" **DON'T FORGET THE SLASH** /n",
-			argv[0], argv[0]);
+			"\t service run proj -args \"<path to the repository's parent directory> \n"
+			"Example : service run proj -args \"/home/lcom/feup/\" **DON'T FORGET THE SLASH** \n");
 }
 
 int main(int argc, char **argv) {

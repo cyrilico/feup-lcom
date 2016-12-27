@@ -12,11 +12,11 @@
 #define PLAYER_START_X 75
 #define PLAYER_START_Y 460
 #define PLAYER_DEATH_TOLERANCE 5
-#define NUMBER_OF_BONUSES 3 /* TO DO: Change this to a more random function (don't just use %) */
+#define NUMBER_OF_BONUSES 4 /* TO DO: Change this to a more random function (don't just use %) */
 #define BONUS_DURATION 5
 #define BONUS_FREQUENCY 10 //every 10 seconds, a new bonus
 
-typedef enum bonusstate_t {NO_BONUS,INVINCIBLE,INFINITE_AMMO} bonusstate;
+typedef enum bonusstate_t {NO_BONUS,INVINCIBLE,INFINITE_AMMO, DOUBLE_BULLETS} bonusstate;
 
 typedef struct{
 	unsigned int score_minutes;
