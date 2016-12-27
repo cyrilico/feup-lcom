@@ -1,7 +1,7 @@
 #pragma once
 
-#define SCORESFILE "/home/lcom/lcom1617-t4g11/proj/src/highscores.txt"
-//#define SCORESFILE "/home/lcom/casa2/lcom1617-t4g11/proj/src/highscores.txt"
+//#define SCORESFILE "/home/lcom/lcom1617-t4g11/proj/src/highscores.txt"
+#define SCORESFILE "/home/lcom/casa/lcom1617-t4g11/proj/src/highscores.txt"
 
 #define MAX_SCORES_READ 15
 #define NAME_LENGTH 4
