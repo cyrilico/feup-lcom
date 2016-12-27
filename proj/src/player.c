@@ -32,16 +32,16 @@ void update_player_mouse(Player* player, Mouse* mouse, char* buffer){
 		/* Testing pixels around buzz to guarantee he doesn't go over obstacles on his sides (unless he has the invincibility bonus)
 		 * Must test top, middle and bottom pixels to cover all cases
 		 */
-		unsigned long topPixelLeft = *(buffer + ((player->bitmap->y)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
-		unsigned long topPixelRight = *(buffer + ((player->bitmap->y)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
+		unsigned long top_pixel_left = *(buffer + ((player->bitmap->y)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+		unsigned long top_pixel_right = *(buffer + ((player->bitmap->y)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-		unsigned long middlePixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
-		unsigned long middlePixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
+		unsigned long middle_pixel_left = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+		unsigned long middle_pixel_right = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height/2)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-		unsigned long bottomPixelLeft = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
-		unsigned long bottomPixelRight = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
+		unsigned long bottom_pixel_left = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + player->bitmap->x-1)*vg_get_bytes_per_pixel());
+		unsigned long bottom_pixel_right = *(buffer + ((player->bitmap->y + player->bitmap->bitmapInfoHeader.height)*vg_get_h_res() + (player->bitmap->x+player->bitmap->bitmapInfoHeader.width))*vg_get_bytes_per_pixel());
 
-		if(topPixelLeft != BLACK || topPixelRight != BLACK || middlePixelLeft != BLACK || middlePixelRight != BLACK || bottomPixelLeft != BLACK || bottomPixelRight != BLACK)
+		if(top_pixel_left != BLACK || top_pixel_right != BLACK || middle_pixel_left != BLACK || middle_pixel_right != BLACK || bottom_pixel_left != BLACK || bottom_pixel_right != BLACK)
 			player->bitmap->x = previous_x;
 	}
 
@@ -81,8 +81,10 @@ void generate_bonus(Player* player){
 	int bonus = rand() % NUMBER_OF_BONUSES; /* TO DO: Create a more generous 'kind of hash' function */
 	if(bonus == 0)
 		player->bonus = INVINCIBLE;
-	else
+	else if(bonus == 1)
 		player->bonus = INFINITE_AMMO;
+	else
+		player->bonus = DOUBLE_BULLETS;
 
 	player->bonus_timer = BONUS_DURATION;
 }

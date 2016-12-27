@@ -8,49 +8,6 @@
 #include "utils.h"
 #include "game.h"
 
-Bullet* create_bullet(int x, int y){
-	Bullet* bullet = (Bullet*)(malloc(sizeof(Bullet)));
-	bullet->bitmap = loadBitmap(fullPath("bullet.bmp"), x, y);
-	return bullet;
-}
-
-int update_bullet(Bullet* bullet){
-	bullet->bitmap->y -= BULLET_SPEED;
-	if(bullet->bitmap->y <= 0)
-		return 1;
-	else
-		return 0;
-}
-
-int bullet_obstacle_collision(Bullet* bullet, Obstacle* obstacle){
-	int bullet_top_left_x = bullet->bitmap->x;
-	int bullet_y = bullet->bitmap->y;
-	int bullet_top_right_x = bullet_top_left_x + bullet->bitmap->bitmapInfoHeader.width;
-	int obstacle_x = obstacle->bitmaps[0]->x;
-	int obstacle_y = obstacle->bitmaps[0]->y;
-	int obstacle_width = obstacle->bitmaps[0]->bitmapInfoHeader.width;
-	int obstacle_height = obstacle->bitmaps[0]->bitmapInfoHeader.height;
-
-	int top_left_x_alligned = (bullet_top_left_x >= obstacle_x && bullet_top_left_x <= obstacle_x + obstacle_width ? 1 : 0);
-	int top_right_x_alligned = (bullet_top_right_x >= obstacle_x && bullet_top_right_x <= obstacle_x + obstacle_width ? 1 : 0);
-	int alligned_x_axis = top_left_x_alligned | top_right_x_alligned;
-	int alligned_y_axis = (bullet_y <= obstacle_y + obstacle_height && bullet_y >= obstacle_y ? 1 : 0);
-
-	if(alligned_x_axis && alligned_y_axis)
-		return 1;
-	else
-		return 0;
-}
-
-void draw_bullet(Bullet* bullet, char* buffer){
-	drawBitmap(bullet->bitmap,buffer,ALIGN_LEFT);
-}
-
-void delete_bullet(Bullet* bullet){
-	deleteBitmap(bullet->bitmap);
-	free(bullet);
-}
-
 Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
 	/* What the fuck? Sometimes create_game_mouse makes program crash, sometimes create_mouse does it */
@@ -163,7 +120,11 @@ void update_game_running(Game* game){
 						if(bullet_obstacle_collision(game->bullets[i],game->obstacles[1][index])){
 							delete_bullet(game->bullets[i]);
 							game->bullets[i] = NULL;
-							if(--(game->obstacles[1][index]->lives) == 0){
+							if(game->player->bonus == DOUBLE_BULLETS && game->obstacles[1][index]->lives >= 2)
+								game->obstacles[1][index]->lives -= 2;
+							else
+								game->obstacles[1][index]->lives--;
+							if(game->obstacles[1][index]->lives == 0){
 								game->player->number_of_bullets += game->obstacles[1][index]->const_lives * BULLET_GAIN_FACTOR;
 								delete_obstacle(game->obstacles[1][index]);
 								game->obstacles[1][index] = NULL;
@@ -174,7 +135,11 @@ void update_game_running(Game* game){
 						if(bullet_obstacle_collision(game->bullets[i],game->obstacles[0][index])){
 							delete_bullet(game->bullets[i]);
 							game->bullets[i] = NULL;
-							if(--(game->obstacles[0][index]->lives) == 0){
+							if(game->player->bonus == DOUBLE_BULLETS && game->obstacles[0][index]->lives >= 2)
+								game->obstacles[0][index]->lives -= 2;
+							else
+								game->obstacles[0][index]->lives--;
+							if(game->obstacles[0][index]->lives == 0){
 								game->player->number_of_bullets += game->obstacles[0][index]->const_lives * BULLET_GAIN_FACTOR;
 								delete_obstacle(game->obstacles[0][index]);
 								game->obstacles[0][index] = NULL;
@@ -221,6 +186,8 @@ void update_game_running(Game* game){
 		drawBitmap(loadBitmap(fullPath("invincibility.bmp"),5,485), game->secondary_buffer, ALIGN_LEFT);
 	else if(game->player->bonus == INFINITE_AMMO)
 		drawBitmap(loadBitmap(fullPath("infiniteammo.bmp"),10,485), game->secondary_buffer, ALIGN_LEFT);
+	else if(game->player->bonus == DOUBLE_BULLETS)
+		drawBitmap(loadBitmap(fullPath("doublebullets.bmp"),10,485), game->secondary_buffer, ALIGN_LEFT);
 	else //bonus == NO_BONUS
 		drawBitmap(loadBitmap(fullPath("nobonus.bmp"),10,485), game->secondary_buffer, ALIGN_LEFT);
 
@@ -318,7 +285,7 @@ int add_bullet_shot(Game* game, int x, int y){
 	int i;
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] == NULL){
-			game->bullets[i] = create_bullet(x+BULLET_OFFSET,y-BULLET_HEIGHT);
+			game->bullets[i] = create_bullet(game->player, x+BULLET_OFFSET,y-BULLET_HEIGHT);
 			success = 1;
 			break;
 		}

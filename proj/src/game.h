@@ -1,20 +1,9 @@
 #pragma once
 
-#include "player.h"
-#include "obstacle.h"
-#include "bitmap.h"
 #include "mouse.h"
 #include "keyboard.h"
 #include "score.h"
-
-#define N_BULLETS 50
-#define MAX_BULLETS_ON_SCREEN 10
-#define BULLET_HEIGHT 12
-#define BULLET_OFFSET 37
-#define BULLET_SPEED 3
-#define BULLET_GAIN_FACTOR 1
-#define N_OBSTACLE_LINES 2
-#define RANDOM_OBSTACLE_FACTOR 50
+#include "bullet.h"
 
 #define PLAYER_NAME_X_START 300
 #define PLAYER_NAME_Y_START 266
@@ -23,18 +12,6 @@
 #define UNDERSCORE_GAP 67
 #define HIGHSCORE_NAME_X 120
 #define HIGHSCORE_NAME_Y 57
-
-
-//Not really necessary, but good for reading purposes
-typedef struct{
-	Bitmap* bitmap;
-}Bullet;
-
-Bullet* create_bullet(int x, int y); //creates new bullet at position (x,y)
-int bullet_obstacle_collision(Bullet* bullet, Obstacle* obstacle); //checks if bullet collided with object. returns 1 if yes, 0 otherwise
-int update_bullet(Bullet* bullet); //updates bullet's position. returns 1 if bullet goes off-screen, 0 otherwise
-void draw_bullet(Bullet* bullet, char* buffer);
-void delete_bullet(Bullet* bullet);
 
 typedef enum gamestate_t {GAME_RUNNING, GAME_PAUSED, GAME_SCORE, GAME_OVER} gamestate;
 typedef enum scorenamestate_t {FIRST_LETTER, SECOND_LETTER, THIRD_LETTER, FOURTH_LETTER, NAME_RECEIVED} scorenamestate;
