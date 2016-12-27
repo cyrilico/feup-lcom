@@ -1,6 +1,8 @@
 #include "dispatcher.h"
 
-Dispatcher* create_dispatcher() {
+static char* pwd;
+
+Dispatcher* create_dispatcher(char* path) {
 	Dispatcher* dispatcher = (Dispatcher*)(malloc(sizeof(Dispatcher)));
 
 	dispatcher->irq_timer = timer_subscribe_int();
@@ -8,7 +10,13 @@ Dispatcher* create_dispatcher() {
 	dispatcher->irq_mouse = mouse_subscribe_int();
 	dispatcher->irq_rtc = rtc_subscribe_int();
 	dispatcher->state = MAIN_MENU;
+
+	pwd = path;
 	return dispatcher;
+}
+
+char* get_pwd() {
+	return pwd;
 }
 
 /*
