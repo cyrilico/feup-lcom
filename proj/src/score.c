@@ -72,16 +72,21 @@ void draw_scores(Score** scores, int x, int y, char* buffer){
 			break;
 	}
 }
-
+const char* get_scores_file() {
+	char* result = (char*)malloc(256);
+	strcpy(result,get_pwd());
+	strcat(result,"lcom1617-t4g11/proj/src/highscores.txt");
+	return result;
+}
 void write_score_to_file(Score* score){
-	FILE* scoresfile = fopen(SCORESFILE,"a");
+	FILE* scoresfile = fopen(get_scores_file(),"a");
 	fprintf(scoresfile,"%s %d %d %d %d %d %d %d %d\n", score->name, score->date[0], score->date[1], score->date[2], score->time[0], score->time[1], score->time[2], score->points_minutes, score->points_seconds); /*Order: name day month year hour minutes seconds score_minutes score_seconds*/
 	fclose(scoresfile);
 }
 
 Score** read_scores_from_file(){
 	Score** result = (Score**)(malloc(MAX_SCORES_READ*sizeof(Score*)));
-	FILE* scoresfile = fopen(SCORESFILE, "r");
+	FILE* scoresfile = fopen(get_scores_file(), "r");
 	unsigned long* time = (unsigned long*)malloc(3*sizeof(unsigned long));
 	unsigned long* date = (unsigned long*)malloc(3*sizeof(unsigned long));
 	unsigned int* score_minutes = (unsigned int*)malloc(sizeof(unsigned int));

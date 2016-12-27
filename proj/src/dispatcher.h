@@ -18,15 +18,16 @@ typedef struct{
 
 	message msg;
 	int ipc_status;
+	char* pwd;
 	dispatcherstate state;
 } Dispatcher;
 
-Dispatcher* create_dispatcher();
+Dispatcher* create_dispatcher(char* path);
 /*
 void process_main_menu(Dispatcher* dispatcher);
 void process_game(Dispatcher* dispatcher);*/
 void delete_dispatcher(Dispatcher* dispatcher);
-
+char* get_pwd();
 
 void interrupt_handler(Dispatcher* dispatcher);
 
