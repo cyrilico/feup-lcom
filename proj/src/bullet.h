@@ -9,7 +9,7 @@
 #include "obstacle.h"
 
 /** @defgroup bullet bullet
- * Functions related with processing bullets (lasers) shot by player in-game
+ * @brief Functions related with processing bullets (lasers) shot by player in-game
  * @{
  *
  *

@@ -3,17 +3,17 @@
 #include <stdint.h>
 
 /** @defgroup vbe vbe
+ * @brief Functions related to the VBE standard
  * @{
  *
- * Functions related to the VBE standard
  */
 
 /** @name VBE Mode Info Block */
 /**@{
  *
- * Packed VBE Mode Info Block 
- */ 
- 
+ * Packed VBE Mode Info Block
+ */
+
 typedef struct {
   /*  Mandatory information for all VBE revisions */
   uint16_t ModeAttributes; 	/**< @brief mode attributes */
@@ -41,7 +41,7 @@ typedef struct {
   uint8_t Reserved1;		/**< @brief reserved for page function */
 
   /* Direct Color fields (required for direct/6 and YUV/7 memory models) */
-  
+
   uint8_t RedMaskSize;		/* size of direct color red mask in bits */
   uint8_t RedFieldPosition;	/* bit position of lsb of red mask */
   uint8_t GreenMaskSize;		/* size of direct color green mask in bits */
@@ -113,12 +113,12 @@ typedef struct {
 
 /**
  * @brief Returns information on the input VBE mode, including screen dimensions, color depth and VRAM physical address
- * 
+ *
  * Initializes unpacked vbe_mode__info_t structure passed as an address with
  *  the information of the input mode, by calling VBE function 0x01
  *  Return VBE Mode Information and unpacking the ModeInfoBlock struct
  *  returned by that function.
- * 
+ *
  * @param mode mode whose information should be returned
  * @param vmi_p address of vbe_mode_info_t structure to be initialized
  * @return 0 on success, non-zero otherwise

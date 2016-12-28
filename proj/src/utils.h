@@ -5,9 +5,9 @@
 */
 
 /** @defgroup utils utils
+ * @brief General functions to aid the program execution
  * @{
  *
- * General functions to aid the program execution
  */
 
 #define BIT(n) (0x01<<(n))

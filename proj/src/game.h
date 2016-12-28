@@ -9,8 +9,8 @@
 #include "score.h"
 #include "bullet.h"
 
-/** @defgroup dispatcher dispatcher
- * Functions related with processing the main game
+/** @defgroup game game
+ * @brief Functions related with processing the main game
  * @{
  *
  *

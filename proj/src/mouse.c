@@ -56,8 +56,8 @@ int mouse_write_byte(unsigned char byte){
 			return -1;
 
 		if(mouse_write_code(IN_BUF, byte) == -1)
-
 			return -1;
+			
 		sys_inb(OUT_BUF, &trash);
 		if(trash != ACK)
 			printf("Error sending 0x%x, trying again\n",byte);

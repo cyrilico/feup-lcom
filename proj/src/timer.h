@@ -5,9 +5,9 @@
 */
 
 /** @defgroup timer timer
+ * @brief Functions for using the i8254 timer0
  * @{
  *
- * Functions for using the i8254 timer0
  */
 
 /**
@@ -23,3 +23,5 @@ int timer_subscribe_int(void );
  * @return Return 0 upon success and non-zero otherwise
  */
 int timer_unsubscribe_int();
+
+/** @} */
