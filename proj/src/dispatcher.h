@@ -46,7 +46,7 @@ typedef struct{
  * @brief Subscribes to hardware peripherals and initializes Dispatcher's members. Also initializes variable used to store the session's path
  *
  * @param path String that holds the session's path - value inserted by user as service run call's argument
- * @return Return's pointer to initialized Dispatcher
+ * @return Pointer to initialized Dispatcher
  */
 Dispatcher* create_dispatcher(char* path);
 

@@ -10,8 +10,6 @@
 
 Game* create_game(){
 	Game* game = (Game*)(malloc(sizeof(Game)));
-	/* What the fuck? Sometimes create_game_mouse makes program crash, sometimes create_mouse does it */
-	//game->mouse = create_game_mouse();
 	game->mouse = create_mouse();
 	game->keyboard = create_keyboard();
 	game->background = loadBitmap(fullPath("game_background.bmp"),0,0);
@@ -61,7 +59,9 @@ void detect_game_end(Game* game){
 		int i;
 		for(i = 0; i < NAME_LENGTH+1; i++)
 			game->session_name[i] = 0;
-		game->session_score = create_score(game->player->score_minutes,game->player->score_seconds,rtc_get(CURRENT_TIME),rtc_get(CURRENT_DATE),game->session_name); //Current session name will be registered by user
+		unsigned long* session_time = bcd_to_binary_array(rtc_get(CURRENT_TIME),TIME_LENGTH);
+		unsigned long* session_date = bcd_to_binary_array(rtc_get(CURRENT_DATE),DATE_LENGTH);
+		game->session_score = create_score(game->player->score_minutes,game->player->score_seconds,session_time,session_date,game->session_name); //Current session name will be registered by user
 
 		//Prepare first frame so it doesn't get 'stuck' in GAME_RUNNING screen until user presses a key
 		drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
@@ -74,19 +74,13 @@ void detect_game_end(Game* game){
 		position_x += SCORE_BITMAP_WIDTH;
 		draw_score_number(game->session_score->points_seconds,position_x,SESSION_SCORE_Y,game->secondary_buffer);
 
-		//Draw current session name (or part of it)
-		for(i = 0; i < NAME_LENGTH; i++){
-			if(game->session_name[i] != NOT_VALID)
-				draw_letter(game->session_name[i],PLAYER_NAME_X_START+i*UNDERSCORE_GAP,PLAYER_NAME_Y_START,game->secondary_buffer);
-		}
-
 		//Draw current highscores
 		draw_scores(game->current_highscores,20,400,game->secondary_buffer);
 	}
 }
 
 void update_game_running(Game* game){
-	//Update objects' positions
+	//Update obstacles' positions
 	int i, j;
 	int off_screen[2];
 	for(i = 0; i < N_OBSTACLE_LINES; i++){
@@ -107,7 +101,7 @@ void update_game_running(Game* game){
 	}
 
 	int bullet_off_screen;
-	//Update shot bullets' positions
+	//Update shot bullets' positions (for each, checks what obstacle is in its way and checks collision with only that one)
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL){
 			bullet_off_screen = update_bullet(game->bullets[i]);
@@ -155,14 +149,19 @@ void update_game_running(Game* game){
 
 	update_player_collision(game->player,game->secondary_buffer);
 	update_player_score(game->player);
-	if(game->player->score_seconds % BONUS_FREQUENCY == 0 && game->player->score_seconds+game->player->score_minutes != 0 && game->player->score_aux == 0) {
+	int time_to_generate_bonus = (game->player->score_seconds % BONUS_FREQUENCY == 0 ? 1 : 0);
+	int not_game_beginning = (game->player->score_seconds+game->player->score_minutes != 0 ? 1 : 0); // 0 % any number is 0, so this is to avoid giving a bonus when the game starts
+	int score_seconds_just_incremented = (game->player->score_aux == 0 ? 1 : 0); //if a bonus is generated every 15 seconds, we'd generate 60 different bonuses during said second and the next one. only want to do it once
+	if(time_to_generate_bonus && not_game_beginning && score_seconds_just_incremented){
 		generate_bonus(game->player);
 		update_lives_boundaries();
 	}
 
-	//Prepare next frame
+	/* PREPARE NEXT FRAME */
+	//Draw background
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
 
+	//Draw obstacles
 	for(i = 0; i < N_OBSTACLE_LINES; i++){
 		for(j = 0; j < N_OBSTACLES; j++){
 			if(game->obstacles[i][j] != NULL)
@@ -170,16 +169,17 @@ void update_game_running(Game* game){
 		}
 	}
 
-
+	//Draw player
 	draw_player(game->player,game->secondary_buffer);
 
-	//Draw player score
+	//Draw player's score
 	draw_game_number(game->player->score_minutes,3,270,game->secondary_buffer);
 	draw_game_number(game->player->score_seconds,39,270,game->secondary_buffer);
 
-	//Draw player current number of bullets
+	//Draw player's current number of bullets
 	draw_game_number(game->player->number_of_bullets,31,400,game->secondary_buffer);
 
+	//Draw bullets on screen
 	for(i = 0; i < MAX_BULLETS_ON_SCREEN; i++){
 		if(game->bullets[i] != NULL)
 			draw_bullet(game->bullets[i],game->secondary_buffer);
@@ -254,7 +254,8 @@ void update_game_score(Game* game) {
 	char current_key = scancode_to_letter(game->keyboard->scancode);
 	game_score_event_handler(game, current_key);
 
-	//Prepare next frame
+	/* PREPARE NEXT FRAME */
+	//Draw background
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);
 
 	//Draw current session score
@@ -306,7 +307,7 @@ void draw_game(Game* game){
 
 void delete_game(Game* game){
 	delete_keyboard(game->keyboard);
-	delete_game_mouse(game->mouse);
+	delete_mouse(game->mouse);
 	deleteBitmap(game->background);
 	delete_player(game->player);
 	int i, j;
@@ -321,8 +322,7 @@ void delete_game(Game* game){
 			delete_bullet(game->bullets[i]);
 	}
 	delete_score(game->session_score);
-	i = 0;
-	for(i; game->current_highscores[i] != NULL; i++)
+	for(i = 0; game->current_highscores[i] != NULL; i++)
 		delete_score(game->current_highscores[i]);
 	free(game->secondary_buffer);
 	free(game);

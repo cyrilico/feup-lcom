@@ -27,7 +27,7 @@ int vg_exit() {
 
   if( sys_int86(&reg86) != OK ) {
       printf("\tvg_exit(): sys_int86() failed \n");
-      return 1;
+      return -1;
   } else
       return 0;
 }

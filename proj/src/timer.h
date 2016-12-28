@@ -1,9 +1,13 @@
 #pragma once
 
+/*! \file timer.h
+ \brief Functions for using the i8254 timer0
+*/
+
 /** @defgroup timer timer
  * @{
  *
- * Functions for using the i8254 timers
+ * Functions for using the i8254 timer0
  */
 
 /**

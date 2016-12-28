@@ -1,12 +1,12 @@
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 #include "bitmap.h"
 #include "video_gr.h"
 #include "utils.h"
 
 const char* fullPath(const char* filename){
 	char* result = (char*)malloc(256);
-	//TO DO - Fix warning caused by removing char* cast below
 	strcpy(result,(char*)get_pwd());
 	strcat(result,"lcom1617-t4g11/proj/images/");
 	strcat(result,filename);
@@ -20,7 +20,6 @@ void draw_game_number(int number, int x, int y, char* buffer){
 	char lsd_file[10];
 	sprintf(msd_file,"%d.bmp",msd);
 	sprintf(lsd_file,"%d.bmp",lsd);
-	/*printf("Cheguei aqui e os nomes dos ficheiros sao %s e %s\n", msd_file, lsd_file);*/
 	Bitmap* msd_bitmap = loadBitmap(fullPath(msd_file),x,y);
 	Bitmap* lsd_bitmap = loadBitmap(fullPath(lsd_file),x+GAME_NUMBER_WIDTH,y);
 	drawBitmap(msd_bitmap,buffer,ALIGN_LEFT);
@@ -80,10 +79,27 @@ void draw_slash(int x, int y, char* buffer){
 void draw_letter(char letter, int x, int y, char* buffer){
 	char letter_file[10];
 	sprintf(letter_file,"%c.bmp",letter);
-	/*printf("Cheguei aqui e o nome do ficheiro e' %s\n", letter_file);*/
 	Bitmap* letter_bitmap = loadBitmap(fullPath(letter_file),x,y);
 	drawBitmap(letter_bitmap,buffer,ALIGN_LEFT);
 	deleteBitmap(letter_bitmap);
+}
+
+unsigned long bcd_to_binary(unsigned long number_in_bcd){
+	unsigned long number = number_in_bcd;
+	unsigned long result = 0;
+	int i = 0;
+	while(number > 0){
+		result += BCD_LSD(number)*pow(10,i++);
+		number >>= 4;
+	}
+	return result;
+}
+
+unsigned long* bcd_to_binary_array(unsigned long* base, int size){
+	int i;
+	for(i = 0; i < size; i++)
+		base[i] = bcd_to_binary(base[i]);
+	return base;
 }
 
 int start_graphic_mode(){

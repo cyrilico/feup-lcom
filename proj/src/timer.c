@@ -4,7 +4,6 @@
 #include "timer.h"
 #include "i8254.h"
 
-unsigned long interrupt_counter = 0;
 int hookid = 15;
 
 int timer_subscribe_int(void) {
