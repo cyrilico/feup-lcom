@@ -78,7 +78,7 @@ int player_has_bullets(Player* player){
 }
 
 void generate_bonus(Player* player){
-	int bonus = rand() % NUMBER_OF_BONUSES; /* TO DO: Create a more generous 'kind of hash' function */
+	int bonus = rand() % NUMBER_OF_BONUSES;
 	if(bonus == 0)
 		player->bonus = INVINCIBLE;
 	else if(bonus == 1)

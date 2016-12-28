@@ -2,10 +2,6 @@
 
 #include "utils.h"
 
-//Custom symbolic constants
-#define GET_LSB (BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(5) | BIT(6) | BIT(7))
-#define GET_2ND_LSB (BIT(8) | BIT(9) | BIT(10) | BIT (11) | BIT(12) | BIT(13) | BIT(14) | BIT(15))
-
 /** @defgroup i8254 i8254
  * @{
  *

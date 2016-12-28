@@ -1,5 +1,9 @@
 #pragma once
 
+/*! \file dispatcher.h
+ \brief Functions for outputing data to screen in graphics mode
+*/
+
 /** @defgroup video_gr video_gr
  * @{
  *
@@ -25,10 +29,40 @@ void *vg_init(unsigned short mode);
  * @return 0 upon success, non-zero upon failure
  */
 int vg_exit(void);
+
+/**
+ * @brief Provides the value of horizontal resolution in graphics mode being used at that moment
+ *
+ * @return copy of private global variable h_res, which holds the current horizontal resolution
+ */
 unsigned int vg_get_h_res();
+
+/**
+ * @brief Provides the value of vertical resolution in graphics mode being used at that moment
+ *
+ * @return copy of private global variable v_res, which holds the current vertical resolution
+ */
 unsigned int vg_get_v_res();
+
+/**
+ * @brief Provides the number of bytes used per pixel in graphics mode being used at that moment
+ *
+ * @return copy of private global variable bits_per_pixel divided by 8
+ */
 unsigned int vg_get_bytes_per_pixel();
+
+/**
+ * @brief Provides the base address where VRAM was mapped to
+ *
+ * @return copy of private global variable video_mem
+ */
 char* vg_get_video_mem();
+
+/**
+ * @brief Provides the window's size in graphics mode being used at that moment, in bytes
+ *
+ * @return window size (in number of bytes)
+ */
 unsigned int vg_get_window_size();
 
 

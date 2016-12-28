@@ -3,7 +3,6 @@
 #define RTC_ADDR_REG 0x70
 #define RTC_DATA_REG 0x71
 #define REGA 0xA
-#define REGB 0xB
 #define REGA_UIP BIT(7)
 #define SECREG 0x00
 #define MINREG 0x02
