@@ -60,8 +60,11 @@ void update_menu(Menu* menu, int kbd_or_mouse){
 			menu->state = EXIT_CHOSEN;
 	}
 
-	//Prepare next frame
+	/* PREPARE NEXT FRAME */
+	//Draw background
 	drawBitmap(menu->background,menu->secondary_buffer,ALIGN_LEFT);
+
+	//Draw mouse's crosshair
 	draw_mouse(menu->mouse,menu->secondary_buffer);
 }
 

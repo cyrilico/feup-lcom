@@ -17,10 +17,10 @@ int kbd_subscribe_int() {
 	/*Variable that will hold return value in case of successful call, since sys_irq calls will modify hookid value*/
 	int hookid_kbd_bit = BIT(hookid_kbd);
 
-	if(sys_irqsetpolicy(IRQ_KBD, IRQ_EXCLUSIVE | IRQ_REENABLE, &hookid_kbd) != OK)
+	if(sys_irqsetpolicy(IRQ_KBD, IRQ_EXCLUSIVE | IRQ_REENABLE, &hookid_kbd) != 0)
 		return -1;
 
-	if(sys_irqenable(&hookid_kbd) != OK)
+	if(sys_irqenable(&hookid_kbd) != 0)
 		return -1;
 
 	return hookid_kbd_bit;
@@ -28,10 +28,10 @@ int kbd_subscribe_int() {
 
 int kbd_unsubscribe_int() {
 
-	if(sys_irqdisable(&hookid_kbd) != OK)
+	if(sys_irqdisable(&hookid_kbd) != 0)
 		return -1;
 
-	if(sys_irqrmpolicy(&hookid_kbd) != OK)
+	if(sys_irqrmpolicy(&hookid_kbd) != 0)
 		return -1;
 
 	return 0;
@@ -95,8 +95,6 @@ char scancode_to_letter(unsigned long code){
 		return 0;
 	}
 }
-
-/*------------------------------------------------*/
 
 Keyboard* create_keyboard(){
 	Keyboard* keyboard = (Keyboard*)(malloc(sizeof(Keyboard)));

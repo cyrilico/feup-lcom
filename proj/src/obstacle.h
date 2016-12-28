@@ -19,6 +19,8 @@
 #define N_OBSTACLES 9
 #define EMPTY_FACTOR 2
 #define MAX_OBSTACLE_LIVES 5
+#define N_OBSTACLE_LINES 2
+#define RANDOM_OBSTACLE_FACTOR 50
 
 /**
  * @brief Holds current maximum value of lives that newly generated obstacles have

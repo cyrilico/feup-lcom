@@ -9,10 +9,10 @@
 int hookid_rtc = 30;
 
 int rtc_subscribe_int(){
-	if(sys_irqsetpolicy(IRQ_RTC, IRQ_EXCLUSIVE | IRQ_REENABLE, &hookid_rtc) != OK)
+	if(sys_irqsetpolicy(IRQ_RTC, IRQ_EXCLUSIVE | IRQ_REENABLE, &hookid_rtc) != 0)
 		return -1;
 
-	if(sys_irqenable(&hookid_rtc) != OK)
+	if(sys_irqenable(&hookid_rtc) != 0)
 		return -1;
 
 	return 0;
@@ -20,10 +20,10 @@ int rtc_subscribe_int(){
 
 
 int rtc_unsubscribe_int(){
-	if(sys_irqdisable(&hookid_rtc) != OK)
+	if(sys_irqdisable(&hookid_rtc) != 0)
 		return -1;
 
-	if(sys_irqrmpolicy(&hookid_rtc) != OK)
+	if(sys_irqrmpolicy(&hookid_rtc) != 0)
 		return -1;
 
 	return 0;
