@@ -73,8 +73,8 @@ void interrupt_handler(Dispatcher* dispatcher);
 /**
  * @brief State handler to determine dispatcher's next state, based on menu or game's states. Also deletes either menu or game if the dispatcher's state changes.
  * @param dispatcher Dispatcher whose next state is being determined.
- * @param menu Menu whose's state may determine the dispatcher's next state. May be deleted
- * @param game Game whose's state may determine the dispatcher's next state. May be deleted
+ * @param menu Menu whose state may determine the dispatcher's next state. May be deleted
+ * @param game Game whose state may determine the dispatcher's next state. May be deleted
  */
 void state_handler(Dispatcher* dispatcher, Menu* menu, Game* game);
 

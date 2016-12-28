@@ -14,20 +14,20 @@ int mouse_subscribe_int() {
 	/*Variable that will hold return value in case of successful call, since sys_irq calls will modify hookid value*/
 	int hookid_mouse_bit = BIT(hookid_mouse);
 
-	if(sys_irqsetpolicy(IRQ_MOUSE, IRQ_EXCLUSIVE | IRQ_REENABLE, &hookid_mouse) != OK)
+	if(sys_irqsetpolicy(IRQ_MOUSE, IRQ_EXCLUSIVE | IRQ_REENABLE, &hookid_mouse) != 0)
 		return -1;
 
-	if(sys_irqenable(&hookid_mouse) != OK)
+	if(sys_irqenable(&hookid_mouse) != 0)
 		return -1;
 
 	return hookid_mouse_bit;
 }
 
 int mouse_unsubscribe_int() {
-	if(sys_irqdisable(&hookid_mouse) != OK)
+	if(sys_irqdisable(&hookid_mouse) != 0)
 		return -1;
 
-	if(sys_irqrmpolicy(&hookid_mouse) != OK)
+	if(sys_irqrmpolicy(&hookid_mouse) != 0)
 		return -1;
 
 	return 0;
@@ -65,8 +65,6 @@ int mouse_write_byte(unsigned char byte){
 	}while(trash != ACK && counter < NTRIES);
 	return 0;
 }
-
-/* --------------------- */
 
 #define MOUSE_START_X 100
 #define MOUSE_START_Y 100
@@ -111,7 +109,6 @@ void read_packet_byte(Mouse* mouse){
 	else{
 		mouse->packet[mouse->byteID++] = (unsigned char)(mouse->packet_byte);
 		if(mouse->byteID == 3){
-			//mouse_print_packet(mouse->packet);
 			mouse->byteID = 0;
 			update_mouse(mouse);
 			mouse->packet_state = RECEIVED;
@@ -173,17 +170,4 @@ void delete_mouse(Mouse* mouse){
 void delete_game_mouse(Mouse* mouse) {
 	mouse_write_byte(DISABLE_MOUSE_DATA_REPORTING);
 	free(mouse);
-}
-
-void mouse_print_packet(unsigned char packet[]){
-	printf("B1=0x%x ", packet[0]);
-	printf("B2=0x%x ", packet[1]);
-	printf("B3=0x%x ", packet[2]);
-	printf("LB=%u ", packet[0] & BIT(0));
-	printf("MB=%u ", (packet[0] & BIT(2))>>2);
-	printf("RB=%u ", (packet[0] & BIT(1))>>1);
-	printf("XOV=%u ", (packet[0] & BIT(6))>>6);
-	printf("YOV=%u ", (packet[0] & BIT(7))>>7);
-	printf("X=%d ", ((packet[0] & BIT(4)) ? TWOSCOMPLEMENT(packet[1]) : packet[1]));
-	printf("Y=%d\n\n", ((packet[0] & BIT(5)) ? TWOSCOMPLEMENT(packet[2]) : packet[2]));
 }
