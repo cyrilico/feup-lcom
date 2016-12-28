@@ -8,8 +8,8 @@
 #include "mouse.h"
 #include "keyboard.h"
 
-/** @defgroup dispatcher dispatcher
- * Functions related with processing the program's main menu
+/** @defgroup menu menu
+ * @brief Functions related with processing the program's main menu
  * @{
  *
  *

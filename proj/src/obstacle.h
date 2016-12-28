@@ -4,8 +4,8 @@
  \brief Functions related with processing the game's obstacles
 */
 
-/** @defgroup dispatcher dispatcher
- * Functions related with processing the game's obstacles
+/** @defgroup obstacle obstacle
+ * @brief Functions related with processing the game's obstacles
  * @{
  *
  *

@@ -13,7 +13,7 @@
 #include "game.h"
 
 /** @defgroup dispatcher dispatcher
- * Functions related with the program's state and HW interruptions handling
+ * @brief Functions related with the program's state and HW interruptions handling
  * @{
  *
  *

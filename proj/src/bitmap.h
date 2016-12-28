@@ -2,7 +2,7 @@
 
 /** @defgroup Bitmap Bitmap
  * @{
- * Functions for manipulating bitmaps.
+ * @brief Functions for manipulating bitmaps.
  * All credits go to Henrique Ferrolho, the original author of the code.
  * Changes made:
  * - Added the information about the bitmap's coordinates on the screen to the structure

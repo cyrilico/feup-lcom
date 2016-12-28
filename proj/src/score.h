@@ -14,7 +14,7 @@
 #define HIGHSCORE_GAP 30
 
 /** @defgroup score score
- * Functions related with game score handling
+ * @brief Functions related with game score handling
  * @{
  *
  *

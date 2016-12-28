@@ -6,8 +6,8 @@
 
 #include "bitmap.h"
 
-/** @defgroup dispatcher dispatcher
- * Functions related with processing the PC's mouse
+/** @defgroup mouse mouse
+ * @brief Functions related with processing the PC's mouse
  * @{
  *
  *

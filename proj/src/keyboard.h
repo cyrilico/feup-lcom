@@ -7,7 +7,7 @@
 #include "i8042.h"
 
 /** @defgroup keyboard keyboard
- * Functions related with processing the i8042's keyboard
+ * @brief Functions related with processing the i8042's keyboard
  * @{
  *
  *

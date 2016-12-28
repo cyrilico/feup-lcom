@@ -8,7 +8,7 @@
 #define CURRENT_DATE 1
 
 /** @defgroup rtc rtc
- * Functions related with the usage of the PC's Real Time Clock
+ * @brief Functions related with the usage of the PC's Real Time Clock
  * @{
  *
  *

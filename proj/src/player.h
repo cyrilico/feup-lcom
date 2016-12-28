@@ -7,8 +7,8 @@
 #include "mouse.h"
 #include "bitmap.h"
 
-/** @defgroup dispatcher dispatcher
- * Functions related with processing the game's character
+/** @defgroup player player
+ * @brief Functions related with processing the game's character
  * @{
  *
  *
