@@ -9,6 +9,9 @@
 #define EMPTY_FACTOR 2
 #define MAX_OBSTACLE_LIVES 5
 
+static unsigned int current_max_lives;
+static unsigned int current_min_lives;
+
 typedef struct{
 	unsigned int const_lives; //Same as 'lives' but will never be modified
 	unsigned int lives;
@@ -21,4 +24,7 @@ void draw_obstacle(Obstacle* obstacle, char* buffer);
 int obstacle_off_screen(Obstacle* obstacle); //Checks if obstacle is out of the screen. Returns 1 if it is, 0 otherwise
 void delete_obstacle(Obstacle* obstacle);
 void generate_obstacle_line(Obstacle** obstacles, int line_size, int line_number); //generates a random obstacle line in array 'obstacles'
+void init_current_max_lives();
+void init_current_min_lives();
+void update_lives_boundaries();
 void delete_obstacle_line(Obstacle** obstacles, int line_size); //deletes entire obstacle line stored in 'obstacles'

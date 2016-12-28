@@ -8,7 +8,7 @@
 
 Obstacle* create_obstacle(int x, int y){
 	Obstacle* obstacle = (Obstacle*)(malloc(sizeof(Obstacle)));
-	obstacle->lives = rand() % MAX_OBSTACLE_LIVES+1;
+	obstacle->lives = rand() % current_max_lives + current_min_lives;
 	obstacle->const_lives = obstacle->lives;
 	int i;
 	for(i = 0; i < MAX_OBSTACLE_LIVES; i++){
@@ -57,6 +57,23 @@ void generate_obstacle_line(Obstacle** obstacles, int line_size, int line_number
 			obstacles[i] = create_obstacle(OBSTACLE_WIDTH*(i+1),OBSTACLE_HEIGHT*(1+line_number));
 		else
 			obstacles[i] = NULL;
+	}
+}
+
+void init_current_max_lives() {
+	current_max_lives = 1;
+}
+void init_current_min_lives() {
+	current_min_lives = 1;
+}
+
+void update_lives_boundaries() {
+	if(current_max_lives < MAX_OBSTACLE_LIVES && current_min_lives == 1)
+		current_max_lives++;
+	else if(current_min_lives < MAX_OBSTACLE_LIVES) {
+		if(current_max_lives > 1)
+			current_max_lives--; //To make sure lives values stay between 1-5. At this point max_lives is no longer directly the maximum number of an obstacle's lives
+		current_min_lives++;
 	}
 }
 
