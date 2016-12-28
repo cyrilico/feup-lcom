@@ -18,6 +18,8 @@ Game* create_game(){
 	game->player = create_player();
 	game->secondary_buffer = (char*)(malloc(vg_get_window_size()));
 	game->obstacles = (Obstacle***)(malloc(N_OBSTACLE_LINES*sizeof(Obstacle**)));
+	init_current_max_lives();
+	init_current_min_lives();
 	int i;
 	for(i = 0; i < N_OBSTACLE_LINES; i++){
 		game->obstacles[i] = (Obstacle**)(malloc(N_OBSTACLES*sizeof(Obstacle*)));
@@ -153,8 +155,10 @@ void update_game_running(Game* game){
 
 	update_player_collision(game->player,game->secondary_buffer);
 	update_player_score(game->player);
-	if(game->player->score_seconds % BONUS_FREQUENCY == 0 && game->player->score_seconds+game->player->score_minutes != 0 && game->player->score_aux == 0)
+	if(game->player->score_seconds % BONUS_FREQUENCY == 0 && game->player->score_seconds+game->player->score_minutes != 0 && game->player->score_aux == 0) {
 		generate_bonus(game->player);
+		update_lives_boundaries();
+	}
 
 	//Prepare next frame
 	drawBitmap(game->background,game->secondary_buffer,ALIGN_LEFT);

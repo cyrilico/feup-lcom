@@ -52,7 +52,7 @@ Dispatcher* create_dispatcher(char* path);
 
 /**
  * @brief Frees dynamically allocated memory by Dispatcher's members
- * @param Dispatcher* Dispatcher to delete
+ * @param dispatcher Dispatcher to delete
  */
 void delete_dispatcher(Dispatcher* dispatcher);
 
