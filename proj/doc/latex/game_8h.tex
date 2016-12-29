@@ -1,0 +1,95 @@
+\hypertarget{game_8h}{}\section{game.\+h File Reference}
+\label{game_8h}\index{game.\+h@{game.\+h}}
+
+
+Functions related with processing the main game.  
+
+
+{\ttfamily \#include \char`\"{}mouse.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}keyboard.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}score.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}bullet.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_game}{Game}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{struct_game}{Game} \char`\"{}class\char`\"{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define {\bfseries P\+L\+A\+Y\+E\+R\+\_\+\+N\+A\+M\+E\+\_\+\+X\+\_\+\+S\+T\+A\+RT}~300
+\item 
+\#define {\bfseries P\+L\+A\+Y\+E\+R\+\_\+\+N\+A\+M\+E\+\_\+\+Y\+\_\+\+S\+T\+A\+RT}~266
+\item 
+\#define {\bfseries P\+A\+U\+S\+E\+\_\+\+M\+E\+S\+S\+A\+G\+E\+\_\+X}~300
+\item 
+\#define {\bfseries P\+A\+U\+S\+E\+\_\+\+M\+E\+S\+S\+A\+G\+E\+\_\+Y}~264
+\item 
+\#define {\bfseries U\+N\+D\+E\+R\+S\+C\+O\+R\+E\+\_\+\+G\+AP}~67
+\item 
+\#define {\bfseries H\+I\+G\+H\+S\+C\+O\+R\+E\+\_\+\+N\+A\+M\+E\+\_\+X}~120
+\item 
+\#define {\bfseries H\+I\+G\+H\+S\+C\+O\+R\+E\+\_\+\+N\+A\+M\+E\+\_\+Y}~57
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \hyperlink{group__game_gaa3df7fce134ae5843a2bd6cdcd5796d0}{gamestate\+\_\+t} \hyperlink{group__game_ga33d4db650f69082296cc8c864c785e15}{gamestate}
+\begin{DoxyCompactList}\small\item\em Possible game states. \end{DoxyCompactList}\item 
+typedef enum \hyperlink{group__game_gab8e853703f9cb99b52ba53bcf16b5c4a}{scorenamestate\+\_\+t} \hyperlink{group__game_ga74f568c551e9db616e8fae5ed65be48d}{scorenamestate}
+\begin{DoxyCompactList}\small\item\em Possible game session\textquotesingle{}s name receiving states. \end{DoxyCompactList}\item 
+typedef enum \hyperlink{group__game_ga9984788ca86b30e008e68a755caeb998}{gamedrawstate\+\_\+t} \hyperlink{group__game_gab1e4078b5fa77cbf79de5e160f4cb261}{gamedrawstate}
+\begin{DoxyCompactList}\small\item\em Possible game drawing states. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__game_gaa3df7fce134ae5843a2bd6cdcd5796d0}{}\label{group__game_gaa3df7fce134ae5843a2bd6cdcd5796d0} 
+enum \hyperlink{group__game_gaa3df7fce134ae5843a2bd6cdcd5796d0}{gamestate\+\_\+t} \{ {\bfseries G\+A\+M\+E\+\_\+\+R\+U\+N\+N\+I\+NG}, 
+{\bfseries G\+A\+M\+E\+\_\+\+P\+A\+U\+S\+ED}, 
+{\bfseries G\+A\+M\+E\+\_\+\+S\+C\+O\+RE}, 
+{\bfseries G\+A\+M\+E\+\_\+\+O\+V\+ER}
+ \}\begin{DoxyCompactList}\small\item\em Possible game states. \end{DoxyCompactList}
+\item 
+\hypertarget{group__game_gab8e853703f9cb99b52ba53bcf16b5c4a}{}\label{group__game_gab8e853703f9cb99b52ba53bcf16b5c4a} 
+enum \hyperlink{group__game_gab8e853703f9cb99b52ba53bcf16b5c4a}{scorenamestate\+\_\+t} \{ \newline
+{\bfseries F\+I\+R\+S\+T\+\_\+\+L\+E\+T\+T\+ER}, 
+{\bfseries S\+E\+C\+O\+N\+D\+\_\+\+L\+E\+T\+T\+ER}, 
+{\bfseries T\+H\+I\+R\+D\+\_\+\+L\+E\+T\+T\+ER}, 
+{\bfseries F\+O\+U\+R\+T\+H\+\_\+\+L\+E\+T\+T\+ER}, 
+\newline
+{\bfseries N\+A\+M\+E\+\_\+\+R\+E\+C\+E\+I\+V\+ED}
+ \}\begin{DoxyCompactList}\small\item\em Possible game session\textquotesingle{}s name receiving states. \end{DoxyCompactList}
+\item 
+\hypertarget{group__game_ga9984788ca86b30e008e68a755caeb998}{}\label{group__game_ga9984788ca86b30e008e68a755caeb998} 
+enum \hyperlink{group__game_ga9984788ca86b30e008e68a755caeb998}{gamedrawstate\+\_\+t} \{ {\bfseries D\+O\+N\+T\+D\+R\+AW}, 
+{\bfseries D\+R\+AW}
+ \}\begin{DoxyCompactList}\small\item\em Possible game drawing states. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_game}{Game} $\ast$ \hyperlink{group__game_gaabb10419dbd089ed1f572a817bea10ee}{create\+\_\+game} ()
+\begin{DoxyCompactList}\small\item\em Creates a new game session. \end{DoxyCompactList}\item 
+int \hyperlink{group__game_ga419536b6c803dd698c45680932477690}{determine\+\_\+index} (int bullet\+\_\+x)
+\begin{DoxyCompactList}\small\item\em Calculates the index of the obstacle to test collision with (used for bullet-\/obstacle collisions) \end{DoxyCompactList}\item 
+void \hyperlink{group__game_gaf0f9fdea8b3749557a89193e12153e1e}{update\+\_\+game\+\_\+running} (\hyperlink{struct_game}{Game} $\ast$game)
+\begin{DoxyCompactList}\small\item\em Updates a game session that hasn\textquotesingle{}t finished yet. \end{DoxyCompactList}\item 
+void \hyperlink{group__game_gaae19b3df5cdf51786306772dc362cc78}{game\+\_\+score\+\_\+event\+\_\+handler} (\hyperlink{struct_game}{Game} $\ast$game, char current\+\_\+key)
+\begin{DoxyCompactList}\small\item\em Updates the current session\textquotesingle{}s name letter receiving state machine according to latest key received from user input. \end{DoxyCompactList}\item 
+void \hyperlink{group__game_ga7fb225326dc8e9874c6ae3ac8b92e590}{update\+\_\+game\+\_\+score} (\hyperlink{struct_game}{Game} $\ast$game)
+\begin{DoxyCompactList}\small\item\em Updates a game session that has finished (and therefore is on the final score screen) \end{DoxyCompactList}\item 
+void \hyperlink{group__game_ga6d509d99fcf7deead2ccb896bfce5b78}{detect\+\_\+game\+\_\+end} (\hyperlink{struct_game}{Game} $\ast$game)
+\begin{DoxyCompactList}\small\item\em Checks if a game has ended (if player got pushed off-\/screen by an obstacle). Updates the attribute gamestate if necessary. \end{DoxyCompactList}\item 
+void \hyperlink{group__game_ga60f9b07b784e68d3c43cc63c54847e92}{update\+\_\+draw\+\_\+state} (\hyperlink{struct_game}{Game} $\ast$game)
+\begin{DoxyCompactList}\small\item\em Every time it is called it flips the game\textquotesingle{}s attribute drawstate. Options are D\+O\+N\+T\+D\+R\+AW and D\+R\+AW (guarantees 30fps game) \end{DoxyCompactList}\item 
+void \hyperlink{group__game_ga0e5a63798b2083168206005d4b9dcd83}{draw\+\_\+game} (\hyperlink{struct_game}{Game} $\ast$game)
+\begin{DoxyCompactList}\small\item\em Copies frame stored in menu\textquotesingle{}s secondary buffer to the main buffer (video\+\_\+mem) \end{DoxyCompactList}\item 
+int \hyperlink{group__game_gac31aaf764e55a4a6de1082340f7e5ed8}{add\+\_\+bullet\+\_\+shot} (\hyperlink{struct_game}{Game} $\ast$game, int x, int y)
+\begin{DoxyCompactList}\small\item\em Tries to shoot a bullet from the player\textquotesingle{}s position. \end{DoxyCompactList}\item 
+void \hyperlink{group__game_ga11217e4d270598c9ab99d632d090b942}{delete\+\_\+game} (\hyperlink{struct_game}{Game} $\ast$game)
+\begin{DoxyCompactList}\small\item\em Frees dynamically reserved memory and deletes \textquotesingle{}object\textquotesingle{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions related with processing the main game. 
+

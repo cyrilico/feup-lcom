@@ -1,0 +1,150 @@
+\hypertarget{group__bullet}{}\section{bullet}
+\label{group__bullet}\index{bullet@{bullet}}
+
+
+Functions related with processing bullets (lasers) shot by player in-\/game.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_bullet}{Bullet}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{struct_bullet}{Bullet} \char`\"{}class\char`\"{} (Not really necessary, but good for code reading purposes) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__bullet_gaaa5bfb702f940c6bae0cf67564d121fb}{}\label{group__bullet_gaaa5bfb702f940c6bae0cf67564d121fb} 
+\#define {\bfseries N\+\_\+\+B\+U\+L\+L\+E\+TS}~50
+\item 
+\hypertarget{group__bullet_ga98bca580357a061356b549e2754bcf9d}{}\label{group__bullet_ga98bca580357a061356b549e2754bcf9d} 
+\#define {\bfseries M\+A\+X\+\_\+\+B\+U\+L\+L\+E\+T\+S\+\_\+\+O\+N\+\_\+\+S\+C\+R\+E\+EN}~10
+\item 
+\hypertarget{group__bullet_gac91cd0386a836b604804b5dd09c0a65c}{}\label{group__bullet_gac91cd0386a836b604804b5dd09c0a65c} 
+\#define {\bfseries B\+U\+L\+L\+E\+T\+\_\+\+H\+E\+I\+G\+HT}~12
+\item 
+\hypertarget{group__bullet_gaa88983cdaf4f3c6d69aee4c57066c989}{}\label{group__bullet_gaa88983cdaf4f3c6d69aee4c57066c989} 
+\#define {\bfseries B\+U\+L\+L\+E\+T\+\_\+\+O\+F\+F\+S\+ET}~37
+\item 
+\hypertarget{group__bullet_ga70b3e643b533b8f785b7912e69434161}{}\label{group__bullet_ga70b3e643b533b8f785b7912e69434161} 
+\#define {\bfseries B\+U\+L\+L\+E\+T\+\_\+\+S\+P\+E\+ED}~3
+\item 
+\hypertarget{group__bullet_gab2621d8750a2ab7c4dfd98fe49ea4d1b}{}\label{group__bullet_gab2621d8750a2ab7c4dfd98fe49ea4d1b} 
+\#define {\bfseries B\+U\+L\+L\+E\+T\+\_\+\+G\+A\+I\+N\+\_\+\+F\+A\+C\+T\+OR}~1
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_bullet}{Bullet} $\ast$ \hyperlink{group__bullet_gaf45d82f5138b8d8b424513cda1236282}{create\+\_\+bullet} (\hyperlink{struct_player}{Player} $\ast$player, int x, int y)
+\begin{DoxyCompactList}\small\item\em Creates a new bullet at given position. \end{DoxyCompactList}\item 
+int \hyperlink{group__bullet_ga821005fc4046140ee784eafbe32db07a}{bullet\+\_\+obstacle\+\_\+collision} (\hyperlink{struct_bullet}{Bullet} $\ast$bullet, \hyperlink{struct_obstacle}{Obstacle} $\ast$obstacle)
+\begin{DoxyCompactList}\small\item\em Checks if there\textquotesingle{}s a collision between a certain bullet and a certain obstacle. \end{DoxyCompactList}\item 
+int \hyperlink{group__bullet_ga18a96b8efbc45b8cbc1429f3660bae57}{update\+\_\+bullet} (\hyperlink{struct_bullet}{Bullet} $\ast$bullet)
+\begin{DoxyCompactList}\small\item\em Updates a bullet\textquotesingle{}s position, checking if it goes off-\/screen in the process. \end{DoxyCompactList}\item 
+void \hyperlink{group__bullet_ga9227bafd4863d90378dbcc48ebf68b93}{draw\+\_\+bullet} (\hyperlink{struct_bullet}{Bullet} $\ast$bullet, char $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Draws a bullet at given buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__bullet_ga715ca6e4284d7f977a09c8d141737e06}{delete\+\_\+bullet} (\hyperlink{struct_bullet}{Bullet} $\ast$bullet)
+\begin{DoxyCompactList}\small\item\em Frees dynamically reserved memory and deletes bullet \textquotesingle{}object\textquotesingle{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions related with processing bullets (lasers) shot by player in-\/game. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__bullet_ga821005fc4046140ee784eafbe32db07a}{}\label{group__bullet_ga821005fc4046140ee784eafbe32db07a} 
+\index{bullet@{bullet}!bullet\+\_\+obstacle\+\_\+collision@{bullet\+\_\+obstacle\+\_\+collision}}
+\index{bullet\+\_\+obstacle\+\_\+collision@{bullet\+\_\+obstacle\+\_\+collision}!bullet@{bullet}}
+\subsubsection{\texorpdfstring{bullet\+\_\+obstacle\+\_\+collision()}{bullet\_obstacle\_collision()}}
+{\footnotesize\ttfamily int bullet\+\_\+obstacle\+\_\+collision (\begin{DoxyParamCaption}\item[{\hyperlink{struct_bullet}{Bullet} $\ast$}]{bullet,  }\item[{\hyperlink{struct_obstacle}{Obstacle} $\ast$}]{obstacle }\end{DoxyParamCaption})}
+
+
+
+Checks if there\textquotesingle{}s a collision between a certain bullet and a certain obstacle. 
+
+The function tests the top left and right pixels for the x-\/axis and the bullet\textquotesingle{}s top for the y-\/axis. If its y-\/axis position is aligned with the obstacle\textquotesingle{}s and at least one of the x-\/axis positions if aligned aswell, it means there\textquotesingle{}s a collision
+
+
+\begin{DoxyParams}{Parameters}
+{\em bullet} & \hyperlink{struct_bullet}{Bullet} \textquotesingle{}object\textquotesingle{} to be tested \\
+\hline
+{\em obstacle} & \hyperlink{struct_obstacle}{Obstacle} \textquotesingle{}object\textquotesingle{} to be tested \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if there\textquotesingle{}s a collision, 0 otherwise 
+\end{DoxyReturn}
+\hypertarget{group__bullet_gaf45d82f5138b8d8b424513cda1236282}{}\label{group__bullet_gaf45d82f5138b8d8b424513cda1236282} 
+\index{bullet@{bullet}!create\+\_\+bullet@{create\+\_\+bullet}}
+\index{create\+\_\+bullet@{create\+\_\+bullet}!bullet@{bullet}}
+\subsubsection{\texorpdfstring{create\+\_\+bullet()}{create\_bullet()}}
+{\footnotesize\ttfamily \hyperlink{struct_bullet}{Bullet}$\ast$ create\+\_\+bullet (\begin{DoxyParamCaption}\item[{\hyperlink{struct_player}{Player} $\ast$}]{player,  }\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+
+
+Creates a new bullet at given position. 
+
+The type of bullet drawn will depend on the player\textquotesingle{}s bonus\textquotesingle{} information
+
+
+\begin{DoxyParams}{Parameters}
+{\em player} & \hyperlink{struct_player}{Player} \textquotesingle{}object\textquotesingle{} to test bonus status \\
+\hline
+{\em x} & X-\/coordinate where bullet will be created \\
+\hline
+{\em y} & Y-\/coordinate where bullet will be created \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to initialized \hyperlink{struct_bullet}{Bullet} 
+\end{DoxyReturn}
+\hypertarget{group__bullet_ga715ca6e4284d7f977a09c8d141737e06}{}\label{group__bullet_ga715ca6e4284d7f977a09c8d141737e06} 
+\index{bullet@{bullet}!delete\+\_\+bullet@{delete\+\_\+bullet}}
+\index{delete\+\_\+bullet@{delete\+\_\+bullet}!bullet@{bullet}}
+\subsubsection{\texorpdfstring{delete\+\_\+bullet()}{delete\_bullet()}}
+{\footnotesize\ttfamily void delete\+\_\+bullet (\begin{DoxyParamCaption}\item[{\hyperlink{struct_bullet}{Bullet} $\ast$}]{bullet }\end{DoxyParamCaption})}
+
+
+
+Frees dynamically reserved memory and deletes bullet \textquotesingle{}object\textquotesingle{}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bullet} & \hyperlink{struct_bullet}{Bullet} \textquotesingle{}object\textquotesingle{} to be deleted \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__bullet_ga9227bafd4863d90378dbcc48ebf68b93}{}\label{group__bullet_ga9227bafd4863d90378dbcc48ebf68b93} 
+\index{bullet@{bullet}!draw\+\_\+bullet@{draw\+\_\+bullet}}
+\index{draw\+\_\+bullet@{draw\+\_\+bullet}!bullet@{bullet}}
+\subsubsection{\texorpdfstring{draw\+\_\+bullet()}{draw\_bullet()}}
+{\footnotesize\ttfamily void draw\+\_\+bullet (\begin{DoxyParamCaption}\item[{\hyperlink{struct_bullet}{Bullet} $\ast$}]{bullet,  }\item[{char $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Draws a bullet at given buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bullet} & \hyperlink{struct_bullet}{Bullet} \textquotesingle{}object\textquotesingle{} to be drawn \\
+\hline
+{\em buffer} & Buffer where the bullet will be drawn at (normally a secondary buffer) \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__bullet_ga18a96b8efbc45b8cbc1429f3660bae57}{}\label{group__bullet_ga18a96b8efbc45b8cbc1429f3660bae57} 
+\index{bullet@{bullet}!update\+\_\+bullet@{update\+\_\+bullet}}
+\index{update\+\_\+bullet@{update\+\_\+bullet}!bullet@{bullet}}
+\subsubsection{\texorpdfstring{update\+\_\+bullet()}{update\_bullet()}}
+{\footnotesize\ttfamily int update\+\_\+bullet (\begin{DoxyParamCaption}\item[{\hyperlink{struct_bullet}{Bullet} $\ast$}]{bullet }\end{DoxyParamCaption})}
+
+
+
+Updates a bullet\textquotesingle{}s position, checking if it goes off-\/screen in the process. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bullet} & \hyperlink{struct_bullet}{Bullet} \textquotesingle{}object\textquotesingle{} to be updated and tested \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if bullet\textquotesingle{}s new position is off-\/screen, 0 otherwise 
+\end{DoxyReturn}

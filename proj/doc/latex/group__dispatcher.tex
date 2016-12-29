@@ -1,0 +1,131 @@
+\hypertarget{group__dispatcher}{}\section{dispatcher}
+\label{group__dispatcher}\index{dispatcher@{dispatcher}}
+
+
+Functions related with the program\textquotesingle{}s state and HW interruptions handling.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_dispatcher}{Dispatcher}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{struct_dispatcher}{Dispatcher} \char`\"{}class\char`\"{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__dispatcher_gafe31418b86c6754be94c8e79cfeed813}{}\label{group__dispatcher_gafe31418b86c6754be94c8e79cfeed813} 
+typedef enum \hyperlink{group__dispatcher_ga90e75071da8646d19ce0a3cd2926af3a}{dispatcherstate\+\_\+t} \hyperlink{group__dispatcher_gafe31418b86c6754be94c8e79cfeed813}{dispatcherstate}
+\begin{DoxyCompactList}\small\item\em Possible \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s states. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__dispatcher_ga90e75071da8646d19ce0a3cd2926af3a}{}\label{group__dispatcher_ga90e75071da8646d19ce0a3cd2926af3a} 
+enum \hyperlink{group__dispatcher_ga90e75071da8646d19ce0a3cd2926af3a}{dispatcherstate\+\_\+t} \{ {\bfseries M\+A\+I\+N\+\_\+\+M\+E\+NU}, 
+{\bfseries G\+A\+ME}, 
+{\bfseries E\+X\+I\+T\+\_\+\+P\+R\+O\+G\+R\+AM}
+ \}\begin{DoxyCompactList}\small\item\em Possible \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s states. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_dispatcher}{Dispatcher} $\ast$ \hyperlink{group__dispatcher_ga806e2b40b340c9431427c77f94e859fa}{create\+\_\+dispatcher} (char $\ast$path)
+\begin{DoxyCompactList}\small\item\em Subscribes to hardware peripherals and initializes \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s members. Also initializes variable used to store the session\textquotesingle{}s path. \end{DoxyCompactList}\item 
+void \hyperlink{group__dispatcher_ga4a58ba5ba48cbbaa0aad022b75685942}{delete\+\_\+dispatcher} (\hyperlink{struct_dispatcher}{Dispatcher} $\ast$dispatcher)
+\begin{DoxyCompactList}\small\item\em Frees dynamically allocated memory by \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s members. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__dispatcher_ga5ac2060f25333e39dcf8ea5a304b310f}{get\+\_\+pwd} ()
+\begin{DoxyCompactList}\small\item\em Returns the repository\textquotesingle{}s parent directory path. \end{DoxyCompactList}\item 
+void \hyperlink{group__dispatcher_ga2f999b67515a92fc53d29324552cd141}{interrupt\+\_\+handler} (\hyperlink{struct_dispatcher}{Dispatcher} $\ast$dispatcher)
+\begin{DoxyCompactList}\small\item\em Initializes either game or menu based on dispatcher\textquotesingle{}s state. Includes driver receive loop that calls game specific functions to handle hardware interruptions, which loops until the dispatcher\textquotesingle{}s state changes. \end{DoxyCompactList}\item 
+void \hyperlink{group__dispatcher_ga3b358623605878251bcfa528381cb15e}{state\+\_\+handler} (\hyperlink{struct_dispatcher}{Dispatcher} $\ast$dispatcher, \hyperlink{struct_menu}{Menu} $\ast$menu, \hyperlink{struct_game}{Game} $\ast$game)
+\begin{DoxyCompactList}\small\item\em State handler to determine dispatcher\textquotesingle{}s next state, based on menu or game\textquotesingle{}s states. Also deletes either menu or game if the dispatcher\textquotesingle{}s state changes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions related with the program\textquotesingle{}s state and HW interruptions handling. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__dispatcher_ga806e2b40b340c9431427c77f94e859fa}{}\label{group__dispatcher_ga806e2b40b340c9431427c77f94e859fa} 
+\index{dispatcher@{dispatcher}!create\+\_\+dispatcher@{create\+\_\+dispatcher}}
+\index{create\+\_\+dispatcher@{create\+\_\+dispatcher}!dispatcher@{dispatcher}}
+\subsubsection{\texorpdfstring{create\+\_\+dispatcher()}{create\_dispatcher()}}
+{\footnotesize\ttfamily \hyperlink{struct_dispatcher}{Dispatcher}$\ast$ create\+\_\+dispatcher (\begin{DoxyParamCaption}\item[{char $\ast$}]{path }\end{DoxyParamCaption})}
+
+
+
+Subscribes to hardware peripherals and initializes \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s members. Also initializes variable used to store the session\textquotesingle{}s path. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & String that holds the session\textquotesingle{}s path -\/ value inserted by user as service run call\textquotesingle{}s argument \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to initialized \hyperlink{struct_dispatcher}{Dispatcher} 
+\end{DoxyReturn}
+\hypertarget{group__dispatcher_ga4a58ba5ba48cbbaa0aad022b75685942}{}\label{group__dispatcher_ga4a58ba5ba48cbbaa0aad022b75685942} 
+\index{dispatcher@{dispatcher}!delete\+\_\+dispatcher@{delete\+\_\+dispatcher}}
+\index{delete\+\_\+dispatcher@{delete\+\_\+dispatcher}!dispatcher@{dispatcher}}
+\subsubsection{\texorpdfstring{delete\+\_\+dispatcher()}{delete\_dispatcher()}}
+{\footnotesize\ttfamily void delete\+\_\+dispatcher (\begin{DoxyParamCaption}\item[{\hyperlink{struct_dispatcher}{Dispatcher} $\ast$}]{dispatcher }\end{DoxyParamCaption})}
+
+
+
+Frees dynamically allocated memory by \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s members. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dispatcher} & \hyperlink{struct_dispatcher}{Dispatcher} to delete \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__dispatcher_ga5ac2060f25333e39dcf8ea5a304b310f}{}\label{group__dispatcher_ga5ac2060f25333e39dcf8ea5a304b310f} 
+\index{dispatcher@{dispatcher}!get\+\_\+pwd@{get\+\_\+pwd}}
+\index{get\+\_\+pwd@{get\+\_\+pwd}!dispatcher@{dispatcher}}
+\subsubsection{\texorpdfstring{get\+\_\+pwd()}{get\_pwd()}}
+{\footnotesize\ttfamily char$\ast$ get\+\_\+pwd (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns the repository\textquotesingle{}s parent directory path. 
+
+\begin{DoxyReturn}{Returns}
+String with the repository\textquotesingle{}s parent directory path 
+\end{DoxyReturn}
+\hypertarget{group__dispatcher_ga2f999b67515a92fc53d29324552cd141}{}\label{group__dispatcher_ga2f999b67515a92fc53d29324552cd141} 
+\index{dispatcher@{dispatcher}!interrupt\+\_\+handler@{interrupt\+\_\+handler}}
+\index{interrupt\+\_\+handler@{interrupt\+\_\+handler}!dispatcher@{dispatcher}}
+\subsubsection{\texorpdfstring{interrupt\+\_\+handler()}{interrupt\_handler()}}
+{\footnotesize\ttfamily void interrupt\+\_\+handler (\begin{DoxyParamCaption}\item[{\hyperlink{struct_dispatcher}{Dispatcher} $\ast$}]{dispatcher }\end{DoxyParamCaption})}
+
+
+
+Initializes either game or menu based on dispatcher\textquotesingle{}s state. Includes driver receive loop that calls game specific functions to handle hardware interruptions, which loops until the dispatcher\textquotesingle{}s state changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{struct_dispatcher}{Dispatcher}} & whose members will be changed \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{group__dispatcher_ga3b358623605878251bcfa528381cb15e}{state\+\_\+handler} 
+\end{DoxySeeAlso}
+\hypertarget{group__dispatcher_ga3b358623605878251bcfa528381cb15e}{}\label{group__dispatcher_ga3b358623605878251bcfa528381cb15e} 
+\index{dispatcher@{dispatcher}!state\+\_\+handler@{state\+\_\+handler}}
+\index{state\+\_\+handler@{state\+\_\+handler}!dispatcher@{dispatcher}}
+\subsubsection{\texorpdfstring{state\+\_\+handler()}{state\_handler()}}
+{\footnotesize\ttfamily void state\+\_\+handler (\begin{DoxyParamCaption}\item[{\hyperlink{struct_dispatcher}{Dispatcher} $\ast$}]{dispatcher,  }\item[{\hyperlink{struct_menu}{Menu} $\ast$}]{menu,  }\item[{\hyperlink{struct_game}{Game} $\ast$}]{game }\end{DoxyParamCaption})}
+
+
+
+State handler to determine dispatcher\textquotesingle{}s next state, based on menu or game\textquotesingle{}s states. Also deletes either menu or game if the dispatcher\textquotesingle{}s state changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dispatcher} & \hyperlink{struct_dispatcher}{Dispatcher} whose next state is being determined. \\
+\hline
+{\em menu} & \hyperlink{struct_menu}{Menu} whose state may determine the dispatcher\textquotesingle{}s next state. May be deleted \\
+\hline
+{\em game} & \hyperlink{struct_game}{Game} whose state may determine the dispatcher\textquotesingle{}s next state. May be deleted \\
+\hline
+\end{DoxyParams}

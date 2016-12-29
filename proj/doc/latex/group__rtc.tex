@@ -1,0 +1,77 @@
+\hypertarget{group__rtc}{}\section{rtc}
+\label{group__rtc}\index{rtc@{rtc}}
+
+
+Functions related with the usage of the PC\textquotesingle{}s Real Time Clock.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group__rtcmacro}{rtcmacro}
+\begin{DoxyCompactList}\small\item\em Constants for programming the i8254 Timer. Needs to be completed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned long $\ast$ \hyperlink{group__rtc_ga4ca5626e3ae7e8da1ad9183a7e6aa999}{rtc\+\_\+get} ()
+\begin{DoxyCompactList}\small\item\em Externally defined function that returns an array containing the current date or time. \end{DoxyCompactList}\item 
+int \hyperlink{group__rtc_gabd8de825e876e8ef94c64ac616f68a11}{rtc\+\_\+subscribe\+\_\+int} ()
+\begin{DoxyCompactList}\small\item\em Subscribes Real Time Clock. \end{DoxyCompactList}\item 
+int \hyperlink{group__rtc_gab8f17bf5280c908c8b199a90fefcc758}{rtc\+\_\+unsubscribe\+\_\+int} ()
+\begin{DoxyCompactList}\small\item\em Unsubscribes Real Time Clock. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__rtc_gadc2ce94d90a689e95b0f88f7209bae2b}{}\label{group__rtc_gadc2ce94d90a689e95b0f88f7209bae2b} 
+unsigned long $\ast$ \hyperlink{group__rtc_gadc2ce94d90a689e95b0f88f7209bae2b}{result\+\_\+date}
+\begin{DoxyCompactList}\small\item\em Externally declared array containing a date. \end{DoxyCompactList}\item 
+\hypertarget{group__rtc_ga3ee7a67468f7238ecea0abc3f33eb1ed}{}\label{group__rtc_ga3ee7a67468f7238ecea0abc3f33eb1ed} 
+unsigned long $\ast$ \hyperlink{group__rtc_ga3ee7a67468f7238ecea0abc3f33eb1ed}{result\+\_\+time}
+\begin{DoxyCompactList}\small\item\em Externally declared array containing a time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions related with the usage of the PC\textquotesingle{}s Real Time Clock. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__rtc_ga4ca5626e3ae7e8da1ad9183a7e6aa999}{}\label{group__rtc_ga4ca5626e3ae7e8da1ad9183a7e6aa999} 
+\index{rtc@{rtc}!rtc\+\_\+get@{rtc\+\_\+get}}
+\index{rtc\+\_\+get@{rtc\+\_\+get}!rtc@{rtc}}
+\subsubsection{\texorpdfstring{rtc\+\_\+get()}{rtc\_get()}}
+{\footnotesize\ttfamily unsigned long$\ast$ rtc\+\_\+get (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Externally defined function that returns an array containing the current date or time. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to array containing either current date or current time 
+\end{DoxyReturn}
+\hypertarget{group__rtc_gabd8de825e876e8ef94c64ac616f68a11}{}\label{group__rtc_gabd8de825e876e8ef94c64ac616f68a11} 
+\index{rtc@{rtc}!rtc\+\_\+subscribe\+\_\+int@{rtc\+\_\+subscribe\+\_\+int}}
+\index{rtc\+\_\+subscribe\+\_\+int@{rtc\+\_\+subscribe\+\_\+int}!rtc@{rtc}}
+\subsubsection{\texorpdfstring{rtc\+\_\+subscribe\+\_\+int()}{rtc\_subscribe\_int()}}
+{\footnotesize\ttfamily int rtc\+\_\+subscribe\+\_\+int (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Subscribes Real Time Clock. 
+
+\begin{DoxyReturn}{Returns}
+0 if successful, -\/1 otherwise 
+\end{DoxyReturn}
+\hypertarget{group__rtc_gab8f17bf5280c908c8b199a90fefcc758}{}\label{group__rtc_gab8f17bf5280c908c8b199a90fefcc758} 
+\index{rtc@{rtc}!rtc\+\_\+unsubscribe\+\_\+int@{rtc\+\_\+unsubscribe\+\_\+int}}
+\index{rtc\+\_\+unsubscribe\+\_\+int@{rtc\+\_\+unsubscribe\+\_\+int}!rtc@{rtc}}
+\subsubsection{\texorpdfstring{rtc\+\_\+unsubscribe\+\_\+int()}{rtc\_unsubscribe\_int()}}
+{\footnotesize\ttfamily int rtc\+\_\+unsubscribe\+\_\+int (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Unsubscribes Real Time Clock. 
+
+\begin{DoxyReturn}{Returns}
+0 if successful, -\/1 otherwise 
+\end{DoxyReturn}

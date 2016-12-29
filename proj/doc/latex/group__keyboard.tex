@@ -1,0 +1,195 @@
+\hypertarget{group__keyboard}{}\section{keyboard}
+\label{group__keyboard}\index{keyboard@{keyboard}}
+
+
+Functions related with processing the i8042\textquotesingle{}s keyboard.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_keyboard}{Keyboard}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{struct_keyboard}{Keyboard} \char`\"{}class\char`\"{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__keyboard_ga0b76c3eaf709ef57eecc834107a6d8cb}{}\label{group__keyboard_ga0b76c3eaf709ef57eecc834107a6d8cb} 
+typedef enum \hyperlink{group__keyboard_gac25cb6c9d28679aed197b02d5885fcc2}{scancodestate\+\_\+t} \hyperlink{group__keyboard_ga0b76c3eaf709ef57eecc834107a6d8cb}{scancodestate}
+\begin{DoxyCompactList}\small\item\em Possible scancode receiving states (there are scancodes with more than one byte) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__keyboard_gac25cb6c9d28679aed197b02d5885fcc2}{}\label{group__keyboard_gac25cb6c9d28679aed197b02d5885fcc2} 
+enum \hyperlink{group__keyboard_gac25cb6c9d28679aed197b02d5885fcc2}{scancodestate\+\_\+t} \{ {\bfseries R\+E\+A\+D\+\_\+\+A\+G\+A\+IN}, 
+{\bfseries F\+U\+L\+L\+Y\+\_\+\+R\+E\+AD}
+ \}\begin{DoxyCompactList}\small\item\em Possible scancode receiving states (there are scancodes with more than one byte) \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{group__keyboard_ga77e2ed8f53e0fae3f4005fa26c6d2692}{kbd\+\_\+subscribe\+\_\+int} ()
+\begin{DoxyCompactList}\small\item\em Subscribes the i8042\textquotesingle{}s keyboard and enables its interrupts. \end{DoxyCompactList}\item 
+int \hyperlink{group__keyboard_ga5bdf6cfb570c375192b0d87913b65c57}{kbd\+\_\+unsubscribe\+\_\+int} ()
+\begin{DoxyCompactList}\small\item\em Unsubscribes the i8042\textquotesingle{}s keyboard\textquotesingle{}s interrupts. \end{DoxyCompactList}\item 
+char \hyperlink{group__keyboard_ga837f1700d58c441769ddcfdae9792f13}{scancode\+\_\+to\+\_\+letter} (unsigned long code)
+\begin{DoxyCompactList}\small\item\em Transforms breakcodes into the respective letter. \end{DoxyCompactList}\item 
+\hyperlink{struct_keyboard}{Keyboard} $\ast$ \hyperlink{group__keyboard_ga12648eff06090040743ce7b51875afec}{create\+\_\+keyboard} ()
+\begin{DoxyCompactList}\small\item\em Creates a new keyboard \textquotesingle{}object\textquotesingle{}. \end{DoxyCompactList}\item 
+void \hyperlink{group__keyboard_ga97b5d5bf543266e60da0cc33c00aefad}{read\+\_\+scancode} (\hyperlink{struct_keyboard}{Keyboard} $\ast$keyboard)
+\begin{DoxyCompactList}\small\item\em Reads a scancode (or part of it) from O\+U\+T\+\_\+\+B\+UF. Sets F\+U\+L\+L\+Y\+\_\+\+R\+E\+AD flag if full scancode is read. \end{DoxyCompactList}\item 
+unsigned long \hyperlink{group__keyboard_ga4f6e388e1ad885350358a234aeed5be7}{read\+\_\+scancode\+\_\+asm} ()
+\begin{DoxyCompactList}\small\item\em Externally defined -\/ read\+\_\+scancode\+\_\+asm. Reads a scancode (or part of it) from O\+U\+T\+\_\+\+B\+UF. Sets F\+U\+L\+L\+Y\+\_\+\+R\+E\+AD flag if full scancode is read. \end{DoxyCompactList}\item 
+int \hyperlink{group__keyboard_gacd892a0b56fcd859cc2ed0bc17e32d7f}{full\+\_\+scancode\+\_\+received} (\hyperlink{struct_keyboard}{Keyboard} $\ast$keyboard)
+\begin{DoxyCompactList}\small\item\em Checks if a full scancode has been read (through attribute codestatus) \end{DoxyCompactList}\item 
+int \hyperlink{group__keyboard_gaa472854b178776886c9bf568945db9c6}{key\+\_\+detected} (\hyperlink{struct_keyboard}{Keyboard} $\ast$keyboard, unsigned long key)
+\begin{DoxyCompactList}\small\item\em Checks if a given key has been pressed (or released, in case it\textquotesingle{}s a break code) \end{DoxyCompactList}\item 
+void \hyperlink{group__keyboard_ga8cbe117a33793a5f88056d37164af0a8}{delete\+\_\+keyboard} (\hyperlink{struct_keyboard}{Keyboard} $\ast$keyboard)
+\begin{DoxyCompactList}\small\item\em Frees dynamically reserved memory and deletes keyboard \textquotesingle{}object\textquotesingle{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions related with processing the i8042\textquotesingle{}s keyboard. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__keyboard_ga12648eff06090040743ce7b51875afec}{}\label{group__keyboard_ga12648eff06090040743ce7b51875afec} 
+\index{keyboard@{keyboard}!create\+\_\+keyboard@{create\+\_\+keyboard}}
+\index{create\+\_\+keyboard@{create\+\_\+keyboard}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{create\+\_\+keyboard()}{create\_keyboard()}}
+{\footnotesize\ttfamily \hyperlink{struct_keyboard}{Keyboard}$\ast$ create\+\_\+keyboard (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Creates a new keyboard \textquotesingle{}object\textquotesingle{}. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to initialized \hyperlink{struct_keyboard}{Keyboard} 
+\end{DoxyReturn}
+\hypertarget{group__keyboard_ga8cbe117a33793a5f88056d37164af0a8}{}\label{group__keyboard_ga8cbe117a33793a5f88056d37164af0a8} 
+\index{keyboard@{keyboard}!delete\+\_\+keyboard@{delete\+\_\+keyboard}}
+\index{delete\+\_\+keyboard@{delete\+\_\+keyboard}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{delete\+\_\+keyboard()}{delete\_keyboard()}}
+{\footnotesize\ttfamily void delete\+\_\+keyboard (\begin{DoxyParamCaption}\item[{\hyperlink{struct_keyboard}{Keyboard} $\ast$}]{keyboard }\end{DoxyParamCaption})}
+
+
+
+Frees dynamically reserved memory and deletes keyboard \textquotesingle{}object\textquotesingle{}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em keyboard} & \hyperlink{struct_keyboard}{Keyboard} \textquotesingle{}object\textquotesingle{} to be deleted \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__keyboard_gacd892a0b56fcd859cc2ed0bc17e32d7f}{}\label{group__keyboard_gacd892a0b56fcd859cc2ed0bc17e32d7f} 
+\index{keyboard@{keyboard}!full\+\_\+scancode\+\_\+received@{full\+\_\+scancode\+\_\+received}}
+\index{full\+\_\+scancode\+\_\+received@{full\+\_\+scancode\+\_\+received}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{full\+\_\+scancode\+\_\+received()}{full\_scancode\_received()}}
+{\footnotesize\ttfamily int full\+\_\+scancode\+\_\+received (\begin{DoxyParamCaption}\item[{\hyperlink{struct_keyboard}{Keyboard} $\ast$}]{keyboard }\end{DoxyParamCaption})}
+
+
+
+Checks if a full scancode has been read (through attribute codestatus) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em keyboard} & \hyperlink{struct_keyboard}{Keyboard} \textquotesingle{}object\textquotesingle{} to be tested \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if keyboard\textquotesingle{}s codestatus == R\+E\+C\+E\+I\+V\+ED, 0 otherwise 
+\end{DoxyReturn}
+\hypertarget{group__keyboard_ga77e2ed8f53e0fae3f4005fa26c6d2692}{}\label{group__keyboard_ga77e2ed8f53e0fae3f4005fa26c6d2692} 
+\index{keyboard@{keyboard}!kbd\+\_\+subscribe\+\_\+int@{kbd\+\_\+subscribe\+\_\+int}}
+\index{kbd\+\_\+subscribe\+\_\+int@{kbd\+\_\+subscribe\+\_\+int}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{kbd\+\_\+subscribe\+\_\+int()}{kbd\_subscribe\_int()}}
+{\footnotesize\ttfamily int kbd\+\_\+subscribe\+\_\+int (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Subscribes the i8042\textquotesingle{}s keyboard and enables its interrupts. 
+
+\begin{DoxyReturn}{Returns}
+Bitmask whose set bit number corresponds to the keyboard\textquotesingle{}s hook\+ID if successful, -\/1 otherwise 
+\end{DoxyReturn}
+\hypertarget{group__keyboard_ga5bdf6cfb570c375192b0d87913b65c57}{}\label{group__keyboard_ga5bdf6cfb570c375192b0d87913b65c57} 
+\index{keyboard@{keyboard}!kbd\+\_\+unsubscribe\+\_\+int@{kbd\+\_\+unsubscribe\+\_\+int}}
+\index{kbd\+\_\+unsubscribe\+\_\+int@{kbd\+\_\+unsubscribe\+\_\+int}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{kbd\+\_\+unsubscribe\+\_\+int()}{kbd\_unsubscribe\_int()}}
+{\footnotesize\ttfamily int kbd\+\_\+unsubscribe\+\_\+int (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Unsubscribes the i8042\textquotesingle{}s keyboard\textquotesingle{}s interrupts. 
+
+\begin{DoxyReturn}{Returns}
+0 if successful, -\/1 otherwise 
+\end{DoxyReturn}
+\hypertarget{group__keyboard_gaa472854b178776886c9bf568945db9c6}{}\label{group__keyboard_gaa472854b178776886c9bf568945db9c6} 
+\index{keyboard@{keyboard}!key\+\_\+detected@{key\+\_\+detected}}
+\index{key\+\_\+detected@{key\+\_\+detected}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{key\+\_\+detected()}{key\_detected()}}
+{\footnotesize\ttfamily int key\+\_\+detected (\begin{DoxyParamCaption}\item[{\hyperlink{struct_keyboard}{Keyboard} $\ast$}]{keyboard,  }\item[{unsigned long}]{key }\end{DoxyParamCaption})}
+
+
+
+Checks if a given key has been pressed (or released, in case it\textquotesingle{}s a break code) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em keyboard} & \hyperlink{struct_keyboard}{Keyboard} \textquotesingle{}object\textquotesingle{} to be tested \\
+\hline
+{\em key} & Key to be tested \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if key was indeed detected (is stored in keyboard and its codestatus is R\+E\+C\+E\+I\+V\+ED), 0 otherwise 
+\end{DoxyReturn}
+\hypertarget{group__keyboard_ga97b5d5bf543266e60da0cc33c00aefad}{}\label{group__keyboard_ga97b5d5bf543266e60da0cc33c00aefad} 
+\index{keyboard@{keyboard}!read\+\_\+scancode@{read\+\_\+scancode}}
+\index{read\+\_\+scancode@{read\+\_\+scancode}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{read\+\_\+scancode()}{read\_scancode()}}
+{\footnotesize\ttfamily void read\+\_\+scancode (\begin{DoxyParamCaption}\item[{\hyperlink{struct_keyboard}{Keyboard} $\ast$}]{keyboard }\end{DoxyParamCaption})}
+
+
+
+Reads a scancode (or part of it) from O\+U\+T\+\_\+\+B\+UF. Sets F\+U\+L\+L\+Y\+\_\+\+R\+E\+AD flag if full scancode is read. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em keyboard} & \hyperlink{struct_keyboard}{Keyboard} \textquotesingle{}object\textquotesingle{} where the scancode will be read to \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__keyboard_ga4f6e388e1ad885350358a234aeed5be7}{}\label{group__keyboard_ga4f6e388e1ad885350358a234aeed5be7} 
+\index{keyboard@{keyboard}!read\+\_\+scancode\+\_\+asm@{read\+\_\+scancode\+\_\+asm}}
+\index{read\+\_\+scancode\+\_\+asm@{read\+\_\+scancode\+\_\+asm}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{read\+\_\+scancode\+\_\+asm()}{read\_scancode\_asm()}}
+{\footnotesize\ttfamily unsigned long read\+\_\+scancode\+\_\+asm (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Externally defined -\/ read\+\_\+scancode\+\_\+asm. Reads a scancode (or part of it) from O\+U\+T\+\_\+\+B\+UF. Sets F\+U\+L\+L\+Y\+\_\+\+R\+E\+AD flag if full scancode is read. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em keyboard} & \hyperlink{struct_keyboard}{Keyboard} \textquotesingle{}object\textquotesingle{} where the scancode will be read to \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__keyboard_ga837f1700d58c441769ddcfdae9792f13}{}\label{group__keyboard_ga837f1700d58c441769ddcfdae9792f13} 
+\index{keyboard@{keyboard}!scancode\+\_\+to\+\_\+letter@{scancode\+\_\+to\+\_\+letter}}
+\index{scancode\+\_\+to\+\_\+letter@{scancode\+\_\+to\+\_\+letter}!keyboard@{keyboard}}
+\subsubsection{\texorpdfstring{scancode\+\_\+to\+\_\+letter()}{scancode\_to\_letter()}}
+{\footnotesize\ttfamily char scancode\+\_\+to\+\_\+letter (\begin{DoxyParamCaption}\item[{unsigned long}]{code }\end{DoxyParamCaption})}
+
+
+
+Transforms breakcodes into the respective letter. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em code} & Breakcode received to be transformed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+char corresponding to the breakcode received in case of letter breakcode, N\+U\+LL character (0) otherwise 
+\end{DoxyReturn}

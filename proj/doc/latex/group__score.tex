@@ -1,0 +1,204 @@
+\hypertarget{group__score}{}\section{score}
+\label{group__score}\index{score@{score}}
+
+
+Functions related with game score handling.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_score}{Score}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{struct_score}{Score} \char`\"{}class\char`\"{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_score}{Score} $\ast$ \hyperlink{group__score_gac0781ace02ea3b0c0326eedcbe331017}{create\+\_\+score} (unsigned int new\+\_\+points\+\_\+minutes, unsigned int new\+\_\+points\+\_\+seconds, unsigned long $\ast$new\+\_\+time, unsigned long $\ast$new\+\_\+date, char $\ast$new\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Creates a new score from a recently finished game. \end{DoxyCompactList}\item 
+void \hyperlink{group__score_gae35db4ff67df11b097733c7d9dd5a40f}{set\+\_\+score\+\_\+name} (\hyperlink{struct_score}{Score} $\ast$score, char $\ast$new\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Sets a score\textquotesingle{}s session name. \end{DoxyCompactList}\item 
+void \hyperlink{group__score_ga00d69b4d67f70acd50560939535f2464}{draw\+\_\+score} (\hyperlink{struct_score}{Score} $\ast$score, int x, int y, char $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Draws a score on given coordinates, at given buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__score_ga2a08c01d91777c5e1166d04419dbb4c4}{draw\+\_\+scores} (\hyperlink{struct_score}{Score} $\ast$$\ast$scores, int x, int y, char $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Draws an array of (high)scores on given coordinates, at given buffer. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{group__score_ga7db0bd0fa660d164c6f16dcc3e45d709}{get\+\_\+scores\+\_\+file} ()
+\begin{DoxyCompactList}\small\item\em Provides absolute path of highscores text file (file must be in proj/src) \end{DoxyCompactList}\item 
+void \hyperlink{group__score_gafda13bf491b8895de5356e2e8e9e0006}{write\+\_\+score\+\_\+to\+\_\+file} (\hyperlink{struct_score}{Score} $\ast$score)
+\begin{DoxyCompactList}\small\item\em Writes a score to the highscores text file (appended to existing ones) \end{DoxyCompactList}\item 
+\hyperlink{struct_score}{Score} $\ast$$\ast$ \hyperlink{group__score_ga24850c38550bc5c6d3df0df15306a583}{read\+\_\+scores\+\_\+from\+\_\+file} ()
+\begin{DoxyCompactList}\small\item\em Reads current scores saved in highscores text file. \end{DoxyCompactList}\item 
+int \hyperlink{group__score_ga987e3955c36619ffa125c50620c85000}{comp\+\_\+score} (const void $\ast$s1, const void $\ast$s2)
+\begin{DoxyCompactList}\small\item\em Compares two scores by their total score in seconds (used in qsort to sort highscores array) \end{DoxyCompactList}\item 
+void \hyperlink{group__score_ga579c3c56eea0c910d596054bb9802d8c}{delete\+\_\+score} (\hyperlink{struct_score}{Score} $\ast$score)
+\begin{DoxyCompactList}\small\item\em Frees memory dynamically reserved for a score. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions related with game score handling. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group__score_ga987e3955c36619ffa125c50620c85000}{}\label{group__score_ga987e3955c36619ffa125c50620c85000} 
+\index{score@{score}!comp\+\_\+score@{comp\+\_\+score}}
+\index{comp\+\_\+score@{comp\+\_\+score}!score@{score}}
+\subsubsection{\texorpdfstring{comp\+\_\+score()}{comp\_score()}}
+{\footnotesize\ttfamily int comp\+\_\+score (\begin{DoxyParamCaption}\item[{const void $\ast$}]{s1,  }\item[{const void $\ast$}]{s2 }\end{DoxyParamCaption})}
+
+
+
+Compares two scores by their total score in seconds (used in qsort to sort highscores array) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s1} & First of two scores to be compared \\
+\hline
+{\em s2} & Second of two scores to be compared \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+-\/1 if s1\textquotesingle{}s total score is lower than s2\textquotesingle{}s total score, 1 if it\textquotesingle{}s bigger, 0 if equal 
+\end{DoxyReturn}
+\hypertarget{group__score_gac0781ace02ea3b0c0326eedcbe331017}{}\label{group__score_gac0781ace02ea3b0c0326eedcbe331017} 
+\index{score@{score}!create\+\_\+score@{create\+\_\+score}}
+\index{create\+\_\+score@{create\+\_\+score}!score@{score}}
+\subsubsection{\texorpdfstring{create\+\_\+score()}{create\_score()}}
+{\footnotesize\ttfamily \hyperlink{struct_score}{Score}$\ast$ create\+\_\+score (\begin{DoxyParamCaption}\item[{unsigned int}]{new\+\_\+points\+\_\+minutes,  }\item[{unsigned int}]{new\+\_\+points\+\_\+seconds,  }\item[{unsigned long $\ast$}]{new\+\_\+time,  }\item[{unsigned long $\ast$}]{new\+\_\+date,  }\item[{char $\ast$}]{new\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Creates a new score from a recently finished game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+points\+\_\+minutes} & The new score\textquotesingle{}s minutes value \\
+\hline
+{\em new\+\_\+points\+\_\+seconds} & The new score\textquotesingle{}s seconds value \\
+\hline
+{\em new\+\_\+time} & Pointer to array that contains time when the score was obtained \\
+\hline
+{\em new\+\_\+date} & Pointer to array that contains date when the score was obtained \\
+\hline
+{\em new\+\_\+name} & String that holds name of the session when the score was obtained \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to newly created score 
+\end{DoxyReturn}
+\hypertarget{group__score_ga579c3c56eea0c910d596054bb9802d8c}{}\label{group__score_ga579c3c56eea0c910d596054bb9802d8c} 
+\index{score@{score}!delete\+\_\+score@{delete\+\_\+score}}
+\index{delete\+\_\+score@{delete\+\_\+score}!score@{score}}
+\subsubsection{\texorpdfstring{delete\+\_\+score()}{delete\_score()}}
+{\footnotesize\ttfamily void delete\+\_\+score (\begin{DoxyParamCaption}\item[{\hyperlink{struct_score}{Score} $\ast$}]{score }\end{DoxyParamCaption})}
+
+
+
+Frees memory dynamically reserved for a score. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em score} & \hyperlink{struct_score}{Score} \textquotesingle{}object\textquotesingle{} to be deleted \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__score_ga00d69b4d67f70acd50560939535f2464}{}\label{group__score_ga00d69b4d67f70acd50560939535f2464} 
+\index{score@{score}!draw\+\_\+score@{draw\+\_\+score}}
+\index{draw\+\_\+score@{draw\+\_\+score}!score@{score}}
+\subsubsection{\texorpdfstring{draw\+\_\+score()}{draw\_score()}}
+{\footnotesize\ttfamily void draw\+\_\+score (\begin{DoxyParamCaption}\item[{\hyperlink{struct_score}{Score} $\ast$}]{score,  }\item[{int}]{x,  }\item[{int}]{y,  }\item[{char $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Draws a score on given coordinates, at given buffer. 
+
+Function takes coordinates of top left corner of score\textquotesingle{}s session name\textquotesingle{}s first letter, as the positions of the remaining characters is automatically calculated
+
+
+\begin{DoxyParams}{Parameters}
+{\em score} & \hyperlink{struct_score}{Score} to be drawn \\
+\hline
+{\em x} & x-\/coordinate of top left corner of first letter of score\textquotesingle{}s session name \\
+\hline
+{\em y} & y-\/coordinate of top left corner of first letter of score\textquotesingle{}s session name \\
+\hline
+{\em buffer} & buffer where the score will be drawn (normally a secondary buffer) \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__score_ga2a08c01d91777c5e1166d04419dbb4c4}{}\label{group__score_ga2a08c01d91777c5e1166d04419dbb4c4} 
+\index{score@{score}!draw\+\_\+scores@{draw\+\_\+scores}}
+\index{draw\+\_\+scores@{draw\+\_\+scores}!score@{score}}
+\subsubsection{\texorpdfstring{draw\+\_\+scores()}{draw\_scores()}}
+{\footnotesize\ttfamily void draw\+\_\+scores (\begin{DoxyParamCaption}\item[{\hyperlink{struct_score}{Score} $\ast$$\ast$}]{scores,  }\item[{int}]{x,  }\item[{int}]{y,  }\item[{char $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Draws an array of (high)scores on given coordinates, at given buffer. 
+
+Function takes coordinates of top left corner of first score\textquotesingle{}s session name\textquotesingle{}s first letter, as the positions of the remaining characters (in the same score) and the next scores are automatically calculated
+
+
+\begin{DoxyParams}{Parameters}
+{\em scores} & Pointer to array of \hyperlink{struct_score}{Score} \textquotesingle{}objects\textquotesingle{} to be drawn \\
+\hline
+{\em x} & x-\/coordinate of top left corner of first letter of first score\textquotesingle{}s session name \\
+\hline
+{\em y} & y-\/coordinate of top left corner of first letter of first score\textquotesingle{}s session name \\
+\hline
+{\em buffer} & buffer where the score will be drawn (normally a secondary buffer) \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__score_ga7db0bd0fa660d164c6f16dcc3e45d709}{}\label{group__score_ga7db0bd0fa660d164c6f16dcc3e45d709} 
+\index{score@{score}!get\+\_\+scores\+\_\+file@{get\+\_\+scores\+\_\+file}}
+\index{get\+\_\+scores\+\_\+file@{get\+\_\+scores\+\_\+file}!score@{score}}
+\subsubsection{\texorpdfstring{get\+\_\+scores\+\_\+file()}{get\_scores\_file()}}
+{\footnotesize\ttfamily const char$\ast$ get\+\_\+scores\+\_\+file (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Provides absolute path of highscores text file (file must be in proj/src) 
+
+\begin{DoxyReturn}{Returns}
+absolute path of \char`\"{}highscores.\+txt\char`\"{} 
+\end{DoxyReturn}
+\hypertarget{group__score_ga24850c38550bc5c6d3df0df15306a583}{}\label{group__score_ga24850c38550bc5c6d3df0df15306a583} 
+\index{score@{score}!read\+\_\+scores\+\_\+from\+\_\+file@{read\+\_\+scores\+\_\+from\+\_\+file}}
+\index{read\+\_\+scores\+\_\+from\+\_\+file@{read\+\_\+scores\+\_\+from\+\_\+file}!score@{score}}
+\subsubsection{\texorpdfstring{read\+\_\+scores\+\_\+from\+\_\+file()}{read\_scores\_from\_file()}}
+{\footnotesize\ttfamily \hyperlink{struct_score}{Score}$\ast$$\ast$ read\+\_\+scores\+\_\+from\+\_\+file (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Reads current scores saved in highscores text file. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to array of scores read 
+\end{DoxyReturn}
+\hypertarget{group__score_gae35db4ff67df11b097733c7d9dd5a40f}{}\label{group__score_gae35db4ff67df11b097733c7d9dd5a40f} 
+\index{score@{score}!set\+\_\+score\+\_\+name@{set\+\_\+score\+\_\+name}}
+\index{set\+\_\+score\+\_\+name@{set\+\_\+score\+\_\+name}!score@{score}}
+\subsubsection{\texorpdfstring{set\+\_\+score\+\_\+name()}{set\_score\_name()}}
+{\footnotesize\ttfamily void set\+\_\+score\+\_\+name (\begin{DoxyParamCaption}\item[{\hyperlink{struct_score}{Score} $\ast$}]{score,  }\item[{char $\ast$}]{new\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Sets a score\textquotesingle{}s session name. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+name} & name of the session \\
+\hline
+\end{DoxyParams}
+\hypertarget{group__score_gafda13bf491b8895de5356e2e8e9e0006}{}\label{group__score_gafda13bf491b8895de5356e2e8e9e0006} 
+\index{score@{score}!write\+\_\+score\+\_\+to\+\_\+file@{write\+\_\+score\+\_\+to\+\_\+file}}
+\index{write\+\_\+score\+\_\+to\+\_\+file@{write\+\_\+score\+\_\+to\+\_\+file}!score@{score}}
+\subsubsection{\texorpdfstring{write\+\_\+score\+\_\+to\+\_\+file()}{write\_score\_to\_file()}}
+{\footnotesize\ttfamily void write\+\_\+score\+\_\+to\+\_\+file (\begin{DoxyParamCaption}\item[{\hyperlink{struct_score}{Score} $\ast$}]{score }\end{DoxyParamCaption})}
+
+
+
+Writes a score to the highscores text file (appended to existing ones) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em score} & \hyperlink{struct_score}{Score} to be saved in text file \\
+\hline
+\end{DoxyParams}
