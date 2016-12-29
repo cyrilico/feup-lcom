@@ -67,6 +67,13 @@ Keyboard* create_keyboard();
 void read_scancode(Keyboard* keyboard);
 
 /**
+ * @brief Externally defined - read_scancode_asm. Reads a scancode (or part of it) from OUT_BUF. Sets FULLY_READ flag if full scancode is read
+ *
+ * @param keyboard Keyboard 'object' where the scancode will be read to
+ */
+extern unsigned long read_scancode_asm();
+
+/**
  * @brief Checks if a full scancode has been read (through attribute codestatus)
  *
  * @param keyboard Keyboard 'object' to be tested
