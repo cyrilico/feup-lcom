@@ -1,6 +1,7 @@
 #pragma once
 
 /** @defgroup i8042 i8042
+ * @ingroup controller_macros
  * @brief Constants for programming the i8042 controller. Needs to be completed.
  * @{
  *
