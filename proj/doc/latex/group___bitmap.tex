@@ -1,0 +1,102 @@
+\hypertarget{group___bitmap}{}\section{Bitmap}
+\label{group___bitmap}\index{Bitmap@{Bitmap}}
+
+
+Functions for manipulating bitmaps. All credits go to Henrique Ferrolho, the original author of the code. Changes made\+:  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_bitmap_file_header}{Bitmap\+File\+Header}
+\item 
+struct \hyperlink{struct_bitmap_info_header}{Bitmap\+Info\+Header}
+\item 
+struct \hyperlink{struct_bitmap}{Bitmap}
+\begin{DoxyCompactList}\small\item\em Represents a \hyperlink{struct_bitmap}{Bitmap}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group___bitmap_gacdfaca60ec19c0265bac2692d7982726}{}\label{group___bitmap_gacdfaca60ec19c0265bac2692d7982726} 
+enum {\bfseries Alignment} \{ {\bfseries A\+L\+I\+G\+N\+\_\+\+L\+E\+FT}, 
+{\bfseries A\+L\+I\+G\+N\+\_\+\+C\+E\+N\+T\+ER}, 
+{\bfseries A\+L\+I\+G\+N\+\_\+\+R\+I\+G\+HT}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_bitmap}{Bitmap} $\ast$ \hyperlink{group___bitmap_gad47a5ba782d17f94ad9f08956d61660a}{load\+Bitmap} (const char $\ast$filename, int x, int y)
+\begin{DoxyCompactList}\small\item\em Loads a bmp image. \end{DoxyCompactList}\item 
+void \hyperlink{group___bitmap_gaff908de4d166dac85027695204508ff4}{draw\+Bitmap} (\hyperlink{struct_bitmap}{Bitmap} $\ast$bitmap, char $\ast$buffer, Alignment alignment)
+\begin{DoxyCompactList}\small\item\em Draws an unscaled, unrotated bitmap at the given position. \end{DoxyCompactList}\item 
+void \hyperlink{group___bitmap_ga08c1d4f4fff81df260d979ea8fc1aa61}{delete\+Bitmap} (\hyperlink{struct_bitmap}{Bitmap} $\ast$bmp)
+\begin{DoxyCompactList}\small\item\em Destroys the given bitmap, freeing all resources used by it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions for manipulating bitmaps. All credits go to Henrique Ferrolho, the original author of the code. Changes made\+: 
+
+
+\begin{DoxyItemize}
+\item Added the information about the bitmap\textquotesingle{}s coordinates on the screen to the structure
+\item draw\+Bitmap function receives the destination buffer as an argument (was sending to video\+\_\+mem as default)
+\end{DoxyItemize}
+
+Taken from \href{http://difusal.blogspot.pt/2014/09/minixtutorial-8-loading-bmp-images.html}{\tt http\+://difusal.\+blogspot.\+pt/2014/09/minixtutorial-\/8-\/loading-\/bmp-\/images.\+html} 
+
+\subsection{Function Documentation}
+\hypertarget{group___bitmap_ga08c1d4f4fff81df260d979ea8fc1aa61}{}\label{group___bitmap_ga08c1d4f4fff81df260d979ea8fc1aa61} 
+\index{Bitmap@{Bitmap}!delete\+Bitmap@{delete\+Bitmap}}
+\index{delete\+Bitmap@{delete\+Bitmap}!Bitmap@{Bitmap}}
+\subsubsection{\texorpdfstring{delete\+Bitmap()}{deleteBitmap()}}
+{\footnotesize\ttfamily void delete\+Bitmap (\begin{DoxyParamCaption}\item[{\hyperlink{struct_bitmap}{Bitmap} $\ast$}]{bmp }\end{DoxyParamCaption})}
+
+
+
+Destroys the given bitmap, freeing all resources used by it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & bitmap to be destroyed \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___bitmap_gaff908de4d166dac85027695204508ff4}{}\label{group___bitmap_gaff908de4d166dac85027695204508ff4} 
+\index{Bitmap@{Bitmap}!draw\+Bitmap@{draw\+Bitmap}}
+\index{draw\+Bitmap@{draw\+Bitmap}!Bitmap@{Bitmap}}
+\subsubsection{\texorpdfstring{draw\+Bitmap()}{drawBitmap()}}
+{\footnotesize\ttfamily void draw\+Bitmap (\begin{DoxyParamCaption}\item[{\hyperlink{struct_bitmap}{Bitmap} $\ast$}]{bitmap,  }\item[{char $\ast$}]{buffer,  }\item[{Alignment}]{alignment }\end{DoxyParamCaption})}
+
+
+
+Draws an unscaled, unrotated bitmap at the given position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & bitmap to be drawn \\
+\hline
+{\em alignment} & image alignment \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___bitmap_gad47a5ba782d17f94ad9f08956d61660a}{}\label{group___bitmap_gad47a5ba782d17f94ad9f08956d61660a} 
+\index{Bitmap@{Bitmap}!load\+Bitmap@{load\+Bitmap}}
+\index{load\+Bitmap@{load\+Bitmap}!Bitmap@{Bitmap}}
+\subsubsection{\texorpdfstring{load\+Bitmap()}{loadBitmap()}}
+{\footnotesize\ttfamily \hyperlink{struct_bitmap}{Bitmap}$\ast$ load\+Bitmap (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename,  }\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+
+
+Loads a bmp image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & Path of the image to load \\
+\hline
+{\em x} & initial bitmap position on the x-\/axis \\
+\hline
+{\em y} & initial bitmap position on the y-\/axis \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Non N\+U\+LL pointer to the image buffer 
+\end{DoxyReturn}

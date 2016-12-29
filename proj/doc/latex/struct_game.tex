@@ -1,0 +1,129 @@
+\hypertarget{struct_game}{}\section{Game Struct Reference}
+\label{struct_game}\index{Game@{Game}}
+
+
+The \hyperlink{struct_game}{Game} \char`\"{}class\char`\"{}.  
+
+
+
+
+{\ttfamily \#include $<$game.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_obstacle}{Obstacle} $\ast$$\ast$$\ast$ \hyperlink{struct_game_ab4a2d4a1db034550f0e6755c8417f00e}{obstacles}
+\item 
+\hyperlink{struct_mouse}{Mouse} $\ast$ \hyperlink{struct_game_a2514b83cbae6998a57eae74a24f6faf4}{mouse}
+\item 
+\hyperlink{struct_keyboard}{Keyboard} $\ast$ \hyperlink{struct_game_a945ceeb6236fbaf00dcdb7a0109f0d40}{keyboard}
+\item 
+\hyperlink{struct_bitmap}{Bitmap} $\ast$ \hyperlink{struct_game_a15de70574bc710486bf129a5c8f1634e}{background}
+\item 
+\hyperlink{struct_player}{Player} $\ast$ \hyperlink{struct_game_a96781128d3743da3d17e0fdd91afba7b}{player}
+\item 
+char $\ast$ \hyperlink{struct_game_a1820f1e9a26c0253b13be1df94052ca1}{secondary\+\_\+buffer}
+\item 
+\hyperlink{struct_bullet}{Bullet} $\ast$$\ast$ \hyperlink{struct_game_a6a95913dbac873584311bd479b43f911}{bullets}
+\item 
+\hyperlink{group__game_gab1e4078b5fa77cbf79de5e160f4cb261}{gamedrawstate} \hyperlink{struct_game_ab151fa4f58b0ddc30af7e501f6ba2ec3}{drawstate}
+\item 
+\hyperlink{group__game_ga33d4db650f69082296cc8c864c785e15}{gamestate} \hyperlink{struct_game_abb14911062a24c4178eb0f62fca2b925}{state}
+\item 
+\hyperlink{struct_score}{Score} $\ast$ \hyperlink{struct_game_ad7d780df0071261da7a401c839fa8a66}{session\+\_\+score}
+\item 
+\hyperlink{struct_score}{Score} $\ast$$\ast$ \hyperlink{struct_game_a544b8de55d5dc1667fad656b245d4a5a}{current\+\_\+highscores}
+\item 
+\hyperlink{group__game_ga74f568c551e9db616e8fae5ed65be48d}{scorenamestate} \hyperlink{struct_game_a49bcb1da4ed10a863fee60550febc40a}{namestate}
+\item 
+char \hyperlink{struct_game_a744d78025079ffc153f0be03356efdbe}{session\+\_\+name} \mbox{[}N\+A\+M\+E\+\_\+\+L\+E\+N\+G\+TH+1\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{struct_game}{Game} \char`\"{}class\char`\"{}. 
+
+\subsection{Field Documentation}
+\hypertarget{struct_game_a15de70574bc710486bf129a5c8f1634e}{}\label{struct_game_a15de70574bc710486bf129a5c8f1634e} 
+\index{Game@{Game}!background@{background}}
+\index{background@{background}!Game@{Game}}
+\subsubsection{\texorpdfstring{background}{background}}
+{\footnotesize\ttfamily \hyperlink{struct_bitmap}{Bitmap}$\ast$ background}
+
+The game background \hypertarget{struct_game_a6a95913dbac873584311bd479b43f911}{}\label{struct_game_a6a95913dbac873584311bd479b43f911} 
+\index{Game@{Game}!bullets@{bullets}}
+\index{bullets@{bullets}!Game@{Game}}
+\subsubsection{\texorpdfstring{bullets}{bullets}}
+{\footnotesize\ttfamily \hyperlink{struct_bullet}{Bullet}$\ast$$\ast$ bullets}
+
+Array that holds information about current on-\/screen bullets (by other words, bullets shot by player) \hypertarget{struct_game_a544b8de55d5dc1667fad656b245d4a5a}{}\label{struct_game_a544b8de55d5dc1667fad656b245d4a5a} 
+\index{Game@{Game}!current\+\_\+highscores@{current\+\_\+highscores}}
+\index{current\+\_\+highscores@{current\+\_\+highscores}!Game@{Game}}
+\subsubsection{\texorpdfstring{current\+\_\+highscores}{current\_highscores}}
+{\footnotesize\ttfamily \hyperlink{struct_score}{Score}$\ast$$\ast$ current\+\_\+highscores}
+
+Array that holds information about previous game sessions \hypertarget{struct_game_ab151fa4f58b0ddc30af7e501f6ba2ec3}{}\label{struct_game_ab151fa4f58b0ddc30af7e501f6ba2ec3} 
+\index{Game@{Game}!drawstate@{drawstate}}
+\index{drawstate@{drawstate}!Game@{Game}}
+\subsubsection{\texorpdfstring{drawstate}{drawstate}}
+{\footnotesize\ttfamily \hyperlink{group__game_gab1e4078b5fa77cbf79de5e160f4cb261}{gamedrawstate} drawstate}
+
+Holds information about the game\textquotesingle{}s drawing state \hypertarget{struct_game_a945ceeb6236fbaf00dcdb7a0109f0d40}{}\label{struct_game_a945ceeb6236fbaf00dcdb7a0109f0d40} 
+\index{Game@{Game}!keyboard@{keyboard}}
+\index{keyboard@{keyboard}!Game@{Game}}
+\subsubsection{\texorpdfstring{keyboard}{keyboard}}
+{\footnotesize\ttfamily \hyperlink{struct_keyboard}{Keyboard}$\ast$ keyboard}
+
+Holds information about keys pressed that will afect the game\textquotesingle{}s flow \hypertarget{struct_game_a2514b83cbae6998a57eae74a24f6faf4}{}\label{struct_game_a2514b83cbae6998a57eae74a24f6faf4} 
+\index{Game@{Game}!mouse@{mouse}}
+\index{mouse@{mouse}!Game@{Game}}
+\subsubsection{\texorpdfstring{mouse}{mouse}}
+{\footnotesize\ttfamily \hyperlink{struct_mouse}{Mouse}$\ast$ mouse}
+
+Holds information about mouse movement to update the player\textquotesingle{}s position \hypertarget{struct_game_a49bcb1da4ed10a863fee60550febc40a}{}\label{struct_game_a49bcb1da4ed10a863fee60550febc40a} 
+\index{Game@{Game}!namestate@{namestate}}
+\index{namestate@{namestate}!Game@{Game}}
+\subsubsection{\texorpdfstring{namestate}{namestate}}
+{\footnotesize\ttfamily \hyperlink{group__game_ga74f568c551e9db616e8fae5ed65be48d}{scorenamestate} namestate}
+
+Holds information about current session\textquotesingle{}s name letter receiving \hypertarget{struct_game_ab4a2d4a1db034550f0e6755c8417f00e}{}\label{struct_game_ab4a2d4a1db034550f0e6755c8417f00e} 
+\index{Game@{Game}!obstacles@{obstacles}}
+\index{obstacles@{obstacles}!Game@{Game}}
+\subsubsection{\texorpdfstring{obstacles}{obstacles}}
+{\footnotesize\ttfamily \hyperlink{struct_obstacle}{Obstacle}$\ast$$\ast$$\ast$ obstacles}
+
+Matrix holding information about current on-\/screen obstacles \hypertarget{struct_game_a96781128d3743da3d17e0fdd91afba7b}{}\label{struct_game_a96781128d3743da3d17e0fdd91afba7b} 
+\index{Game@{Game}!player@{player}}
+\index{player@{player}!Game@{Game}}
+\subsubsection{\texorpdfstring{player}{player}}
+{\footnotesize\ttfamily \hyperlink{struct_player}{Player}$\ast$ player}
+
+The main character \hypertarget{struct_game_a1820f1e9a26c0253b13be1df94052ca1}{}\label{struct_game_a1820f1e9a26c0253b13be1df94052ca1} 
+\index{Game@{Game}!secondary\+\_\+buffer@{secondary\+\_\+buffer}}
+\index{secondary\+\_\+buffer@{secondary\+\_\+buffer}!Game@{Game}}
+\subsubsection{\texorpdfstring{secondary\+\_\+buffer}{secondary\_buffer}}
+{\footnotesize\ttfamily char$\ast$ secondary\+\_\+buffer}
+
+The double buffer used in the game \hypertarget{struct_game_a744d78025079ffc153f0be03356efdbe}{}\label{struct_game_a744d78025079ffc153f0be03356efdbe} 
+\index{Game@{Game}!session\+\_\+name@{session\+\_\+name}}
+\index{session\+\_\+name@{session\+\_\+name}!Game@{Game}}
+\subsubsection{\texorpdfstring{session\+\_\+name}{session\_name}}
+{\footnotesize\ttfamily char session\+\_\+name\mbox{[}N\+A\+M\+E\+\_\+\+L\+E\+N\+G\+TH+1\mbox{]}}
+
+String that will store current session\textquotesingle{}s name (read from user input) \hypertarget{struct_game_ad7d780df0071261da7a401c839fa8a66}{}\label{struct_game_ad7d780df0071261da7a401c839fa8a66} 
+\index{Game@{Game}!session\+\_\+score@{session\+\_\+score}}
+\index{session\+\_\+score@{session\+\_\+score}!Game@{Game}}
+\subsubsection{\texorpdfstring{session\+\_\+score}{session\_score}}
+{\footnotesize\ttfamily \hyperlink{struct_score}{Score}$\ast$ session\+\_\+score}
+
+Will hold information about the game session when it ends \hypertarget{struct_game_abb14911062a24c4178eb0f62fca2b925}{}\label{struct_game_abb14911062a24c4178eb0f62fca2b925} 
+\index{Game@{Game}!state@{state}}
+\index{state@{state}!Game@{Game}}
+\subsubsection{\texorpdfstring{state}{state}}
+{\footnotesize\ttfamily \hyperlink{group__game_ga33d4db650f69082296cc8c864c785e15}{gamestate} state}
+
+Holds information about the game\textquotesingle{}s state 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{game_8h}{game.\+h}\end{DoxyCompactItemize}

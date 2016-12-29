@@ -1,0 +1,52 @@
+\hypertarget{dispatcher_8h}{}\section{dispatcher.\+h File Reference}
+\label{dispatcher_8h}\index{dispatcher.\+h@{dispatcher.\+h}}
+
+
+Functions related with the program\textquotesingle{}s state and HW interruptions handling.  
+
+
+{\ttfamily \#include $<$minix/syslib.\+h$>$}\newline
+{\ttfamily \#include $<$minix/drivers.\+h$>$}\newline
+{\ttfamily \#include $<$machine/int86.\+h$>$}\newline
+{\ttfamily \#include $<$sys/mman.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}menu.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}game.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_dispatcher}{Dispatcher}
+\begin{DoxyCompactList}\small\item\em The \hyperlink{struct_dispatcher}{Dispatcher} \char`\"{}class\char`\"{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \hyperlink{group__dispatcher_ga90e75071da8646d19ce0a3cd2926af3a}{dispatcherstate\+\_\+t} \hyperlink{group__dispatcher_gafe31418b86c6754be94c8e79cfeed813}{dispatcherstate}
+\begin{DoxyCompactList}\small\item\em Possible \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s states. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__dispatcher_ga90e75071da8646d19ce0a3cd2926af3a}{}\label{group__dispatcher_ga90e75071da8646d19ce0a3cd2926af3a} 
+enum \hyperlink{group__dispatcher_ga90e75071da8646d19ce0a3cd2926af3a}{dispatcherstate\+\_\+t} \{ {\bfseries M\+A\+I\+N\+\_\+\+M\+E\+NU}, 
+{\bfseries G\+A\+ME}, 
+{\bfseries E\+X\+I\+T\+\_\+\+P\+R\+O\+G\+R\+AM}
+ \}\begin{DoxyCompactList}\small\item\em Possible \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s states. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_dispatcher}{Dispatcher} $\ast$ \hyperlink{group__dispatcher_ga806e2b40b340c9431427c77f94e859fa}{create\+\_\+dispatcher} (char $\ast$path)
+\begin{DoxyCompactList}\small\item\em Subscribes to hardware peripherals and initializes \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s members. Also initializes variable used to store the session\textquotesingle{}s path. \end{DoxyCompactList}\item 
+void \hyperlink{group__dispatcher_ga4a58ba5ba48cbbaa0aad022b75685942}{delete\+\_\+dispatcher} (\hyperlink{struct_dispatcher}{Dispatcher} $\ast$dispatcher)
+\begin{DoxyCompactList}\small\item\em Frees dynamically allocated memory by \hyperlink{struct_dispatcher}{Dispatcher}\textquotesingle{}s members. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{group__dispatcher_ga5ac2060f25333e39dcf8ea5a304b310f}{get\+\_\+pwd} ()
+\begin{DoxyCompactList}\small\item\em Returns the repository\textquotesingle{}s parent directory path. \end{DoxyCompactList}\item 
+void \hyperlink{group__dispatcher_ga2f999b67515a92fc53d29324552cd141}{interrupt\+\_\+handler} (\hyperlink{struct_dispatcher}{Dispatcher} $\ast$dispatcher)
+\begin{DoxyCompactList}\small\item\em Initializes either game or menu based on dispatcher\textquotesingle{}s state. Includes driver receive loop that calls game specific functions to handle hardware interruptions, which loops until the dispatcher\textquotesingle{}s state changes. \end{DoxyCompactList}\item 
+void \hyperlink{group__dispatcher_ga3b358623605878251bcfa528381cb15e}{state\+\_\+handler} (\hyperlink{struct_dispatcher}{Dispatcher} $\ast$dispatcher, \hyperlink{struct_menu}{Menu} $\ast$menu, \hyperlink{struct_game}{Game} $\ast$game)
+\begin{DoxyCompactList}\small\item\em State handler to determine dispatcher\textquotesingle{}s next state, based on menu or game\textquotesingle{}s states. Also deletes either menu or game if the dispatcher\textquotesingle{}s state changes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions related with the program\textquotesingle{}s state and HW interruptions handling. 
+
+Functions for outputing data to screen in graphics mode.

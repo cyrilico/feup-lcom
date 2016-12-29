@@ -1,0 +1,171 @@
+\hypertarget{group__i8042}{}\section{i8042}
+\label{group__i8042}\index{i8042@{i8042}}
+
+
+Constants for programming the i8042 controller. Needs to be completed.  
+
+
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__i8042_ga0b7569cda71298859ffb6ea55c03a36a}{}\label{group__i8042_ga0b7569cda71298859ffb6ea55c03a36a} 
+\#define \hyperlink{group__i8042_ga0b7569cda71298859ffb6ea55c03a36a}{I\+R\+Q\+\_\+\+K\+BD}~1
+\begin{DoxyCompactList}\small\item\em K\+BD I\+RQ line. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga32ffe73ffc337fbec467ea02948591af}{}\label{group__i8042_ga32ffe73ffc337fbec467ea02948591af} 
+\#define \hyperlink{group__i8042_ga32ffe73ffc337fbec467ea02948591af}{I\+R\+Q\+\_\+\+M\+O\+U\+SE}~12
+\begin{DoxyCompactList}\small\item\em \hyperlink{struct_mouse}{Mouse} I\+RQ line. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga89c4d098b53809674457b1660b1af780}{}\label{group__i8042_ga89c4d098b53809674457b1660b1af780} 
+\#define \hyperlink{group__i8042_ga89c4d098b53809674457b1660b1af780}{S\+T\+A\+T\+\_\+\+R\+EG}~0x64
+\begin{DoxyCompactList}\small\item\em Status Register for K\+BD commands. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga6d57c7927a10f638c83046b52c8caac9}{}\label{group__i8042_ga6d57c7927a10f638c83046b52c8caac9} 
+\#define \hyperlink{group__i8042_ga6d57c7927a10f638c83046b52c8caac9}{K\+B\+C\+\_\+\+C\+M\+D\+\_\+\+R\+EG}~0x64
+\begin{DoxyCompactList}\small\item\em Register for K\+BC commands. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga783be5698cf07b1daaf126ef89c19063}{}\label{group__i8042_ga783be5698cf07b1daaf126ef89c19063} 
+\#define \hyperlink{group__i8042_ga783be5698cf07b1daaf126ef89c19063}{I\+N\+\_\+\+B\+UF}~0x60
+\begin{DoxyCompactList}\small\item\em K\+BC Input Buffer. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_gacfb42dde389e8ca36ab267002fbf5c6a}{}\label{group__i8042_gacfb42dde389e8ca36ab267002fbf5c6a} 
+\#define \hyperlink{group__i8042_gacfb42dde389e8ca36ab267002fbf5c6a}{O\+U\+T\+\_\+\+B\+UF}~0x60
+\begin{DoxyCompactList}\small\item\em K\+BC Output Buffer. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga805da0759dba314e6339d8999c44824c}{}\label{group__i8042_ga805da0759dba314e6339d8999c44824c} 
+\#define \hyperlink{group__i8042_ga805da0759dba314e6339d8999c44824c}{W\+R\+I\+T\+E\+\_\+\+B\+Y\+T\+E\+\_\+\+M\+O\+U\+SE}~0x\+D4
+\begin{DoxyCompactList}\small\item\em Write byte to mouse command. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_gaa5f3ea05c9f4c26b00c14a6a9a3b6ac7}{}\label{group__i8042_gaa5f3ea05c9f4c26b00c14a6a9a3b6ac7} 
+\#define \hyperlink{group__i8042_gaa5f3ea05c9f4c26b00c14a6a9a3b6ac7}{E\+N\+A\+B\+L\+E\+\_\+\+M\+O\+U\+S\+E\+\_\+\+D\+A\+T\+A\+\_\+\+R\+E\+P\+O\+R\+T\+I\+NG}~0x\+F4
+\begin{DoxyCompactList}\small\item\em Enable mouse\textquotesingle{}s data reporting -\/ in stream mode only. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga9c5894f3db7aba4a1ec79e2a5696e579}{}\label{group__i8042_ga9c5894f3db7aba4a1ec79e2a5696e579} 
+\#define \hyperlink{group__i8042_ga9c5894f3db7aba4a1ec79e2a5696e579}{D\+I\+S\+A\+B\+L\+E\+\_\+\+M\+O\+U\+S\+E\+\_\+\+D\+A\+T\+A\+\_\+\+R\+E\+P\+O\+R\+T\+I\+NG}~0x\+F5
+\begin{DoxyCompactList}\small\item\em Disable mouse\textquotesingle{}s data reporting -\/ in stream mode only. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga5add224b75509ea02834f2fe73c5636f}{}\label{group__i8042_ga5add224b75509ea02834f2fe73c5636f} 
+\#define \hyperlink{group__i8042_ga5add224b75509ea02834f2fe73c5636f}{D\+I\+S\+A\+B\+L\+E\+\_\+\+S\+C\+A\+N\+C\+O\+D\+ES}~0x\+F5
+\begin{DoxyCompactList}\small\item\em Disable K\+BD -\/ set default values and stop scanning. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga4a0257a2054c5a33cc50947746332ced}{}\label{group__i8042_ga4a0257a2054c5a33cc50947746332ced} 
+\#define \hyperlink{group__i8042_ga4a0257a2054c5a33cc50947746332ced}{E\+N\+A\+B\+L\+E\+\_\+\+S\+C\+A\+N\+C\+O\+D\+ES}~0x\+F4
+\begin{DoxyCompactList}\small\item\em Clear buffer and enable K\+BD. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga45ba202b05caf39795aeca91b0ae547e}{}\label{group__i8042_ga45ba202b05caf39795aeca91b0ae547e} 
+\#define \hyperlink{group__i8042_ga45ba202b05caf39795aeca91b0ae547e}{T\+I\+M\+E\+O\+UT}~0x40
+\begin{DoxyCompactList}\small\item\em Timeout error -\/ invalid data -\/ B\+I\+T(6) \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_gaf6996d12e71a534569c41a25de7d6d52}{}\label{group__i8042_gaf6996d12e71a534569c41a25de7d6d52} 
+\#define \hyperlink{group__i8042_gaf6996d12e71a534569c41a25de7d6d52}{P\+A\+R\+I\+TY}~0x80
+\begin{DoxyCompactList}\small\item\em Parity error -\/ invalid data -\/ B\+I\+T(7) \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga45967c9e25447ba853cf6fb4ac545fe6}{}\label{group__i8042_ga45967c9e25447ba853cf6fb4ac545fe6} 
+\#define \hyperlink{group__i8042_ga45967c9e25447ba853cf6fb4ac545fe6}{O\+BF}~0x1
+\begin{DoxyCompactList}\small\item\em Output buffer full -\/ B\+I\+T(0) \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga3c48b10907056351582baf9f6478598e}{}\label{group__i8042_ga3c48b10907056351582baf9f6478598e} 
+\#define \hyperlink{group__i8042_ga3c48b10907056351582baf9f6478598e}{I\+BF}~0x2
+\begin{DoxyCompactList}\small\item\em Input buffer full -\/ B\+I\+T(1) \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_gad5a4898d322ab25d2e9e0da38b07ee37}{}\label{group__i8042_gad5a4898d322ab25d2e9e0da38b07ee37} 
+\#define \hyperlink{group__i8042_gad5a4898d322ab25d2e9e0da38b07ee37}{N\+T\+R\+I\+ES}~5
+\begin{DoxyCompactList}\small\item\em Number of tries in\+\_\+buf or out\+\_\+buf are read before aborting. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga9a86f4f038ce85ff0308b0674a6849f2}{}\label{group__i8042_ga9a86f4f038ce85ff0308b0674a6849f2} 
+\#define \hyperlink{group__i8042_ga9a86f4f038ce85ff0308b0674a6849f2}{T\+W\+O\+\_\+\+B\+Y\+T\+E\+\_\+\+S\+C\+A\+N\+C\+O\+DE}~0x\+E0
+\begin{DoxyCompactList}\small\item\em First byte of two byte scancode (usually) \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga6f6489887e08bff4887d0bc5dcf214d8}{}\label{group__i8042_ga6f6489887e08bff4887d0bc5dcf214d8} 
+\#define \hyperlink{group__i8042_ga6f6489887e08bff4887d0bc5dcf214d8}{A\+CK}~0x\+FA
+\begin{DoxyCompactList}\small\item\em Means sucessful command. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga92f67631ef5a97e4a266c15bc710776d}{}\label{group__i8042_ga92f67631ef5a97e4a266c15bc710776d} 
+\#define \hyperlink{group__i8042_ga92f67631ef5a97e4a266c15bc710776d}{R\+E\+S\+E\+ND}~0x\+FE
+\begin{DoxyCompactList}\small\item\em Need to resend current byte. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga8fe83ac76edc595f6b98cd4a4127aed5}{}\label{group__i8042_ga8fe83ac76edc595f6b98cd4a4127aed5} 
+\#define \hyperlink{group__i8042_ga8fe83ac76edc595f6b98cd4a4127aed5}{E\+R\+R\+OR}~0x\+FC
+\begin{DoxyCompactList}\small\item\em Means error in current command -\/ the entire sequence should be restarted. \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga1a522aa19bcb695a9df30032a893bee3}{}\label{group__i8042_ga1a522aa19bcb695a9df30032a893bee3} 
+\#define \hyperlink{group__i8042_ga1a522aa19bcb695a9df30032a893bee3}{D\+E\+L\+A\+Y\+\_\+\+US}~20000
+\begin{DoxyCompactList}\small\item\em Delay time between i8042 out\+\_\+buf accesses (in ms) \end{DoxyCompactList}\item 
+\hypertarget{group__i8042_ga05826112c5acf959ee58dcacd8e9d065}{}\label{group__i8042_ga05826112c5acf959ee58dcacd8e9d065} 
+\#define {\bfseries A\+\_\+\+B\+R\+E\+AK}~0x9E
+\item 
+\hypertarget{group__i8042_gab71f0412d1074dd1639b80cb4212b3f3}{}\label{group__i8042_gab71f0412d1074dd1639b80cb4212b3f3} 
+\#define {\bfseries B\+\_\+\+B\+R\+E\+AK}~0x\+B0
+\item 
+\hypertarget{group__i8042_ga1db17ab74e715b3e1265635a2eb94825}{}\label{group__i8042_ga1db17ab74e715b3e1265635a2eb94825} 
+\#define {\bfseries C\+\_\+\+B\+R\+E\+AK}~0x\+AE
+\item 
+\hypertarget{group__i8042_gad2db9242348c43c781cc14746060470b}{}\label{group__i8042_gad2db9242348c43c781cc14746060470b} 
+\#define {\bfseries D\+\_\+\+B\+R\+E\+AK}~0x\+A0
+\item 
+\hypertarget{group__i8042_gac311aa1d8ee6267fad12d4a8569e2ce9}{}\label{group__i8042_gac311aa1d8ee6267fad12d4a8569e2ce9} 
+\#define {\bfseries E\+\_\+\+B\+R\+E\+AK}~0x92
+\item 
+\hypertarget{group__i8042_gabb14a7c6bdb0f1773fb6c4712a935e89}{}\label{group__i8042_gabb14a7c6bdb0f1773fb6c4712a935e89} 
+\#define {\bfseries F\+\_\+\+B\+R\+E\+AK}~0x\+A1
+\item 
+\hypertarget{group__i8042_ga540965f25f8be58638386fb7e0217da0}{}\label{group__i8042_ga540965f25f8be58638386fb7e0217da0} 
+\#define {\bfseries G\+\_\+\+B\+R\+E\+AK}~0x\+A2
+\item 
+\hypertarget{group__i8042_gab5cf6dcc56896464b68482927d5626cb}{}\label{group__i8042_gab5cf6dcc56896464b68482927d5626cb} 
+\#define {\bfseries H\+\_\+\+B\+R\+E\+AK}~0x\+A3
+\item 
+\hypertarget{group__i8042_gadbd5495a5a7584ce408afc77053a1a6e}{}\label{group__i8042_gadbd5495a5a7584ce408afc77053a1a6e} 
+\#define {\bfseries I\+\_\+\+B\+R\+E\+AK}~0x97
+\item 
+\hypertarget{group__i8042_ga9503cf55f6fa08d947698b7ba9396063}{}\label{group__i8042_ga9503cf55f6fa08d947698b7ba9396063} 
+\#define {\bfseries J\+\_\+\+B\+R\+E\+AK}~0x\+A4
+\item 
+\hypertarget{group__i8042_ga977fbee87f9a0e17cca83f5e9c0c40c5}{}\label{group__i8042_ga977fbee87f9a0e17cca83f5e9c0c40c5} 
+\#define {\bfseries K\+\_\+\+B\+R\+E\+AK}~0x\+A5
+\item 
+\hypertarget{group__i8042_ga89b173a61b555a0b01c964621b1306bd}{}\label{group__i8042_ga89b173a61b555a0b01c964621b1306bd} 
+\#define {\bfseries L\+\_\+\+B\+R\+E\+AK}~0x\+A6
+\item 
+\hypertarget{group__i8042_ga60a801ada5d5408e8e97fa16dc01bc74}{}\label{group__i8042_ga60a801ada5d5408e8e97fa16dc01bc74} 
+\#define {\bfseries M\+\_\+\+B\+R\+E\+AK}~0x\+B2
+\item 
+\hypertarget{group__i8042_ga52dbaa5d914245fef903ccfdfd571a55}{}\label{group__i8042_ga52dbaa5d914245fef903ccfdfd571a55} 
+\#define {\bfseries N\+\_\+\+B\+R\+E\+AK}~0x\+B1
+\item 
+\hypertarget{group__i8042_ga5a03349f44ec55a1cfc17be9b2bd8ffc}{}\label{group__i8042_ga5a03349f44ec55a1cfc17be9b2bd8ffc} 
+\#define {\bfseries O\+\_\+\+B\+R\+E\+AK}~0x98
+\item 
+\hypertarget{group__i8042_gacbfd95d4a939ea12bf10633cc94f1084}{}\label{group__i8042_gacbfd95d4a939ea12bf10633cc94f1084} 
+\#define {\bfseries P\+\_\+\+B\+R\+E\+AK}~0x99
+\item 
+\hypertarget{group__i8042_ga6a2eb960cdda5887902f55fb5d356deb}{}\label{group__i8042_ga6a2eb960cdda5887902f55fb5d356deb} 
+\#define {\bfseries Q\+\_\+\+B\+R\+E\+AK}~0x90
+\item 
+\hypertarget{group__i8042_ga8e47379ada3dfd32077e7e0ab73efcd3}{}\label{group__i8042_ga8e47379ada3dfd32077e7e0ab73efcd3} 
+\#define {\bfseries R\+\_\+\+B\+R\+E\+AK}~0x93
+\item 
+\hypertarget{group__i8042_ga85b3c65b8b6c952e08c252e9737b74f9}{}\label{group__i8042_ga85b3c65b8b6c952e08c252e9737b74f9} 
+\#define {\bfseries S\+\_\+\+B\+R\+E\+AK}~0x9F
+\item 
+\hypertarget{group__i8042_ga89673033fd7501762a771a846d9a04f3}{}\label{group__i8042_ga89673033fd7501762a771a846d9a04f3} 
+\#define {\bfseries T\+\_\+\+B\+R\+E\+AK}~0x94
+\item 
+\hypertarget{group__i8042_ga17ac02c38b412f191a7be71b7ad8d9d9}{}\label{group__i8042_ga17ac02c38b412f191a7be71b7ad8d9d9} 
+\#define {\bfseries U\+\_\+\+B\+R\+E\+AK}~0x96
+\item 
+\hypertarget{group__i8042_gadd8b2aece432b2420c02b95b8b9b5101}{}\label{group__i8042_gadd8b2aece432b2420c02b95b8b9b5101} 
+\#define {\bfseries V\+\_\+\+B\+R\+E\+AK}~0x\+AF
+\item 
+\hypertarget{group__i8042_ga32d11f9abffe8bb3df11feef5ca5213d}{}\label{group__i8042_ga32d11f9abffe8bb3df11feef5ca5213d} 
+\#define {\bfseries W\+\_\+\+B\+R\+E\+AK}~0x91
+\item 
+\hypertarget{group__i8042_ga9c273d3928004114553508394fefdf90}{}\label{group__i8042_ga9c273d3928004114553508394fefdf90} 
+\#define {\bfseries X\+\_\+\+B\+R\+E\+AK}~0x\+AD
+\item 
+\hypertarget{group__i8042_ga10829b1f7f377cbeaed355eb0e09c29b}{}\label{group__i8042_ga10829b1f7f377cbeaed355eb0e09c29b} 
+\#define {\bfseries Y\+\_\+\+B\+R\+E\+AK}~0x95
+\item 
+\hypertarget{group__i8042_ga50ffeb6e62d9f40f723b19984e3ed81b}{}\label{group__i8042_ga50ffeb6e62d9f40f723b19984e3ed81b} 
+\#define {\bfseries Z\+\_\+\+B\+R\+E\+AK}~0x\+AC
+\item 
+\hypertarget{group__i8042_ga95d6e4b61bac77469ecc47b205709af6}{}\label{group__i8042_ga95d6e4b61bac77469ecc47b205709af6} 
+\#define {\bfseries S\+P\+A\+C\+E\+\_\+\+B\+R\+E\+AK}~0x\+B9
+\item 
+\hypertarget{group__i8042_ga768337bc3d53df1b45ef528bf747b645}{}\label{group__i8042_ga768337bc3d53df1b45ef528bf747b645} 
+\#define {\bfseries E\+N\+T\+E\+R\+\_\+\+B\+R\+E\+AK}~0x9C
+\item 
+\hypertarget{group__i8042_gac809e10453e5d77552734079b12899ee}{}\label{group__i8042_gac809e10453e5d77552734079b12899ee} 
+\#define {\bfseries B\+A\+C\+K\+S\+P\+A\+C\+E\+\_\+\+B\+R\+E\+AK}~0x8E
+\item 
+\hypertarget{group__i8042_ga343f44cb034d2d2ff3438b3d45dcde1f}{}\label{group__i8042_ga343f44cb034d2d2ff3438b3d45dcde1f} 
+\#define {\bfseries E\+S\+C\+\_\+\+B\+R\+E\+AK}~0x81
+\item 
+\hypertarget{group__i8042_ga72695d31382ba5334881ad3407393642}{}\label{group__i8042_ga72695d31382ba5334881ad3407393642} 
+\#define {\bfseries N\+O\+T\+\_\+\+V\+A\+L\+ID}~0
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Constants for programming the i8042 controller. Needs to be completed. 
+

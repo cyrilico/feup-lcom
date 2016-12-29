@@ -1,0 +1,51 @@
+\hypertarget{group__rtcmacro}{}\section{rtcmacro}
+\label{group__rtcmacro}\index{rtcmacro@{rtcmacro}}
+
+
+Constants for programming the i8254 Timer. Needs to be completed.  
+
+
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__rtcmacro_ga3a8ea58898cb58fc96013383d39f482c}{}\label{group__rtcmacro_ga3a8ea58898cb58fc96013383d39f482c} 
+\#define {\bfseries B\+IT}(n)~(0x01$<$$<$(n))
+\item 
+\hypertarget{group__rtcmacro_ga910ac5f2c1b4016e433f9832358a1816}{}\label{group__rtcmacro_ga910ac5f2c1b4016e433f9832358a1816} 
+\#define \hyperlink{group__rtcmacro_ga910ac5f2c1b4016e433f9832358a1816}{I\+R\+Q\+\_\+\+R\+TC}~8
+\begin{DoxyCompactList}\small\item\em R\+TC I\+RQ line. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_ga710b98232df2c563009e6f8a6cd18220}{}\label{group__rtcmacro_ga710b98232df2c563009e6f8a6cd18220} 
+\#define \hyperlink{group__rtcmacro_ga710b98232df2c563009e6f8a6cd18220}{R\+T\+C\+\_\+\+A\+D\+D\+R\+\_\+\+R\+EG}~0x70
+\begin{DoxyCompactList}\small\item\em Address register. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_ga2f258a00c59c3f347c8d2d4a75471ce0}{}\label{group__rtcmacro_ga2f258a00c59c3f347c8d2d4a75471ce0} 
+\#define \hyperlink{group__rtcmacro_ga2f258a00c59c3f347c8d2d4a75471ce0}{R\+T\+C\+\_\+\+D\+A\+T\+A\+\_\+\+R\+EG}~0x71
+\begin{DoxyCompactList}\small\item\em Data register. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_ga871557447a6fe92581aa4905362f3526}{}\label{group__rtcmacro_ga871557447a6fe92581aa4905362f3526} 
+\#define \hyperlink{group__rtcmacro_ga871557447a6fe92581aa4905362f3526}{R\+E\+GA}~0xA
+\begin{DoxyCompactList}\small\item\em R\+TC\textquotesingle{}s A register. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_gaa89223a2f0da3d2d0ef8a414a34ed3e6}{}\label{group__rtcmacro_gaa89223a2f0da3d2d0ef8a414a34ed3e6} 
+\#define \hyperlink{group__rtcmacro_gaa89223a2f0da3d2d0ef8a414a34ed3e6}{R\+E\+G\+A\+\_\+\+U\+IP}~B\+IT(7)
+\begin{DoxyCompactList}\small\item\em R\+E\+GA\textquotesingle{}s U\+IP flag -\/ when 1, don\textquotesingle{}t access date/hour registers. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_ga69918592b9e0cc1c96c43c306d0ace10}{}\label{group__rtcmacro_ga69918592b9e0cc1c96c43c306d0ace10} 
+\#define \hyperlink{group__rtcmacro_ga69918592b9e0cc1c96c43c306d0ace10}{S\+E\+C\+R\+EG}~0x00
+\begin{DoxyCompactList}\small\item\em Seconds register. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_gafbf6f6120989061bb2d82f7936aa1e73}{}\label{group__rtcmacro_gafbf6f6120989061bb2d82f7936aa1e73} 
+\#define \hyperlink{group__rtcmacro_gafbf6f6120989061bb2d82f7936aa1e73}{M\+I\+N\+R\+EG}~0x02
+\begin{DoxyCompactList}\small\item\em Minutes register. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_gaed693ead5cc7da76b4e94a4aefa0b30b}{}\label{group__rtcmacro_gaed693ead5cc7da76b4e94a4aefa0b30b} 
+\#define \hyperlink{group__rtcmacro_gaed693ead5cc7da76b4e94a4aefa0b30b}{H\+O\+U\+R\+EG}~0x04
+\begin{DoxyCompactList}\small\item\em Hours register. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_gad33a6b23dcdd06003d2915940dc7b7ed}{}\label{group__rtcmacro_gad33a6b23dcdd06003d2915940dc7b7ed} 
+\#define \hyperlink{group__rtcmacro_gad33a6b23dcdd06003d2915940dc7b7ed}{D\+A\+Y\+R\+EG}~0x07
+\begin{DoxyCompactList}\small\item\em Days register. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_gaacd85e8a61912491f7dd3076b5e80e71}{}\label{group__rtcmacro_gaacd85e8a61912491f7dd3076b5e80e71} 
+\#define \hyperlink{group__rtcmacro_gaacd85e8a61912491f7dd3076b5e80e71}{M\+O\+N\+R\+EG}~0x08
+\begin{DoxyCompactList}\small\item\em Month register. \end{DoxyCompactList}\item 
+\hypertarget{group__rtcmacro_gab6a23fdf0355f6d0fa7118ef326a7053}{}\label{group__rtcmacro_gab6a23fdf0355f6d0fa7118ef326a7053} 
+\#define \hyperlink{group__rtcmacro_gab6a23fdf0355f6d0fa7118ef326a7053}{Y\+E\+A\+R\+EG}~0x09
+\begin{DoxyCompactList}\small\item\em Year register. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Constants for programming the i8254 Timer. Needs to be completed. 
+

@@ -1,0 +1,89 @@
+\hypertarget{struct_player}{}\section{Player Struct Reference}
+\label{struct_player}\index{Player@{Player}}
+
+
+The \hyperlink{struct_player}{Player} \char`\"{}class\char`\"{}.  
+
+
+
+
+{\ttfamily \#include $<$player.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \hyperlink{struct_player_a9ebf860aa3d67f9f3229afa365dbd2df}{score\+\_\+minutes}
+\item 
+unsigned int \hyperlink{struct_player_ac5b57794eda52960699e7304de9ed640}{score\+\_\+seconds}
+\item 
+int \hyperlink{struct_player_aa7c2d82515de928df40dec915c3ba081}{score\+\_\+aux}
+\item 
+unsigned int \hyperlink{struct_player_a391d726f640974bcd70eeba097a92ebf}{number\+\_\+of\+\_\+bullets}
+\item 
+unsigned int \hyperlink{struct_player_a0b2f5a7e6b082f9f828b559d165ac60f}{bonus\+\_\+timer}
+\item 
+\hyperlink{group__player_ga3ab4abfc8d967315be3486178b91d2d9}{bonusstate} \hyperlink{struct_player_ad071f1edf847f7378f6161c02ba70640}{bonus}
+\item 
+\hyperlink{struct_bitmap}{Bitmap} $\ast$ \hyperlink{struct_player_a00c870e2cedff0b231b1c8ad85019f66}{bitmap}
+\item 
+\hyperlink{struct_bitmap}{Bitmap} $\ast$ \hyperlink{struct_player_adb5f5a8861d7950622a415e122e4e6d7}{bitmap\+\_\+shield}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{struct_player}{Player} \char`\"{}class\char`\"{}. 
+
+\subsection{Field Documentation}
+\hypertarget{struct_player_a00c870e2cedff0b231b1c8ad85019f66}{}\label{struct_player_a00c870e2cedff0b231b1c8ad85019f66} 
+\index{Player@{Player}!bitmap@{bitmap}}
+\index{bitmap@{bitmap}!Player@{Player}}
+\subsubsection{\texorpdfstring{bitmap}{bitmap}}
+{\footnotesize\ttfamily \hyperlink{struct_bitmap}{Bitmap}$\ast$ bitmap}
+
+\hyperlink{struct_player}{Player}\textquotesingle{}s normal appearance \hypertarget{struct_player_adb5f5a8861d7950622a415e122e4e6d7}{}\label{struct_player_adb5f5a8861d7950622a415e122e4e6d7} 
+\index{Player@{Player}!bitmap\+\_\+shield@{bitmap\+\_\+shield}}
+\index{bitmap\+\_\+shield@{bitmap\+\_\+shield}!Player@{Player}}
+\subsubsection{\texorpdfstring{bitmap\+\_\+shield}{bitmap\_shield}}
+{\footnotesize\ttfamily \hyperlink{struct_bitmap}{Bitmap}$\ast$ bitmap\+\_\+shield}
+
+\hyperlink{struct_player}{Player}\textquotesingle{}s appearance when invincibility bonus is on (has a rectangle shield around him) \hypertarget{struct_player_ad071f1edf847f7378f6161c02ba70640}{}\label{struct_player_ad071f1edf847f7378f6161c02ba70640} 
+\index{Player@{Player}!bonus@{bonus}}
+\index{bonus@{bonus}!Player@{Player}}
+\subsubsection{\texorpdfstring{bonus}{bonus}}
+{\footnotesize\ttfamily \hyperlink{group__player_ga3ab4abfc8d967315be3486178b91d2d9}{bonusstate} bonus}
+
+Current bonus information \hypertarget{struct_player_a0b2f5a7e6b082f9f828b559d165ac60f}{}\label{struct_player_a0b2f5a7e6b082f9f828b559d165ac60f} 
+\index{Player@{Player}!bonus\+\_\+timer@{bonus\+\_\+timer}}
+\index{bonus\+\_\+timer@{bonus\+\_\+timer}!Player@{Player}}
+\subsubsection{\texorpdfstring{bonus\+\_\+timer}{bonus\_timer}}
+{\footnotesize\ttfamily unsigned int bonus\+\_\+timer}
+
+Holds and controls bonus duration (initialized with B\+O\+N\+U\+S\+\_\+\+D\+U\+R\+A\+T\+I\+ON). Decremented until 0 every time score\+\_\+seconds is incremented \hypertarget{struct_player_a391d726f640974bcd70eeba097a92ebf}{}\label{struct_player_a391d726f640974bcd70eeba097a92ebf} 
+\index{Player@{Player}!number\+\_\+of\+\_\+bullets@{number\+\_\+of\+\_\+bullets}}
+\index{number\+\_\+of\+\_\+bullets@{number\+\_\+of\+\_\+bullets}!Player@{Player}}
+\subsubsection{\texorpdfstring{number\+\_\+of\+\_\+bullets}{number\_of\_bullets}}
+{\footnotesize\ttfamily unsigned int number\+\_\+of\+\_\+bullets}
+
+Current number of bullets (lasers) player has left \hypertarget{struct_player_aa7c2d82515de928df40dec915c3ba081}{}\label{struct_player_aa7c2d82515de928df40dec915c3ba081} 
+\index{Player@{Player}!score\+\_\+aux@{score\+\_\+aux}}
+\index{score\+\_\+aux@{score\+\_\+aux}!Player@{Player}}
+\subsubsection{\texorpdfstring{score\+\_\+aux}{score\_aux}}
+{\footnotesize\ttfamily int score\+\_\+aux}
+
+Counts timer0 interrupts to increment score at each second (really just counting time) \hypertarget{struct_player_a9ebf860aa3d67f9f3229afa365dbd2df}{}\label{struct_player_a9ebf860aa3d67f9f3229afa365dbd2df} 
+\index{Player@{Player}!score\+\_\+minutes@{score\+\_\+minutes}}
+\index{score\+\_\+minutes@{score\+\_\+minutes}!Player@{Player}}
+\subsubsection{\texorpdfstring{score\+\_\+minutes}{score\_minutes}}
+{\footnotesize\ttfamily unsigned int score\+\_\+minutes}
+
+Current player\textquotesingle{}s minutes part of the score \hypertarget{struct_player_ac5b57794eda52960699e7304de9ed640}{}\label{struct_player_ac5b57794eda52960699e7304de9ed640} 
+\index{Player@{Player}!score\+\_\+seconds@{score\+\_\+seconds}}
+\index{score\+\_\+seconds@{score\+\_\+seconds}!Player@{Player}}
+\subsubsection{\texorpdfstring{score\+\_\+seconds}{score\_seconds}}
+{\footnotesize\ttfamily unsigned int score\+\_\+seconds}
+
+Current player\textquotesingle{}s seconds part of the score 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{player_8h}{player.\+h}\end{DoxyCompactItemize}
