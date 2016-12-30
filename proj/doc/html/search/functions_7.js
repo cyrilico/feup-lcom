@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['init_5fcurrent_5fmax_5flives',['init_current_max_lives',['../group__obstacle.html#ga12e6975f62f13cef3f04d4014ac31242',1,'init_current_max_lives():&#160;obstacle.c'],['../group__obstacle.html#ga12e6975f62f13cef3f04d4014ac31242',1,'init_current_max_lives():&#160;obstacle.c']]],
-  ['init_5fcurrent_5fmin_5flives',['init_current_min_lives',['../group__obstacle.html#gae8c5264a98edf73e34cc59b0d79ee5b8',1,'init_current_min_lives():&#160;obstacle.c'],['../group__obstacle.html#gae8c5264a98edf73e34cc59b0d79ee5b8',1,'init_current_min_lives():&#160;obstacle.c']]],
-  ['interrupt_5fhandler',['interrupt_handler',['../group__dispatcher.html#ga2f999b67515a92fc53d29324552cd141',1,'interrupt_handler(Dispatcher *dispatcher):&#160;dispatcher.c'],['../group__dispatcher.html#ga2f999b67515a92fc53d29324552cd141',1,'interrupt_handler(Dispatcher *dispatcher):&#160;dispatcher.c']]]
+  ['game_5fscore_5fevent_5fhandler',['game_score_event_handler',['../group__game.html#gaae19b3df5cdf51786306772dc362cc78',1,'game_score_event_handler(Game *game, char current_key):&#160;game.c'],['../group__game.html#gaae19b3df5cdf51786306772dc362cc78',1,'game_score_event_handler(Game *game, char current_key):&#160;game.c']]],
+  ['generate_5fbonus',['generate_bonus',['../group__player.html#gafa760c994949e72cc685e338eca386e6',1,'generate_bonus(Player *player):&#160;player.c'],['../group__player.html#gafa760c994949e72cc685e338eca386e6',1,'generate_bonus(Player *player):&#160;player.c']]],
+  ['generate_5fobstacle_5fline',['generate_obstacle_line',['../group__obstacle.html#ga3c63dba1f24ebe9bef3e2dd2a5498006',1,'generate_obstacle_line(Obstacle **obstacles, int line_size, int line_number):&#160;obstacle.c'],['../group__obstacle.html#ga3c63dba1f24ebe9bef3e2dd2a5498006',1,'generate_obstacle_line(Obstacle **obstacles, int line_size, int line_number):&#160;obstacle.c']]],
+  ['get_5fpwd',['get_pwd',['../group__dispatcher.html#ga5ac2060f25333e39dcf8ea5a304b310f',1,'get_pwd():&#160;dispatcher.c'],['../group__dispatcher.html#ga5ac2060f25333e39dcf8ea5a304b310f',1,'get_pwd():&#160;dispatcher.c']]],
+  ['get_5fscores_5ffile',['get_scores_file',['../group__score.html#ga7db0bd0fa660d164c6f16dcc3e45d709',1,'get_scores_file():&#160;score.c'],['../group__score.html#ga7db0bd0fa660d164c6f16dcc3e45d709',1,'get_scores_file():&#160;score.c']]]
 ];

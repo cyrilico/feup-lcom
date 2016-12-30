@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['player_5fhas_5fbullets',['player_has_bullets',['../group__player.html#ga22a8eae795d9bddb858ac84d0e7371ed',1,'player_has_bullets(Player *player):&#160;player.c'],['../group__player.html#ga22a8eae795d9bddb858ac84d0e7371ed',1,'player_has_bullets(Player *player):&#160;player.c']]]
+  ['obstacle_5foff_5fscreen',['obstacle_off_screen',['../group__obstacle.html#ga23812cfe6d34ed6fe00446f5e794a46e',1,'obstacle_off_screen(Obstacle *obstacle):&#160;obstacle.c'],['../group__obstacle.html#ga23812cfe6d34ed6fe00446f5e794a46e',1,'obstacle_off_screen(Obstacle *obstacle):&#160;obstacle.c']]]
 ];

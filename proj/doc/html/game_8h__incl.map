@@ -1,0 +1,10 @@
+<map id="game.h" name="game.h">
+<area shape="rect" id="node2" href="$mouse_8h_source.html" title="mouse.h" alt="" coords="58,230,130,255"/>
+<area shape="rect" id="node4" href="$keyboard_8h.html" title="Functions related with processing the i8042&#39;s keyboard. " alt="" coords="24,81,110,106"/>
+<area shape="rect" id="node6" href="$score_8h.html" title="Functions related with game score handling. " alt="" coords="135,81,199,106"/>
+<area shape="rect" id="node7" href="$bullet_8h.html" title="Functions related with processing bullets (lasers) shot by player in&#45;game. " alt="" coords="224,81,289,106"/>
+<area shape="rect" id="node3" href="$bitmap_8h_source.html" title="bitmap.h" alt="" coords="170,305,242,330"/>
+<area shape="rect" id="node5" href="$i8042_8h_source.html" title="i8042.h" alt="" coords="35,155,99,181"/>
+<area shape="rect" id="node8" href="$player_8h.html" title="Functions related with processing the game&#39;s character. " alt="" coords="133,155,201,181"/>
+<area shape="rect" id="node9" href="$obstacle_8h.html" title="Functions related with processing the game&#39;s obstacles. " alt="" coords="205,230,286,255"/>
+</map>

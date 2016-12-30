@@ -1,0 +1,5 @@
+<map id="player.h" name="player.h">
+<area shape="rect" id="node2" href="$bullet_8h.html" title="Functions related with processing bullets (lasers) shot by player in&#45;game. " alt="" coords="19,81,83,106"/>
+<area shape="rect" id="node3" href="$game_8h.html" title="Functions related with processing the main game. " alt="" coords="18,155,83,181"/>
+<area shape="rect" id="node4" href="$dispatcher_8h.html" title="Functions related with the program&#39;s state and HW interruptions handling. " alt="" coords="4,230,96,255"/>
+</map>

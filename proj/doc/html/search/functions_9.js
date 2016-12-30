@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['lm_5falloc',['lm_alloc',['../group__lmlib.html#gae45d971ce2ffcf4dc2677eba033a92cd',1,'lmlib.h']]],
-  ['lm_5ffree',['lm_free',['../group__lmlib.html#ga73e89d9c297b7390021fb545513579c6',1,'lmlib.h']]],
-  ['lm_5finit',['lm_init',['../group__lmlib.html#ga00a9c17c01e794a6bfc80fc5c6ab1ed1',1,'lmlib.h']]],
-  ['loadbitmap',['loadBitmap',['../group___bitmap.html#gad47a5ba782d17f94ad9f08956d61660a',1,'loadBitmap(const char *filename, int x, int y):&#160;bitmap.c'],['../group___bitmap.html#gad47a5ba782d17f94ad9f08956d61660a',1,'loadBitmap(const char *filename, int x, int y):&#160;bitmap.c']]]
+  ['kbd_5fsubscribe_5fint',['kbd_subscribe_int',['../group__keyboard.html#ga77e2ed8f53e0fae3f4005fa26c6d2692',1,'kbd_subscribe_int():&#160;keyboard.c'],['../group__keyboard.html#ga77e2ed8f53e0fae3f4005fa26c6d2692',1,'kbd_subscribe_int():&#160;keyboard.c']]],
+  ['kbd_5funsubscribe_5fint',['kbd_unsubscribe_int',['../group__keyboard.html#ga5bdf6cfb570c375192b0d87913b65c57',1,'kbd_unsubscribe_int():&#160;keyboard.c'],['../group__keyboard.html#ga5bdf6cfb570c375192b0d87913b65c57',1,'kbd_unsubscribe_int():&#160;keyboard.c']]],
+  ['key_5fdetected',['key_detected',['../group__keyboard.html#gaa472854b178776886c9bf568945db9c6',1,'key_detected(Keyboard *keyboard, unsigned long key):&#160;keyboard.c'],['../group__keyboard.html#gaa472854b178776886c9bf568945db9c6',1,'key_detected(Keyboard *keyboard, unsigned long key):&#160;keyboard.c']]]
 ];

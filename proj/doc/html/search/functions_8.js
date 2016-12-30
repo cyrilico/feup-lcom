@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['kbd_5fsubscribe_5fint',['kbd_subscribe_int',['../group__keyboard.html#ga77e2ed8f53e0fae3f4005fa26c6d2692',1,'kbd_subscribe_int():&#160;keyboard.c'],['../group__keyboard.html#ga77e2ed8f53e0fae3f4005fa26c6d2692',1,'kbd_subscribe_int():&#160;keyboard.c']]],
-  ['kbd_5funsubscribe_5fint',['kbd_unsubscribe_int',['../group__keyboard.html#ga5bdf6cfb570c375192b0d87913b65c57',1,'kbd_unsubscribe_int():&#160;keyboard.c'],['../group__keyboard.html#ga5bdf6cfb570c375192b0d87913b65c57',1,'kbd_unsubscribe_int():&#160;keyboard.c']]],
-  ['key_5fdetected',['key_detected',['../group__keyboard.html#gaa472854b178776886c9bf568945db9c6',1,'key_detected(Keyboard *keyboard, unsigned long key):&#160;keyboard.c'],['../group__keyboard.html#gaa472854b178776886c9bf568945db9c6',1,'key_detected(Keyboard *keyboard, unsigned long key):&#160;keyboard.c']]]
+  ['init_5fcurrent_5fmax_5flives',['init_current_max_lives',['../group__obstacle.html#ga12e6975f62f13cef3f04d4014ac31242',1,'init_current_max_lives():&#160;obstacle.c'],['../group__obstacle.html#ga12e6975f62f13cef3f04d4014ac31242',1,'init_current_max_lives():&#160;obstacle.c']]],
+  ['init_5fcurrent_5fmin_5flives',['init_current_min_lives',['../group__obstacle.html#gae8c5264a98edf73e34cc59b0d79ee5b8',1,'init_current_min_lives():&#160;obstacle.c'],['../group__obstacle.html#gae8c5264a98edf73e34cc59b0d79ee5b8',1,'init_current_min_lives():&#160;obstacle.c']]],
+  ['interrupt_5fhandler',['interrupt_handler',['../group__dispatcher.html#ga2f999b67515a92fc53d29324552cd141',1,'interrupt_handler(Dispatcher *dispatcher):&#160;dispatcher.c'],['../group__dispatcher.html#ga2f999b67515a92fc53d29324552cd141',1,'interrupt_handler(Dispatcher *dispatcher):&#160;dispatcher.c']]]
 ];
