@@ -5,6 +5,14 @@
 Functions related with the usage of the PC\textquotesingle{}s Real Time Clock.  
 
 
+Collaboration diagram for rtc\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{group__rtc}
+\end{center}
+\end{figure}
 \subsection*{Modules}
 \begin{DoxyCompactItemize}
 \item 
@@ -13,6 +21,8 @@ Functions related with the usage of the PC\textquotesingle{}s Real Time Clock.
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+eax \hyperlink{group__rtc_gad17bf0ee9de4297ad405b9c197db0eab}{\+\_\+rtc\+\_\+get} (time\+\_\+or\+\_\+date)
+\begin{DoxyCompactList}\small\item\em Reads current time or date (according to user specification). \end{DoxyCompactList}\item 
 unsigned long $\ast$ \hyperlink{group__rtc_ga4ca5626e3ae7e8da1ad9183a7e6aa999}{rtc\+\_\+get} ()
 \begin{DoxyCompactList}\small\item\em Externally defined function that returns an array containing the current date or time. \end{DoxyCompactList}\item 
 int \hyperlink{group__rtc_gabd8de825e876e8ef94c64ac616f68a11}{rtc\+\_\+subscribe\+\_\+int} ()
@@ -36,6 +46,24 @@ Functions related with the usage of the PC\textquotesingle{}s Real Time Clock.
 
 
 \subsection{Function Documentation}
+\hypertarget{group__rtc_gad17bf0ee9de4297ad405b9c197db0eab}{}\label{group__rtc_gad17bf0ee9de4297ad405b9c197db0eab} 
+\index{rtc@{rtc}!\+\_\+rtc\+\_\+get@{\+\_\+rtc\+\_\+get}}
+\index{\+\_\+rtc\+\_\+get@{\+\_\+rtc\+\_\+get}!rtc@{rtc}}
+\subsubsection{\texorpdfstring{\+\_\+rtc\+\_\+get()}{\_rtc\_get()}}
+{\footnotesize\ttfamily eax \+\_\+rtc\+\_\+get (\begin{DoxyParamCaption}\item[{time\+\_\+or\+\_\+date}]{ }\end{DoxyParamCaption})}
+
+
+
+Reads current time or date (according to user specification). 
+
+Defined in rtc\+\_\+get.\+S 
+\begin{DoxyParams}{Parameters}
+{\em time\+\_\+or\+\_\+date} & integer\+: 0 to read time, else to read date \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+eax pointer to first element of array containing wanted data (\mbox{[}day,month,year\mbox{]} or \mbox{[}hours,minutes,seconds\mbox{]}) 
+\end{DoxyReturn}
 \hypertarget{group__rtc_ga4ca5626e3ae7e8da1ad9183a7e6aa999}{}\label{group__rtc_ga4ca5626e3ae7e8da1ad9183a7e6aa999} 
 \index{rtc@{rtc}!rtc\+\_\+get@{rtc\+\_\+get}}
 \index{rtc\+\_\+get@{rtc\+\_\+get}!rtc@{rtc}}
