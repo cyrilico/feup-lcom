@@ -1,5 +1,0 @@
-<map id="keyboard.h" name="keyboard.h">
-<area shape="rect" id="node2" href="$menu_8h.html" title="Functions related with processing the program&#39;s main menu. " alt="" coords="4,81,69,106"/>
-<area shape="rect" id="node4" href="$game_8h.html" title="Functions related with processing the main game. " alt="" coords="94,81,159,106"/>
-<area shape="rect" id="node3" href="$dispatcher_8h.html" title="Functions related with the program&#39;s state and HW interruptions handling. " alt="" coords="35,155,127,181"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="score.h" name="score.h">
-<area shape="rect" id="node2" href="$game_8h.html" title="Functions related with processing the main game. " alt="" coords="18,81,83,106"/>
-<area shape="rect" id="node3" href="$dispatcher_8h.html" title="Functions related with the program&#39;s state and HW interruptions handling. " alt="" coords="4,155,96,181"/>
-</map>
