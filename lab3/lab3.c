@@ -28,6 +28,7 @@ static void print_usage(char **argv)
 			"\t service run %s -args \"test_scan <decimal no. - 0: C version, other: assembly version>\"\n"
 			"\t service run %s -args \"test_leds <array of decimal no. [0-2] - sequence of leds to manipulate>\"\n"
 			"\t service run %s -args \"test_timed_scan <decimal no. - waiting time>\"\n",
+			"\t service run %s -args \"test_poll\"\n",
 			argv[0], argv[0], argv[0]);
 }
 
@@ -79,7 +80,11 @@ if (strncmp(argv[1], "test_scan", strlen("test_scan")) == 0) {
   	  printf("keyboard:: kbd_test_timed_scan(%lu)\n",waiting_time);
   	  kbd_test_timed_scan(waiting_time);
   	  return 0;
-  }  else {
+  } else if (strncmp(argv[1], "test_poll", strlen("test_poll")) == 0) {
+  	  printf("keyboard:: kbd_test_poll()\n");
+  	  kbd_test_poll();
+  	  return 0;
+  } else {
   	  printf("keyboard:: non valid function \"%s\" to test\n", argv[1]);
   	  return 1;
   }

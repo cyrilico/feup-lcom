@@ -38,7 +38,6 @@ int kbd_unsubscribe_int(int *hookid) {
 }
 
 unsigned long kbd_read_code() {
-
 	unsigned long st;
 	unsigned long data;
 	unsigned int counter = 0;
@@ -72,6 +71,42 @@ unsigned long kbd_write_code(unsigned char cmd) {
 		}
 		tickdelay(micros_to_ticks(DELAY_US));
 	}
+
+	return -1;
+}
+
+unsigned long kbd_write_code_reg(unsigned char reg, unsigned char cmd) {
+	unsigned long st;
+	unsigned int counter = 0;
+	while( counter <= NTRIES ) {
+		sys_inb(STAT_REG, &st); /* assuming it returns OK */
+		/* loop while 8042 input buffer is not empty */
+		if( (st & IBF) == 0 ) {
+			sys_outb(reg, cmd); /* no args command */
+			return 0;
+		}
+		tickdelay(micros_to_ticks(DELAY_US));
+	}
+
+	return -1;
+}
+
+
+unsigned long kbd_write_code_arg(unsigned char reg, unsigned char arg) {
+	unsigned long st;
+	counter = 0;
+
+	while( counter <= NTRIES ) {
+		sys_inb(STAT_REG, &st); /* assuming it returns OK */
+		/* loop while 8042 input buffer is not empty */
+		if( (st & IBF) == 0 ) {
+			sys_outb(reg, arg);
+			return 0;
+		}
+		tickdelay(micros_to_ticks(DELAY_US));
+	}
+
+
 	return -1;
 }
 
@@ -122,13 +157,13 @@ int kbd_scan_loop(unsigned short c_or_asm) {
 						code = kbd_read_code_ASM();
 					if(code == -1)
 						return -1;
-					else if(read_again == 1){
+					else if(read_again == 1) {
 						code = code << 8;
 						code |= code_aux;
 						read_again = 0;
 						kbd_print_code(code);
 					}
-					else if(code == TWO_BYTE_SCANCODE){
+					else if(code == TWO_BYTE_SCANCODE) {
 						code_aux = code;
 						read_again = 1;
 					}
@@ -144,6 +179,55 @@ int kbd_scan_loop(unsigned short c_or_asm) {
 		}
 	}
 	return kbd_unsubscribe_int(&hookid_kbd);
+}
+
+int kbd_poll() {
+	unsigned long code = 0;
+	unsigned long code_aux = 0; //Auxiliar variable in case of two byte scancode
+	int read_again = 0;
+
+	while (code != ESC_BREAK) {
+		code = kbd_read_code_ASM();
+		if(code == -1)
+			continue;
+		else if(read_again == 1) {
+			code = code << 8;
+			code |= code_aux;
+			read_again = 0;
+			kbd_print_code(code);
+		}
+		else if(code == TWO_BYTE_SCANCODE) {
+			code_aux = code;
+			read_again = 1;
+		}
+		else
+			kbd_print_code(code);
+	}
+
+		if(kbd_reset_status() == -1) {
+			return -1;
+	}
+
+}
+
+int kbd_reset_status() {
+	unsigned long st;
+	unsigned long new_st;
+
+	if(kbd_write_code_reg(STAT_REG, 0x20) == -1)
+		return -1;
+
+	if((st = kbd_read_code()) == -1)
+		return -1;
+
+	printf("CMD BYTE : %x\n", st);
+	new_st = (st | OBF); // OBF - BIT(0) set to 1 to enable keyboard interruptions
+
+	if(kbd_write_code_reg(STAT_REG, 0x20) == -1)
+		return -1;
+
+	if(kbd_write_code_arg(OUT_BUF, new_st) == -1)
+		return -1;
 }
 
 int kbd_timed_scan_loop(unsigned short n){
