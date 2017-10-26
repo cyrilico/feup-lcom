@@ -6,7 +6,7 @@ int kbd_subscribe_int(int *hookid);
 int kbd_unsubscribe_int(int *hookid);
 unsigned long kbd_read_code();
 unsigned long kbd_write_code(unsigned char cmd);
-unsigned long kbd_write_code_arg(unsigned char reg, unsigned char arg);
+unsigned long kbd_write_code_arg(unsigned char cmd, unsigned char arg);
 unsigned long kbd_write_code_reg(unsigned char reg, unsigned char cmd);
 void kbd_print_code(unsigned long code);
 int kbd_timed_scan_loop(unsigned short n);

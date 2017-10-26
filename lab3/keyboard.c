@@ -13,6 +13,8 @@ int SCROLLLOCK_ON = 0;
 int NUMLOCK_ON = 0;
 int CAPSLOCK_ON = 0;
 
+extern int result_code;
+
 int kbd_subscribe_int(int *hookid) {
 	/*Variable that will hold return value in case of successful call, since sys_irq calls will modify hookid value*/
 	int hookid_kbd_bit = BIT(*hookid);
@@ -92,15 +94,25 @@ unsigned long kbd_write_code_reg(unsigned char reg, unsigned char cmd) {
 }
 
 
-unsigned long kbd_write_code_arg(unsigned char reg, unsigned char arg) {
+unsigned long kbd_write_code_arg(unsigned char cmd, unsigned char arg) {
 	unsigned long st;
-	counter = 0;
-
+	unsigned int counter = 0;
 	while( counter <= NTRIES ) {
 		sys_inb(STAT_REG, &st); /* assuming it returns OK */
 		/* loop while 8042 input buffer is not empty */
 		if( (st & IBF) == 0 ) {
-			sys_outb(reg, arg);
+			sys_outb(STAT_REG, cmd);
+			break;
+		}
+		tickdelay(micros_to_ticks(DELAY_US));
+	}
+
+	counter = 0;
+	while( counter <= NTRIES ) {
+		sys_inb(STAT_REG, &st); /* assuming it returns OK */
+		/* loop while 8042 input buffer is not empty */
+		if( (st & IBF) == 0 ) {
+			sys_outb(OUT_BUF, arg);
 			return 0;
 		}
 		tickdelay(micros_to_ticks(DELAY_US));
@@ -153,17 +165,19 @@ int kbd_scan_loop(unsigned short c_or_asm) {
 				if (msg.NOTIFY_ARG & irq_set) { /* subscribed interrupt */
 					if(c_or_asm == 0)
 						code = kbd_read_code();
-					else
-						code = kbd_read_code_ASM();
+					else {
+						kbd_read_code_ASM_2();
+						code = result_code;
+					}
 					if(code == -1)
 						return -1;
-					else if(read_again == 1) {
+					else if(read_again == 1){
 						code = code << 8;
 						code |= code_aux;
 						read_again = 0;
 						kbd_print_code(code);
 					}
-					else if(code == TWO_BYTE_SCANCODE) {
+					else if(code == TWO_BYTE_SCANCODE){
 						code_aux = code;
 						read_again = 1;
 					}
@@ -214,7 +228,7 @@ int kbd_reset_status() {
 	unsigned long st;
 	unsigned long new_st;
 
-	if(kbd_write_code_reg(STAT_REG, 0x20) == -1)
+	if(kbd_write_code_reg(KBC_CMD_REG, 0x20) == -1)
 		return -1;
 
 	if((st = kbd_read_code()) == -1)
@@ -223,10 +237,7 @@ int kbd_reset_status() {
 	printf("CMD BYTE : %x\n", st);
 	new_st = (st | OBF); // OBF - BIT(0) set to 1 to enable keyboard interruptions
 
-	if(kbd_write_code_reg(STAT_REG, 0x20) == -1)
-		return -1;
-
-	if(kbd_write_code_arg(OUT_BUF, new_st) == -1)
+	if(kbd_write_code_arg(0x60, new_st) == -1)
 		return -1;
 }
 
