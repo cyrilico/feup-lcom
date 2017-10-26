@@ -4,8 +4,8 @@
 .global _result_code
 
 .bss
-    # Reserve 32 bytes of memory
-    .lcomm _result_code, 32
+    # Reserve 1 byte of memory
+    .lcomm _result_code, 1
 
 .text
 
